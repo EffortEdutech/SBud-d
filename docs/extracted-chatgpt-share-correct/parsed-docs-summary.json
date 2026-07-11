@@ -1,0 +1,142 @@
+[
+  {
+    "vol": "H12 – Profile, Subscription & Personal Settings Experience",
+    "title": "Volume H12 – Profile, Subscription & Personal Settings Experience",
+    "chars": 5158
+  },
+  {
+    "vol": "H11 – Learning Analytics & Academic Growth Experience",
+    "title": "Volume H11 – Learning Analytics & Academic Growth Experience",
+    "chars": 5105
+  },
+  {
+    "vol": "H10 – Study Groups & Knowledge Sharing Experience",
+    "title": "Volume H10 – Study Groups & Knowledge Sharing Experience",
+    "chars": 5181
+  },
+  {
+    "vol": "H9 – Study Preparation & Revision Experience",
+    "title": "Volume H9 – Study Preparation & Revision Experience",
+    "chars": 5183
+  },
+  {
+    "vol": "H8 – Document Library & Knowledge Processing Experience",
+    "title": "Volume H8 – Document Library & Knowledge Processing Experience",
+    "chars": 5400
+  },
+  {
+    "vol": "H7 – Personal Learning Knowledge Graph (PLKG) Experience",
+    "title": "Volume H7 – Personal Learning Knowledge Graph (PLKG) Experience",
+    "chars": 5912
+  },
+  {
+    "vol": "H6 – BLIE Experience",
+    "title": "Volume H6 – BLIE Experience",
+    "chars": 5845
+  },
+  {
+    "vol": "H5 – Subject Workspace Experience",
+    "title": "Volume H5 – Subject Workspace Experience",
+    "chars": 5655
+  },
+  {
+    "vol": "H4 – Dashboard Experience",
+    "title": "Volume H4 – Dashboard Experience",
+    "chars": 5326
+  },
+  {
+    "vol": "H3 – Student Onboarding Experience",
+    "title": "Volume H3 – Student Onboarding Experience",
+    "chars": 6031
+  },
+  {
+    "vol": "H2 – Information Architecture & Navigation",
+    "title": "Volume H2 – Information Architecture & Navigation",
+    "chars": 6541
+  },
+  {
+    "vol": "H1 – Design System & Component Library Foundation",
+    "title": "Volume H1 – Design System & Component Library Foundation",
+    "chars": 6909
+  },
+  {
+    "vol": "H0 – UX Philosophy & Student Experience Principles",
+    "title": "Volume H0 – UX Philosophy & Student Experience Principles",
+    "chars": 6047
+  },
+  {
+    "vol": "G13 – MVP Delivery Roadmap",
+    "title": "Volume G13 – MVP Delivery Roadmap",
+    "chars": 5693
+  },
+  {
+    "vol": "G12 – Deployment Roadmap",
+    "title": "Volume G12 – Deployment Roadmap",
+    "chars": 5608
+  },
+  {
+    "vol": "G11 – Testing Strategy",
+    "title": "Volume G11 – Testing Strategy",
+    "chars": 5496
+  },
+  {
+    "vol": "G10 – UI/UX Build Specification",
+    "title": "Volume G10 – UI/UX Build Specification",
+    "chars": 7469
+  },
+  {
+    "vol": "G9 – API Specification",
+    "title": "Volume G9 – API Specification",
+    "chars": 5380
+  },
+  {
+    "vol": "G8 – Document Intelligence Implementation Blueprint",
+    "title": "Volume G8 – Document Intelligence Implementation Blueprint",
+    "chars": 6683
+  },
+  {
+    "vol": "G7 – PLKG Implementation Blueprint",
+    "title": "Volume G7 – PLKG Implementation Blueprint",
+    "chars": 5412
+  },
+  {
+    "vol": "G6 – BLIE Implementation Blueprint",
+    "title": "Volume G6 – BLIE Implementation Blueprint",
+    "chars": 5855
+  },
+  {
+    "vol": "G5 – Mobile Application Implementation Blueprint",
+    "title": "Volume G5 – Mobile Application Implementation Blueprint",
+    "chars": 5484
+  },
+  {
+    "vol": "G4 – Backend Implementation Blueprint",
+    "title": "Volume G4 – Backend Implementation Blueprint",
+    "chars": 5134
+  },
+  {
+    "vol": "G3 – Technology Stack Specification",
+    "title": "Volume G3 – Technology Stack Specification",
+    "chars": 5594
+  },
+  {
+    "vol": "G1A – AI-Native Engineering Workspace",
+    "title": "Volume G1A – AI-Native Engineering Workspace",
+    "chars": 4212
+  },
+  {
+    "vol": "G2 – Monorepo & Repository Architecture",
+    "title": "Volume G2 – Monorepo & Repository Architecture",
+    "chars": 3986
+  },
+  {
+    "vol": "G1 – Engineering Strategy & Development Roadmap",
+    "title": "Volume G1 – Engineering Strategy & Development Roadmap",
+    "chars": 6660
+  },
+  {
+    "vol": "G0 – Engineering Constitution",
+    "title": "Volume G0 – Engineering Constitution",
+    "chars": 6899
+  }
+]

@@ -1,0 +1,13 @@
+node_modules/
+.pnpm-store/
+dist/
+build/
+.next/
+out/
+coverage/
+graphify-out/
+.graphify-work/
+pnpm-lock.yaml
+docs/v1/
+docs/extracted-chatgpt-share/
+docs/extracted-chatgpt-share-correct/

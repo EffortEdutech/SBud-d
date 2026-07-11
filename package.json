@@ -1,0 +1,32 @@
+{
+  "name": "ai-study-buddy",
+  "version": "0.0.0",
+  "private": true,
+  "description": "AI Study Buddy monorepo.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm -r --if-present dev",
+    "build": "pnpm -r --if-present build",
+    "format": "prettier \"*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \"scripts/**/*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \"tests/**/*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \".github/**/*.{yml,yaml}\" --write --no-error-on-unmatched-pattern",
+    "format:check": "prettier \"*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \"scripts/**/*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \"tests/**/*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \".github/**/*.{yml,yaml}\" --check --no-error-on-unmatched-pattern",
+    "lint": "eslint .",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit --project tsconfig.json",
+    "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test",
+    "graph:update": "powershell -ExecutionPolicy Bypass -File scripts/graphify.ps1 update ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "@types/node": "^22.10.7",
+    "eslint": "^9.18.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.20.0",
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@10.30.3+sha512.c961d1e0a2d8e354ecaa5166b822516668b7f44cb5bd95122d590dd81922f606f5473b6d23ec4a5be05e7fcd18e8488d47d978bbe981872f1145d06e9a740017"
+}

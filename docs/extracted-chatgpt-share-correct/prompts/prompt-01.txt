@@ -1,0 +1,584 @@
+This is a copy of a shared ChatGPT conversation
+
+Report conversation
+I have another project
+How much database memory do you expect for 1 student to c...
+Explain more detail on Education Intelligence Platform wi...
+Can we lock our architecture design and move with compreh...
+Can you prepare the Volume A now ?
+Can you start writing the contents of Volume A now
+Please continue with Chapter 2 – Problem Statement. Bismi...
+Proceed with Chapter 3 – Market Opportunity. Bismillah...
+We need to go back to our main objective that is our mark...
+Please give me new Documentation Roadmap.
+Please write a short vol A
+Students will have Individual graph knowledge (similar to...
+The apps already build the knowledge graph even when stud...
+The apps shiuld also be able to help in study prep. The e...
+Now we have a solid apps to be build. I dont want you to ...
+Now can we rewrite a short Volume A
+Can we continue with a short volume B
+Can we continue with a short volume C
+Lets begin a short Volume D – Buddy Learning Intelligent ...
+Lets continue with a short Volume E – Personal Learning K...
+Lets look at the technical architecture, data models, AI ...
+Lets begin Volume F1 – Database & Data Model Specification
+Proceed Volume F2 – BLIE AI Pipeline Specification. Bismi...
+Bismillah and we begin with Volume F3 – Synchronization &...
+Yes. This is crucial.
+Proceed with Volume F5 – Cost & Infrastructure Architectu...
+Begin Volume F6 – Security, Privacy & Student Data Protec...
+Continue Volume F7 – BLIE Memory Architecture & Personali...
+Yes. Proceed please Volume F7 – BLIE Memory Architecture ...
+Volume F8 – Knowledge Processing & Document Intelligence ...
+Bismillah.... next volume, F9 – BLIE Retrieval & Reasonin...
+Continue Volume F10 – Curriculum Intelligence & Learning ...
+Volume F11 – Assessment & Learning Analytics Architecture...
+Proceed F12 – Study Group & Knowledge Sharing Architectur...
+Proceed F13
+Proceed F14. Bismillah...
+Proceed F15. Bismillah...
+Proceed F16. Bismillah...
+Proceed F17. Bismillah...
+Lets begin with Volume G
+Start with G0 – Engineering Constitution. Bismillah ...
+Proceed G1 . Bismillah..
+Proceed with roadmap refinement -
+At this moment stop any enhancement first. We build our d...
+Proceed with next document. Whats next ? You already crea...
+Proceed G3 . Bismillah...
+How many document before we finish the G section?
+Proceed G4. Bismillah...
+Proceed wuth G5 to G8
+Proceed G5. Bismillah...
+Start G6. Bismillah...
+Begin G7. Bismillah...
+G8 please to complete the blueprint . Bismillah...
+Start G9. Bismillah...
+Now G10 we try to be dive into detail UI/UX since this is...
+Proceed with G10. The detai of G10l will be in H sections...
+Proceed G10 - UI/UX Build Specification
+Proceed G11 – Testing Strategy. Bismillah...
+Start G12 – Deployment Roadmap. Bismillah...
+Begin G13 – MVP Delivery Roadmap. Bismillah...
+Proceed with Volume H
+Lock and begin H0, H1, H2
+Start H0. Bismillah...
+Start H1. Bismillah...
+Begin H2. Bismillah...
+Begin H3. Bismillah...
+Begin H4. Bismillah...
+Begin H5. Bismillah...
+Begin H6. Bismillah...
+Begin H7. Bismillah...
+Begin H8. Bismillah...
+Begin H9. Bismillah...
+Begin H10. Bismillah...
+Begin H11. Bismillah...
+Begin H3. Bismillah...
+Begin H13. Bismillah...
+Begin H12. Bismillah...
+I will move the conversation to Sbud-d project folder
+Thursday 12:31 PM
+Thursday 2:34 PM
+Thursday 10:41 PM
+Yesterday 5:21 AM
+Yesterday 7:45 AM
+Yesterday 9:28 AM
+Yesterday 12:06 PM
+Yesterday 3:05 PM
+
+Bismillah.
+
+Before proceeding, I need to maintain the architecture discipline we locked earlier.
+
+At this moment, the H section documents that have been locked are:
+
+✅ H0 – UX Philosophy
+✅ H1 – Design System & Component Library Foundation
+✅ H2 – Information Architecture & Navigation
+✅ H3 – Student Onboarding Experience
+✅ H4 – Dashboard Experience
+✅ H5 – Subject Workspace Experience
+✅ H6 – BLIE Experience
+✅ H7 – Personal Learning Knowledge Graph (PLKG) Experience
+✅ H8 – Document Library & Knowledge Processing Experience
+✅ H9 – Study Preparation & Revision Experience
+✅ H10 – Study Groups & Knowledge Sharing Experience
+✅ H11 – Learning Analytics & Academic Growth Experience
+
+H12 was planned as:
+Profile, Subscription & Personal Settings Experience
+
+However, H13 has not been defined or locked yet.
+
+To avoid the same issue we discussed earlier (uncontrolled expansion and architecture drift), I will not invent a new H13 without your approval.
+
+Suggested next step:
+
+Complete H12 – Profile, Subscription & Personal Settings Experience first.
+
+Then we can decide and lock H13 based on actual remaining user-facing modules.
+
+Possible candidates (only as notes, not locked):
+
+H13 – AI Study Buddy Marketplace / Learning Resources
+
+H13 – Notification & Engagement Experience
+
+H13 – Student Device & Offline Experience
+
+H13 – Parent/Mentor View (future)
+
+H13 – Platform Expansion Experience (future)
+
+But these remain notes only until you approve.
+
+Please confirm the direction:
+
+Proceed H12 first, then define H13
+or
+
+You already have a locked H13 title, and I will begin that document.
+
+Begin H12. Bismillah...
+
+Bismillah.
+
+We proceed with Volume H12 – Profile, Subscription & Personal Settings Experience.
+
+Following our locked architecture:
+
+H0 → UX Philosophy
+
+H1 → Design System Foundation
+
+H2 → Information Architecture & Navigation
+
+H3 → Student Onboarding Experience
+
+H4 → Dashboard Experience
+
+H5 → Subject Workspace Experience
+
+H6 → BLIE Experience
+
+H7 → PLKG Experience
+
+H8 → Document Intelligence Experience
+
+H9 → Study Preparation & Revision Experience
+
+H10 → Study Groups & Knowledge Sharing Experience
+
+H11 → Learning Analytics & Academic Growth Experience
+
+H12 → Student identity, subscription, control and ownership layer
+
+This document defines the personal management layer of AI Study Buddy.
+
+Important architecture principle:
+
+The student is the owner of the learning journey.
+
+The profile system is not only an account page. It is the place where students control:
+
+Their identity.
+
+Their learning preferences.
+
+Their subscription.
+
+Their privacy.
+
+Their AI companion experience.
+
+Edit
+AI Study Buddy
+Volume H12 – Profile, Subscription & Personal Settings Experience
+
+Version: 1.0 (Architecture Freeze)
+
+1. Introduction
+
+The Profile, Subscription & Personal Settings Experience defines how students manage their personal identity, subscription plan, preferences, and privacy controls.
+
+This layer supports the long-term relationship between the student and AI Study Buddy.
+
+The purpose is to provide:
+
+Control.
+
+Transparency.
+
+Personalisation.
+
+Trust.
+
+2. Profile Experience Philosophy
+
+The profile experience follows these principles.
+
+Student Ownership
+
+The student's:
+
+Learning history.
+
+PLKG.
+
+Preferences.
+
+Progress.
+
+belong to the student.
+
+Simple Management
+
+Settings should be understandable and easy to control.
+
+Personalisation
+
+Students can configure how AI Study Buddy supports them.
+
+Trust and Transparency
+
+Students understand:
+
+What data exists.
+
+How it is used.
+
+How they control it.
+
+3. Profile Information Architecture
+
+Structure:
+
+Profile
+
+├── Personal Information
+
+├── Academic Profile
+
+├── Learning Preferences
+
+├── BLIE Preferences
+
+├── Subscription
+
+├── Privacy & Security
+
+├── Data Management
+
+└── Help & Support
+4. Personal Profile
+
+Students manage basic information.
+
+Includes:
+
+Name.
+
+Profile image (optional).
+
+Preferred language.
+
+Communication preferences.
+
+The profile represents the student identity within the learning environment.
+
+5. Academic Profile
+
+Academic information connects to the student's learning journey.
+
+Includes:
+
+University.
+
+Programme.
+
+Current semester.
+
+Academic goals.
+
+Academic information powers personalisation.
+
+6. Learning Preferences
+
+Students can configure how they learn.
+
+Examples:
+
+Explanation Style
+
+Simple explanation.
+
+Detailed explanation.
+
+Example-based explanation.
+
+Step-by-step guidance.
+
+Learning Pace
+
+Quick review.
+
+Normal learning.
+
+Deep exploration.
+
+Study Preference
+
+Reading.
+
+Visual explanation.
+
+Practice-based learning.
+
+7. BLIE Personalisation Settings
+
+Students control their AI companion experience.
+
+Possible settings:
+
+Response Style
+
+Concise.
+
+Balanced.
+
+Detailed.
+
+Learning Support Level
+
+Reactive assistance.
+
+Guided learning.
+
+Proactive recommendations.
+
+Reminder Preferences
+
+Students control learning notifications.
+
+8. Subscription Experience
+
+AI Study Buddy follows a direct-to-student subscription model.
+
+The platform is designed for individual students downloading the application from app stores.
+
+9. Subscription Models
+
+Initial structure:
+
+Individual Subscription
+
+Personal AI Study Buddy.
+
+Includes:
+
+Personal BLIE access.
+
+Personal PLKG.
+
+Learning analytics.
+
+Document intelligence.
+
+Group Subscription
+
+Designed for students learning together.
+
+Benefits:
+
+Lower cost per student.
+
+Shared study resources.
+
+Collaborative learning environment.
+
+10. Subscription Management
+
+Students can manage:
+
+Current plan.
+
+Upgrade.
+
+Renewal.
+
+Billing history.
+
+Subscription status.
+
+The experience should be simple and transparent.
+
+11. Privacy Controls
+
+Students control their data.
+
+Settings include:
+
+Data visibility.
+
+Sharing permissions.
+
+Study group sharing.
+
+AI memory preferences.
+
+12. BLIE Memory Control
+
+Students can manage AI memory.
+
+Possible controls:
+
+View remembered preferences.
+
+Remove saved information.
+
+Adjust memory behaviour.
+
+The student remains in control.
+
+13. Data Management
+
+Students can manage their learning data.
+
+Options:
+
+Export learning history.
+
+Download personal knowledge data.
+
+Delete account data.
+
+14. Security Experience
+
+Security features include:
+
+Account protection.
+
+Authentication management.
+
+Session management.
+
+Security should remain simple for students.
+
+15. Notification Settings
+
+Students control:
+
+Learning Notifications
+
+Examples:
+
+Preparation reminders.
+
+Revision suggestions.
+
+Academic Notifications
+
+Examples:
+
+Upcoming assessments.
+
+Study milestones.
+
+Community Notifications
+
+Examples:
+
+Study group activities.
+
+16. Offline Account Experience
+
+Offline mode allows access to:
+
+Cached profile information.
+
+Local preferences.
+
+Downloaded learning content.
+
+Account changes require synchronization.
+
+17. Account Lifecycle
+
+States:
+
+New Account
+
+Initial setup.
+
+Active Student
+
+Regular learning usage.
+
+Subscription Expired
+
+Limited access state.
+
+Account Archived
+
+Historical learning data retained according to policy.
+
+18. Architecture Freeze
+
+The Profile, Subscription & Personal Settings Experience establishes the student's control layer.
+
+The system shall:
+
+Give students ownership of their learning identity.
+
+Support direct student subscription.
+
+Enable individual and group plans.
+
+Provide AI personalisation controls.
+
+Maintain privacy and transparency.
+
+Support long-term student relationships.
+
+The profile layer ensures AI Study Buddy remains a trusted personal learning companion.
+
+End of Volume H12
+
+Alhamdulillah.
+
+H12 is complete.
+
+Now the main H-series student experience foundation is complete:
+
+✅ Learning journey
+✅ Dashboard
+✅ Subjects
+✅ BLIE
+✅ PLKG
+✅ Documents
+✅ Preparation & Revision
+✅ Study Groups
+✅ Analytics
+✅ Subscription & Personal Control
+
+The next step should be to review and lock the H section before creating any H13, to avoid adding features beyond the agreed product scope.
+
+Today 11:51 AM
+I will move the conversation to Sbud-d project folder
+
+Noted. We will continue the AI Study Buddy project in the Sbud-d project folder.
+
+Current locked documentation status:
+
+Volumes A–G: Complete
+
+Volume H: Complete through H12
+
+Next step: Review the H-series and define any remaining UI/UX documents before implementation
+
+The core product direction remains locked: individual student B2C app, BLIE-powered, PLKG-centred, with preparation, learning, revision, and study-group support.
+
+Voice
+ChatGPT is AI and can make mistakes.
