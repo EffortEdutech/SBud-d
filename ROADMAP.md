@@ -1,7 +1,7 @@
 # AI Study Buddy Roadmap
 
 Status: Living roadmap
-Current sprint: Sprint 1 - Tooling, Standards, and CI Foundation
+Current sprint: Sprint 2 - Application and Backend Shells
 Last updated: 2026-07-11
 
 ---
@@ -12,9 +12,10 @@ AI Study Buddy is moving from documentation-first architecture into implementati
 
 Current focus:
 
-- Establish Sprint 1 tooling and standards.
-- Add real lint, formatting, typecheck, and test tooling.
-- Prepare the repository for application and backend shells.
+- Create the first Expo mobile shell.
+- Create the first NestJS API shell.
+- Add shared TypeScript package foundations.
+- Keep Supabase deferred until the data/authentication sprint.
 
 ---
 
@@ -124,9 +125,9 @@ Sprint 0 is complete when:
 
 ---
 
-# 4. Sprint 1 Next Scope
+# 4. Sprint 1 Completion
 
-Sprint 1 establishes:
+Sprint 1 established:
 
 - TypeScript workspace baseline. Done.
 - Formatting and linting configuration. Done.
@@ -135,4 +136,18 @@ Sprint 1 establishes:
 - Dependency approval policy. Done.
 - CI workflow draft. Done.
 
-No feature implementation should begin until Sprint 1 standards are in place.
+Sprint 1 is complete.
+
+---
+
+# 5. Sprint 2 Current Scope
+
+Sprint 2 establishes:
+
+- Expo mobile shell using localhost port `4800` for local development.
+- NestJS API shell using localhost port `4801` for local development.
+- Shared health/status types.
+- Mobile/API connection strategy.
+- Baseline checks across the new workspace packages.
+
+Supabase remains deferred until Sprint 3.

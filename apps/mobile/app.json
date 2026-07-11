@@ -1,0 +1,20 @@
+{
+  "expo": {
+    "name": "AI Study Buddy",
+    "slug": "ai-study-buddy",
+    "version": "0.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.effortedutech.aistudybuddy"
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}

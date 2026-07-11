@@ -20,11 +20,11 @@ When work progresses, update this checklist in the same commit or handoff as the
 
 # Current Sprint
 
-Current sprint: Sprint 1 - Tooling, Standards, and CI Foundation
+Current sprint: Sprint 2 - Application and Backend Shells
 
 Current goal:
 
-Establish consistent engineering standards before application code grows.
+Create the first runnable mobile and API shells while preserving the approved architecture.
 
 ---
 
@@ -108,32 +108,32 @@ Establish consistent engineering standards before application code grows.
 
 ## Mobile Shell
 
-- [ ] Create `apps/mobile`.
-- [ ] Initialize Expo app.
-- [ ] Add navigation shell.
-- [ ] Add dashboard placeholder.
-- [ ] Add environment-safe config pattern.
+- [x] Create `apps/mobile`.
+- [x] Initialize Expo app.
+- [x] Add navigation shell.
+- [x] Add dashboard placeholder.
+- [x] Add environment-safe config pattern.
 
 ## API Shell
 
-- [ ] Create `services/api`.
-- [ ] Initialize NestJS app.
-- [ ] Add health endpoint.
-- [ ] Add API version prefix.
-- [ ] Add basic error handling.
+- [x] Create `services/api`.
+- [x] Initialize NestJS app.
+- [x] Add health endpoint.
+- [x] Add API version prefix.
+- [x] Add basic error handling.
 
 ## Shared Packages
 
-- [ ] Create `packages/types`.
-- [ ] Create `packages/shared`.
-- [ ] Define first shared health/status type.
+- [x] Create `packages/types`.
+- [x] Create `packages/shared`.
+- [x] Define first shared health/status type.
 
 ## Verification
 
-- [ ] Mobile app starts locally.
-- [ ] API starts locally.
-- [ ] Mobile/API connection strategy is documented or working.
-- [ ] Baseline tests pass.
+- [x] Mobile app starts locally.
+- [x] API starts locally.
+- [x] Mobile/API connection strategy is documented or working.
+- [x] Baseline tests pass.
 
 ---
 

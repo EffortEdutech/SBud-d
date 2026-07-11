@@ -8,11 +8,11 @@
   "scripts": {
     "dev": "pnpm -r --if-present dev",
     "build": "pnpm -r --if-present build",
-    "format": "prettier \"*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \"scripts/**/*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \"tests/**/*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \".github/**/*.{yml,yaml}\" --write --no-error-on-unmatched-pattern",
-    "format:check": "prettier \"*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \"scripts/**/*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \"tests/**/*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \".github/**/*.{yml,yaml}\" --check --no-error-on-unmatched-pattern",
+    "format": "prettier \"*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \"apps/**/*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \"services/**/*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \"packages/**/*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \"scripts/**/*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \"tests/**/*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \".github/**/*.{yml,yaml}\" --write --no-error-on-unmatched-pattern",
+    "format:check": "prettier \"*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \"apps/**/*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \"services/**/*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \"packages/**/*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \"scripts/**/*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \"tests/**/*.{json,yml,yaml,js,mjs,cjs,ts,tsx}\" \".github/**/*.{yml,yaml}\" --check --no-error-on-unmatched-pattern",
     "lint": "eslint .",
-    "test": "vitest run --passWithNoTests",
-    "typecheck": "tsc --noEmit --project tsconfig.json",
+    "test": "vitest run --passWithNoTests && pnpm -r --if-present test",
+    "typecheck": "pnpm --filter @sbud-d/types build && pnpm --filter @sbud-d/shared build && tsc --noEmit --project tsconfig.json && pnpm -r --if-present typecheck",
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test",
     "graph:update": "powershell -ExecutionPolicy Bypass -File scripts/graphify.ps1 update ."
   },

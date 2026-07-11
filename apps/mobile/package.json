@@ -1,0 +1,21 @@
+{
+  "name": "@sbud-d/mobile",
+  "version": "0.0.0",
+  "private": true,
+  "main": "expo/AppEntry",
+  "scripts": {
+    "dev": "expo start --port 4800",
+    "start": "expo start --port 4800",
+    "build": "tsc --project tsconfig.json",
+    "typecheck": "tsc --noEmit --project tsconfig.json"
+  },
+  "dependencies": {
+    "@sbud-d/types": "workspace:*",
+    "expo": "^52.0.23",
+    "react": "^18.3.1",
+    "react-native": "^0.76.5"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.18"
+  }
+}

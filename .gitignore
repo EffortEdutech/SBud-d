@@ -8,6 +8,7 @@ build/
 .next/
 out/
 coverage/
+*.tsbuildinfo
 
 # Environment files
 .env
@@ -24,6 +25,10 @@ pnpm-debug.log*
 Thumbs.db
 .vscode/
 .idea/
+
+# Local app tooling state
+.expo/
+apps/*/.expo/
 
 # Graphify generated graph output
 graphify-out/

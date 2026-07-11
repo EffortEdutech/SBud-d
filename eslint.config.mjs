@@ -26,4 +26,13 @@ export default tseslint.config(
       "no-console": "warn",
     },
   },
+  {
+    files: ["**/babel.config.js"],
+    languageOptions: {
+      globals: {
+        module: "readonly",
+      },
+      sourceType: "script",
+    },
+  },
 );

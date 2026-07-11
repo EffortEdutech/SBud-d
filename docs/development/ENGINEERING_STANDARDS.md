@@ -70,6 +70,13 @@ Development-only dependencies may be added when they directly support the approv
 
 Supabase is approved by the architecture but is not configured yet. Supabase setup is deferred until the data/authentication sprint and must not commit secrets or environment files.
 
+Sprint 2 adds approved runtime dependencies for the first application shells:
+
+- Expo, React, and React Native for `apps/mobile`.
+- NestJS, Reflect Metadata, and RxJS for `services/api`.
+
+These dependencies are limited to the approved mobile/API shell scope.
+
 ---
 
 # 5. CI Baseline

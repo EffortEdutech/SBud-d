@@ -42,7 +42,7 @@ Before making changes:
 
 ## Current Project State
 
-This project is in Sprint 1: Tooling, Standards, and CI Foundation.
+This project is in Sprint 2: Application and Backend Shells.
 
 The approved monorepo skeleton from Volume G2 now exists:
 
@@ -58,7 +58,7 @@ The approved monorepo skeleton from Volume G2 now exists:
 - `tools`
 - `tests`
 
-Implementation folders are scaffolded, but application and service code have not started yet. Sprint 1 is limited to tooling, standards, validation, and CI foundation. Do not invent implementation structure that conflicts with Volume G2.
+Implementation folders are scaffolded and Sprint 2 has started the first runnable mobile and API shells. Keep implementation aligned with Volume G2 and do not introduce Supabase setup until the data/authentication sprint.
 
 ## Architecture Invariants
 
@@ -121,6 +121,18 @@ corepack pnpm check
 corepack pnpm graph:update
 ~~~
 
+Sprint 2 local commands:
+
+~~~powershell
+corepack pnpm --filter @sbud-d/api dev
+corepack pnpm --filter @sbud-d/mobile dev
+~~~
+
+Use the `4800` port series for localhost development:
+
+- Expo mobile dev server: `4800`
+- API server: `4801`
+
 Current command behavior:
 
 - `dev`, `build`, `lint`, `typecheck`, and `test` run package-level scripts when packages exist.
@@ -132,7 +144,7 @@ Current command behavior:
 - `check` runs format check, lint, typecheck, and test.
 - `graph:update` refreshes Graphify through `scripts/graphify.ps1`.
 
-These commands are baseline workspace commands. Production dependencies require explicit approval. Supabase is not configured yet and is deferred until the data/authentication sprint.
+These commands are baseline workspace commands. Supabase is not configured yet and is deferred until the data/authentication sprint.
 
 ## Security Rules
 

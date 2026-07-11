@@ -9,7 +9,7 @@ The product is built around:
 - A cloud-first, offline-capable learning experience.
 - A TypeScript monorepo architecture.
 
-This repository is currently in Sprint 1: Tooling, Standards, and CI Foundation.
+This repository is currently in Sprint 2: Application and Backend Shells.
 
 ---
 
@@ -92,8 +92,8 @@ corepack pnpm graph:update
 
 Current command behavior:
 
-- `pnpm dev` runs package-level `dev` scripts when packages exist.
-- `pnpm build` runs package-level `build` scripts when packages exist.
+- `pnpm dev` runs package-level `dev` scripts.
+- `pnpm build` runs package-level `build` scripts.
 - `pnpm format` formats active tooling, config, and code files.
 - `pnpm format:check` checks active tooling, config, and code files without rewriting frozen architecture documents.
 - `pnpm lint` runs ESLint.
@@ -111,6 +111,20 @@ Local validation script:
 ```
 
 Supabase is approved in the architecture, but the project is not connected to Supabase yet. Supabase setup is deferred until the data/authentication sprint and must not introduce secrets into the repository.
+
+Sprint 2 local development:
+
+```powershell
+corepack pnpm --filter @sbud-d/api dev
+corepack pnpm --filter @sbud-d/mobile dev
+```
+
+Local ports:
+
+- API: `http://localhost:4801/api/v1/health`
+- Expo: `http://localhost:4800`
+
+See `docs/development/LOCAL_DEVELOPMENT.md`.
 
 ---
 
