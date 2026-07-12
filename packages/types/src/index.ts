@@ -1,5 +1,22 @@
+export type {
+  AcademicProfile,
+  AcademicSemester,
+  AcademicSubject,
+  CreateAcademicSubjectInput,
+  SubjectEnrollmentStatus,
+  UpdateAcademicProfileInput,
+} from "./academic.js";
 export type { AuthenticatedUser, AuthSessionState, EmailPasswordCredentials } from "./auth.js";
 export type { Database } from "./database.js";
+export type { DashboardSummary } from "./dashboard.js";
+export type {
+  CreateLearningDocumentInput,
+  DocumentLibrarySummary,
+  LearningDocument,
+  LearningDocumentKind,
+  LearningDocumentProcessing,
+  LearningDocumentStatus,
+} from "./document-library.js";
 export type { HealthStatus, HealthStatusValue } from "./health.js";
 export type {
   CreateStudentProfileInput,

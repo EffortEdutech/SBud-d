@@ -20,11 +20,11 @@ When work progresses, update this checklist in the same commit or handoff as the
 
 # Current Sprint
 
-Current sprint: Sprint 3 - Data and Authentication Foundation
+Current sprint: Sprint 5 - Document Library Foundation
 
 Current goal:
 
-Create the first student-owned data and authentication foundation without committing secrets.
+Allow a student to view a document library, create document metadata, and see processing status placeholders through API and mobile UI.
 
 ---
 
@@ -167,23 +167,23 @@ Create the first student-owned data and authentication foundation without commit
 
 ## Academic Profile
 
-- [ ] Programme setup.
-- [ ] Semester setup.
-- [ ] Subject enrolment.
-- [ ] Academic goals placeholder.
+- [x] Programme setup.
+- [x] Semester setup.
+- [x] Subject enrolment.
+- [x] Academic goals placeholder.
 
 ## Dashboard
 
-- [ ] Current semester summary.
-- [ ] Subject list.
-- [ ] Learning status placeholder.
-- [ ] BLIE recommendation placeholder.
+- [x] Current semester summary.
+- [x] Subject list.
+- [x] Learning status placeholder.
+- [x] BLIE recommendation placeholder.
 
 ## API
 
-- [ ] Academic profile endpoints.
-- [ ] Subject endpoints.
-- [ ] Validation and error states.
+- [x] Academic profile endpoints.
+- [x] Subject endpoints.
+- [x] Validation and error states.
 
 ---
 
@@ -191,23 +191,23 @@ Create the first student-owned data and authentication foundation without commit
 
 ## Upload
 
-- [ ] Document upload UI.
-- [ ] Storage integration.
-- [ ] Metadata persistence.
-- [ ] Upload progress state.
+- [x] Document upload UI.
+- [x] Storage integration.
+- [x] Metadata persistence.
+- [x] Upload progress state.
 
 ## Library
 
-- [ ] Document list.
-- [ ] Document detail.
-- [ ] Processing status.
-- [ ] Empty/error states.
+- [x] Document list.
+- [x] Document detail.
+- [x] Processing status.
+- [x] Empty/error states.
 
 ## Security
 
-- [ ] Student-owned storage paths.
-- [ ] Student-only document access.
-- [ ] Upload validation.
+- [x] Student-owned storage paths.
+- [x] Student-only document access.
+- [x] Upload validation.
 
 ---
 

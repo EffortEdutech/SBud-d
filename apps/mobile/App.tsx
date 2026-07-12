@@ -1,7 +1,14 @@
-import { useMemo, useState } from "react";
-import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { useEffect, useMemo, useState } from "react";
+import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
+import type { DashboardSummary, DocumentLibrarySummary, LearningDocument } from "@sbud-d/types";
 
 import { getApiBaseUrl } from "./src/config/environment";
+import { fallbackDashboardSummary, fetchDashboardSummary } from "./src/dashboard/dashboard-service";
+import {
+  createLearningDocument,
+  fallbackDocumentLibrarySummary,
+  fetchDocumentLibrarySummary,
+} from "./src/documents/document-service";
 
 type TabKey = "dashboard" | "buddy" | "library";
 
@@ -11,37 +18,192 @@ const tabs: Array<{ key: TabKey; label: string }> = [
   { key: "library", label: "Library" },
 ];
 
-const tabContent: Record<TabKey, { title: string; body: string }> = {
-  dashboard: {
-    title: "Learning Dashboard",
-    body: "Your semester, subjects, and learning progress will appear here.",
-  },
-  buddy: {
-    title: "BLIE",
-    body: "The Buddy Learning Intelligent Engine will guide study sessions through the API.",
-  },
-  library: {
-    title: "Learning Library",
-    body: "Uploaded notes, PDFs, and extracted knowledge will be organized here.",
-  },
-};
-
 export default function App(): React.JSX.Element {
   const [activeTab, setActiveTab] = useState<TabKey>("dashboard");
-  const content = tabContent[activeTab];
+  const [dashboard, setDashboard] = useState<DashboardSummary>(fallbackDashboardSummary);
+  const [documentLibrary, setDocumentLibrary] = useState<DocumentLibrarySummary>(
+    fallbackDocumentLibrarySummary,
+  );
+  const [apiStatus, setApiStatus] = useState("Loading dashboard...");
+  const [libraryStatus, setLibraryStatus] = useState("Loading library...");
+  const [uploadState, setUploadState] = useState("Ready for metadata upload");
   const apiBaseUrl = useMemo(() => getApiBaseUrl(), []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    fetchDashboardSummary()
+      .then((summary) => {
+        if (isMounted) {
+          setDashboard(summary);
+          setApiStatus("Connected to API");
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setDashboard(fallbackDashboardSummary);
+          setApiStatus("Using offline fallback");
+        }
+      });
+
+    fetchDocumentLibrarySummary()
+      .then((summary) => {
+        if (isMounted) {
+          setDocumentLibrary(summary);
+          setLibraryStatus("Connected to document API");
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setDocumentLibrary(fallbackDocumentLibrarySummary);
+          setLibraryStatus("Using offline library fallback");
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleCreateDocument = async (): Promise<void> => {
+    setUploadState("Creating document metadata...");
+
+    try {
+      const document = await createLearningDocument({
+        subjectId: dashboard.subjects[0]?.id ?? "subject-programming",
+        fileName: "sample-study-note.pdf",
+        mimeType: "application/pdf",
+        fileSizeBytes: 2048,
+        topicLabel: dashboard.subjects[0]?.currentTopic ?? "Topic pending",
+      });
+
+      setDocumentLibrary((current) => ({
+        ...current,
+        documents: [document, ...current.documents],
+      }));
+      setUploadState("Upload metadata ready for processing");
+    } catch {
+      setUploadState("Upload metadata failed");
+    }
+  };
+
+  const renderDashboard = (): React.JSX.Element => (
+    <>
+      <View style={styles.panel}>
+        <Text style={styles.panelTitle}>Academic Overview</Text>
+        <Text style={styles.metricText}>
+          {dashboard.academicOverview.fieldOfStudy ?? "Field of study pending"}
+        </Text>
+        <Text style={styles.mutedText}>
+          {dashboard.subjects.length} subjects - {dashboard.learningStatus.readinessLabel}
+        </Text>
+      </View>
+
+      <View style={styles.panel}>
+        <Text style={styles.panelTitle}>Subject Progress</Text>
+        {dashboard.subjects.length === 0 ? (
+          <Text style={styles.mutedText}>Add your first subject to start building context.</Text>
+        ) : (
+          dashboard.subjects.map((subject) => (
+            <View key={subject.id} style={styles.subjectRow}>
+              <View style={styles.subjectText}>
+                <Text style={styles.subjectName}>{subject.name}</Text>
+                <Text style={styles.mutedText}>
+                  {subject.code} - {subject.learningStatus}
+                </Text>
+              </View>
+              <Text style={styles.progressText}>{subject.progressPercent}%</Text>
+            </View>
+          ))
+        )}
+      </View>
+
+      <View style={styles.panel}>
+        <Text style={styles.panelTitle}>BLIE Guidance</Text>
+        <Text style={styles.metricText}>{dashboard.blieRecommendation.title}</Text>
+        <Text style={styles.mutedText}>{dashboard.blieRecommendation.body}</Text>
+      </View>
+    </>
+  );
+
+  const renderLibraryDocument = (document: LearningDocument): React.JSX.Element => (
+    <View key={document.id} style={styles.documentRow}>
+      <View style={styles.documentHeader}>
+        <Text style={styles.subjectName}>{document.title}</Text>
+        <Text style={styles.statusPill}>{document.processing.status}</Text>
+      </View>
+      <Text style={styles.mutedText}>
+        {document.subjectName} - {document.topicLabel ?? "Topic pending"}
+      </Text>
+      <Text style={styles.mutedText}>{document.processing.label}</Text>
+      <View style={styles.progressTrack}>
+        <View style={[styles.progressFill, { width: `${document.processing.progressPercent}%` }]} />
+      </View>
+    </View>
+  );
+
+  const renderLibrary = (): React.JSX.Element => (
+    <>
+      <View style={styles.panel}>
+        <Text style={styles.panelTitle}>Document Upload</Text>
+        <Text style={styles.metricText}>{uploadState}</Text>
+        <Text style={styles.mutedText}>Private bucket: {documentLibrary.upload.storageBucket}</Text>
+        <Text style={styles.mutedText}>Path: {documentLibrary.upload.storagePathPattern}</Text>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => {
+            void handleCreateDocument();
+          }}
+          style={styles.primaryButton}
+        >
+          <Text style={styles.primaryButtonText}>Create sample metadata</Text>
+        </Pressable>
+      </View>
+
+      <View style={styles.panel}>
+        <Text style={styles.panelTitle}>Document Library</Text>
+        <Text style={styles.mutedText}>{libraryStatus}</Text>
+        {documentLibrary.documents.length === 0 ? (
+          <>
+            <Text style={styles.metricText}>{documentLibrary.emptyState.title}</Text>
+            <Text style={styles.mutedText}>{documentLibrary.emptyState.body}</Text>
+          </>
+        ) : (
+          documentLibrary.documents.map(renderLibraryDocument)
+        )}
+      </View>
+    </>
+  );
+
+  const renderBuddy = (): React.JSX.Element => (
+    <View style={styles.panel}>
+      <Text style={styles.panelTitle}>BLIE</Text>
+      <Text style={styles.metricText}>Minimum useful chat starts in Sprint 6</Text>
+      <Text style={styles.mutedText}>
+        Sprint 5 prepares document context so BLIE can later retrieve trusted learning materials.
+      </Text>
+    </View>
+  );
 
   return (
     <SafeAreaView style={styles.screen}>
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.eyebrow}>AI Study Buddy</Text>
-        <Text style={styles.heading}>{content.title}</Text>
-        <Text style={styles.body}>{content.body}</Text>
+        <Text style={styles.heading}>Learning Dashboard</Text>
+        <Text style={styles.body}>
+          {dashboard.academicOverview.currentSemester.label} -{" "}
+          {dashboard.academicOverview.programmeName}
+        </Text>
 
         <View style={styles.statusPanel}>
           <Text style={styles.statusLabel}>API base URL</Text>
           <Text style={styles.statusValue}>{apiBaseUrl}</Text>
+          <Text style={styles.statusMeta}>{apiStatus}</Text>
         </View>
+
+        {activeTab === "dashboard" && renderDashboard()}
+        {activeTab === "buddy" && renderBuddy()}
+        {activeTab === "library" && renderLibrary()}
 
         <View style={styles.tabs}>
           {tabs.map((tab) => {
@@ -60,7 +222,7 @@ export default function App(): React.JSX.Element {
             );
           })}
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -71,10 +233,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#f7f8fb",
   },
   container: {
-    flex: 1,
     gap: 18,
-    justifyContent: "center",
     padding: 24,
+    paddingBottom: 34,
   },
   eyebrow: {
     color: "#47636b",
@@ -112,6 +273,107 @@ const styles = StyleSheet.create({
     color: "#15282e",
     fontSize: 15,
     marginTop: 6,
+  },
+  statusMeta: {
+    color: "#52707a",
+    fontSize: 13,
+    marginTop: 8,
+  },
+  panel: {
+    backgroundColor: "#ffffff",
+    borderColor: "#dbe3e7",
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 8,
+    padding: 16,
+  },
+  panelTitle: {
+    color: "#65777e",
+    fontSize: 13,
+    fontWeight: "800",
+    letterSpacing: 0,
+    textTransform: "uppercase",
+  },
+  metricText: {
+    color: "#162b32",
+    fontSize: 18,
+    fontWeight: "800",
+    letterSpacing: 0,
+  },
+  mutedText: {
+    color: "#52666d",
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  subjectRow: {
+    alignItems: "center",
+    borderTopColor: "#edf1f3",
+    borderTopWidth: 1,
+    flexDirection: "row",
+    gap: 12,
+    justifyContent: "space-between",
+    paddingTop: 12,
+  },
+  subjectText: {
+    flex: 1,
+    gap: 3,
+  },
+  subjectName: {
+    color: "#162b32",
+    fontSize: 15,
+    fontWeight: "800",
+  },
+  progressText: {
+    color: "#14323b",
+    fontSize: 15,
+    fontWeight: "800",
+  },
+  documentRow: {
+    borderTopColor: "#edf1f3",
+    borderTopWidth: 1,
+    gap: 7,
+    paddingTop: 12,
+  },
+  documentHeader: {
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 10,
+    justifyContent: "space-between",
+  },
+  statusPill: {
+    backgroundColor: "#e8f0ee",
+    borderRadius: 8,
+    color: "#24463f",
+    fontSize: 12,
+    fontWeight: "800",
+    overflow: "hidden",
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    textTransform: "uppercase",
+  },
+  progressTrack: {
+    backgroundColor: "#e6ecef",
+    borderRadius: 8,
+    height: 8,
+    overflow: "hidden",
+  },
+  progressFill: {
+    backgroundColor: "#24756b",
+    height: 8,
+  },
+  primaryButton: {
+    alignItems: "center",
+    backgroundColor: "#14323b",
+    borderRadius: 8,
+    minHeight: 44,
+    justifyContent: "center",
+    marginTop: 6,
+    paddingHorizontal: 14,
+  },
+  primaryButtonText: {
+    color: "#ffffff",
+    fontSize: 14,
+    fontWeight: "800",
   },
   tabs: {
     flexDirection: "row",

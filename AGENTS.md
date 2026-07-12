@@ -42,7 +42,7 @@ Before making changes:
 
 ## Current Project State
 
-This project is in Sprint 3: Data and Authentication Foundation.
+This project is in Sprint 5: Document Library Foundation.
 
 The approved monorepo skeleton from Volume G2 now exists:
 
@@ -58,7 +58,7 @@ The approved monorepo skeleton from Volume G2 now exists:
 - `tools`
 - `tests`
 
-Implementation folders are scaffolded, Sprint 2 added the first runnable mobile/API shells, and Sprint 3 adds the first Supabase data/authentication foundation. Keep implementation aligned with Volume G2 and never commit Supabase secrets.
+Implementation folders are scaffolded, Sprint 2 added the first runnable mobile/API shells, Sprint 3 added the first Supabase data/authentication foundation, Sprint 4 added the academic profile/dashboard slice, and Sprint 5 adds the document library foundation. Keep implementation aligned with Volume G2 and never commit Supabase secrets.
 
 ## Architecture Invariants
 
@@ -153,6 +153,27 @@ Sprint 3 Supabase notes:
 - Do not commit `.env` files, service-role keys, JWT secrets, API keys, or private tokens.
 - Migration files created by Supabase CLI live under `database/supabase/migrations`.
 - Student-owned RLS policies must combine `TO authenticated` with an ownership predicate such as `(select auth.uid()) = id`.
+
+Sprint 4 academic endpoints:
+
+- `GET /api/v1/academic/profile`
+- `PUT /api/v1/academic/profile`
+- `GET /api/v1/academic/subjects`
+- `POST /api/v1/academic/subjects`
+- `GET /api/v1/dashboard`
+
+Sprint 5 document library endpoints:
+
+- `GET /api/v1/documents/library`
+- `GET /api/v1/documents`
+- `GET /api/v1/documents/:id`
+- `POST /api/v1/documents`
+
+Sprint 5 storage notes:
+
+- Private Supabase Storage bucket: `student-documents`.
+- Student-owned object path pattern: `{studentId}/{subjectId}/{documentId}/{fileName}`.
+- Current implementation stores document metadata in memory for local API/mobile flow; Supabase persistence and real file upload are prepared by migration/reference SQL but still require live project linking.
 
 ## Security Rules
 

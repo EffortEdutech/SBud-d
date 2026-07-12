@@ -1,8 +1,8 @@
 # AI Study Buddy Roadmap
 
 Status: Living roadmap
-Current sprint: Sprint 3 - Data and Authentication Foundation
-Last updated: 2026-07-11
+Current sprint: Sprint 5 - Document Library Foundation
+Last updated: 2026-07-12
 
 ---
 
@@ -12,10 +12,10 @@ AI Study Buddy is moving from documentation-first architecture into implementati
 
 Current focus:
 
-- Establish the first Supabase database migration.
-- Add student profile ownership and RLS baseline.
-- Add environment-safe Supabase Auth integration patterns.
-- Keep live Supabase project linking and secrets out of the repository.
+- Add document library metadata endpoints.
+- Add upload validation and processing status placeholders.
+- Prepare student-owned Supabase Storage paths and RLS policies.
+- Wire the mobile Library tab to the API with offline fallback.
 
 ---
 
@@ -154,12 +154,42 @@ Sprint 2 is complete.
 
 ---
 
-# 6. Sprint 3 Current Scope
+# 6. Sprint 3 Completion
 
-Sprint 3 establishes:
+Sprint 3 established:
 
 - Supabase migration workflow under `database/supabase`.
 - Student profile schema with student-owned RLS policies.
 - Supabase Auth client pattern for mobile sign-up, sign-in, and sign-out.
 - Backend authenticated user context pattern.
 - No committed secrets or live project credentials.
+
+Sprint 3 is complete.
+
+---
+
+# 7. Sprint 4 Completion
+
+Sprint 4 established:
+
+- Academic profile setup placeholder.
+- Current semester setup placeholder.
+- Subject enrollment placeholder.
+- Dashboard academic overview.
+- BLIE guidance placeholder.
+- Student-owned academic schema and RLS reference.
+
+Sprint 4 is complete.
+
+---
+
+# 8. Sprint 5 Current Scope
+
+Sprint 5 establishes:
+
+- Document metadata and processing status types.
+- Document library and document detail endpoints.
+- Upload metadata validation.
+- Student-owned storage path convention.
+- Private storage bucket policy reference.
+- Mobile Library tab with empty, loading, connected, and metadata-upload states.

@@ -1,6 +1,6 @@
 # AI Study Buddy Local Development
 
-Status: Sprint 3 baseline
+Status: Sprint 5 baseline
 Last updated: 2026-07-12
 
 ---
@@ -40,6 +40,19 @@ The API listens on:
 http://localhost:4801/api/v1/health
 ```
 
+Sprint 4 dashboard endpoint:
+
+```text
+http://localhost:4801/api/v1/dashboard
+```
+
+Sprint 5 document library endpoints:
+
+```text
+http://localhost:4801/api/v1/documents/library
+http://localhost:4801/api/v1/documents
+```
+
 Start the mobile app:
 
 ```powershell
@@ -68,13 +81,16 @@ If it is not set, the mobile shell defaults to:
 http://localhost:4801/api/v1
 ```
 
-Do not commit `.env` files. Supabase is not configured in Sprint 2.
+Do not commit `.env` files.
 
 Sprint 3 Supabase variables are documented in:
 
 ```text
 docs/development/SUPABASE_SETUP.md
 ```
+
+Sprint 5 prepares the private `student-documents` storage bucket and student-owned
+path convention in SQL. Real file upload still requires live Supabase project linking.
 
 ---
 

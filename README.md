@@ -9,7 +9,7 @@ The product is built around:
 - A cloud-first, offline-capable learning experience.
 - A TypeScript monorepo architecture.
 
-This repository is currently in Sprint 3: Data and Authentication Foundation.
+This repository is currently in Sprint 5: Document Library Foundation.
 
 ---
 
@@ -134,6 +134,28 @@ Sprint 3 Supabase foundation:
 - Setup guide: `docs/development/SUPABASE_SETUP.md`
 
 Supabase is not linked to a live project yet. Use `.env.example` for required variable names only, and keep real `.env` files local.
+
+Sprint 4 academic endpoints:
+
+- `GET /api/v1/academic/profile`
+- `PUT /api/v1/academic/profile`
+- `GET /api/v1/academic/subjects`
+- `POST /api/v1/academic/subjects`
+- `GET /api/v1/dashboard`
+
+Sprint 5 document library endpoints:
+
+- `GET /api/v1/documents/library`
+- `GET /api/v1/documents`
+- `GET /api/v1/documents/:id`
+- `POST /api/v1/documents`
+
+Document storage is prepared for a private Supabase Storage bucket named `student-documents`
+with student-owned object paths:
+
+```text
+{studentId}/{subjectId}/{documentId}/{fileName}
+```
 
 ---
 
