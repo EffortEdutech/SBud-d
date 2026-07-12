@@ -9,7 +9,7 @@ The product is built around:
 - A cloud-first, offline-capable learning experience.
 - A TypeScript monorepo architecture.
 
-This repository is currently in Sprint 6: BLIE Minimum Useful Chat.
+This repository is currently in Sprint 7: Basic PLKG Foundation.
 
 ---
 
@@ -163,6 +163,15 @@ Sprint 6 BLIE endpoint:
 
 Sprint 6 uses a local provider abstraction for deterministic learning responses. Do not commit
 AI provider secrets; real provider wiring remains behind the provider interface.
+
+Sprint 7 PLKG endpoints:
+
+- `GET /api/v1/plkg/summary`
+- `GET /api/v1/plkg/nodes`
+- `GET /api/v1/plkg/edges`
+- `POST /api/v1/plkg/learning-activity`
+
+Sprint 7 introduces the first student-owned PLKG node and edge model with Supabase-ready RLS.
 
 ---
 

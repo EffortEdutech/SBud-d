@@ -2,6 +2,7 @@ import type { BlieChatRequest, BlieIntent, BlieRetrievedContext } from "@sbud-d/
 
 import { demoAcademicProfile, demoSubjects } from "../academic/academic.fixtures.js";
 import { demoDocuments } from "../documents/document.fixtures.js";
+import { PlkgService } from "../plkg/plkg.service.js";
 
 export interface BlieContextPackage {
   intent: BlieIntent;
@@ -47,6 +48,7 @@ export function detectBlieIntent(message: string): BlieIntent {
 }
 
 export function assembleBlieContext(input: BlieChatRequest): BlieContextPackage {
+  const plkgService = new PlkgService();
   const intent = detectBlieIntent(input.message);
   const requestedSubject = demoSubjects.find((subject) => subject.id === input.subjectId);
   const subject = requestedSubject ?? demoSubjects[0] ?? null;
@@ -86,13 +88,7 @@ export function assembleBlieContext(input: BlieChatRequest): BlieContextPackage 
     })),
   );
 
-  retrievedContext.push({
-    sourceId: "plkg-placeholder",
-    sourceType: "plkg_placeholder",
-    title: "PLKG retrieval placeholder",
-    snippet: "Sprint 7 will replace this with student-owned knowledge graph retrieval.",
-    relevanceLabel: "Retrieval-before-generation hook",
-  });
+  retrievedContext.push(...plkgService.retrieveContextForBlie(subject?.id ?? null));
 
   return {
     intent,

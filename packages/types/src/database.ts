@@ -202,6 +202,85 @@ export interface Database {
           updated_at?: string;
         };
       };
+      plkg_nodes: {
+        Row: {
+          id: string;
+          student_id: string;
+          subject_id: string | null;
+          type: "subject" | "topic" | "concept" | "resource" | "learning_activity";
+          label: string;
+          description: string | null;
+          learning_status:
+            "introduced" | "learning" | "understanding" | "mastered" | "needs_review";
+          confidence_level: number;
+          mastery_score: number;
+          source_type: "academic_profile" | "document" | "blie_interaction" | "manual";
+          source_id: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          student_id: string;
+          subject_id?: string | null;
+          type: "subject" | "topic" | "concept" | "resource" | "learning_activity";
+          label: string;
+          description?: string | null;
+          learning_status?:
+            "introduced" | "learning" | "understanding" | "mastered" | "needs_review";
+          confidence_level?: number;
+          mastery_score?: number;
+          source_type?: "academic_profile" | "document" | "blie_interaction" | "manual";
+          source_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          subject_id?: string | null;
+          type?: "subject" | "topic" | "concept" | "resource" | "learning_activity";
+          label?: string;
+          description?: string | null;
+          learning_status?:
+            "introduced" | "learning" | "understanding" | "mastered" | "needs_review";
+          confidence_level?: number;
+          mastery_score?: number;
+          source_type?: "academic_profile" | "document" | "blie_interaction" | "manual";
+          source_id?: string | null;
+          updated_at?: string;
+        };
+      };
+      plkg_edges: {
+        Row: {
+          id: string;
+          student_id: string;
+          source_node_id: string;
+          target_node_id: string;
+          type:
+            "contains" | "requires" | "related_to" | "explains" | "generated_from" | "reinforces";
+          label: string;
+          strength: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          student_id: string;
+          source_node_id: string;
+          target_node_id: string;
+          type:
+            "contains" | "requires" | "related_to" | "explains" | "generated_from" | "reinforces";
+          label: string;
+          strength?: number;
+          created_at?: string;
+        };
+        Update: {
+          source_node_id?: string;
+          target_node_id?: string;
+          type?:
+            "contains" | "requires" | "related_to" | "explains" | "generated_from" | "reinforces";
+          label?: string;
+          strength?: number;
+        };
+      };
     };
   };
 }

@@ -20,11 +20,11 @@ When work progresses, update this checklist in the same commit or handoff as the
 
 # Current Sprint
 
-Current sprint: Sprint 6 - BLIE Minimum Useful Chat
+Current sprint: Sprint 7 - Basic PLKG Foundation
 
 Current goal:
 
-Allow a student to ask BLIE a subject-contextual learning question and receive a structured, retrieval-grounded response through API and mobile UI.
+Allow a student to view a basic Personal Learning Knowledge Graph and let BLIE retrieve PLKG context before responding.
 
 ---
 
@@ -241,22 +241,22 @@ Allow a student to ask BLIE a subject-contextual learning question and receive a
 
 ## Data Model
 
-- [ ] PLKG node schema.
-- [ ] PLKG edge schema.
-- [ ] Student ownership constraints.
-- [ ] Basic query API.
+- [x] PLKG node schema.
+- [x] PLKG edge schema.
+- [x] Student ownership constraints.
+- [x] Basic query API.
 
 ## Learning Memory
 
-- [ ] Create initial graph from academic profile.
-- [ ] Add node from learning activity.
-- [ ] Retrieve context for BLIE.
+- [x] Create initial graph from academic profile.
+- [x] Add node from learning activity.
+- [x] Retrieve context for BLIE.
 
 ## Experience
 
-- [ ] PLKG list or simple visualization.
-- [ ] Knowledge gap placeholder.
-- [ ] Learning growth indicator.
+- [x] PLKG list or simple visualization.
+- [x] Knowledge gap placeholder.
+- [x] Learning growth indicator.
 
 ---
 

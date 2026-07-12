@@ -4,8 +4,9 @@ import { AcademicModule } from "./academic/academic.module.js";
 import { BlieModule } from "./blie/blie.module.js";
 import { DocumentModule } from "./documents/document.module.js";
 import { HealthModule } from "./health/health.module.js";
+import { PlkgModule } from "./plkg/plkg.module.js";
 
 @Module({
-  imports: [AcademicModule, BlieModule, DocumentModule, HealthModule],
+  imports: [AcademicModule, BlieModule, DocumentModule, HealthModule, PlkgModule],
 })
 export class AppModule {}

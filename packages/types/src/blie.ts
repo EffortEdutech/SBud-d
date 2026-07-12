@@ -11,7 +11,7 @@ export interface BlieChatRequest {
 
 export interface BlieRetrievedContext {
   sourceId: string;
-  sourceType: "academic_profile" | "subject" | "document" | "plkg_placeholder";
+  sourceType: "academic_profile" | "subject" | "document" | "plkg" | "plkg_placeholder";
   title: string;
   snippet: string;
   relevanceLabel: string;

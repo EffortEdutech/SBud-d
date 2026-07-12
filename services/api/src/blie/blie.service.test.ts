@@ -14,6 +14,7 @@ describe("BlieService", () => {
     expect(response.trace.retrievalStatus).toBe("grounded");
     expect(response.trace.provider).toBe("local-learning-provider");
     expect(response.retrievedContext.map((item) => item.sourceType)).toContain("document");
+    expect(response.retrievedContext.map((item) => item.sourceType)).toContain("plkg");
     expect(response.response.checkUnderstanding).toBeTruthy();
   });
 

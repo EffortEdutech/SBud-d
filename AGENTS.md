@@ -42,7 +42,7 @@ Before making changes:
 
 ## Current Project State
 
-This project is in Sprint 6: BLIE Minimum Useful Chat.
+This project is in Sprint 7: Basic PLKG Foundation.
 
 The approved monorepo skeleton from Volume G2 now exists:
 
@@ -58,7 +58,7 @@ The approved monorepo skeleton from Volume G2 now exists:
 - `tools`
 - `tests`
 
-Implementation folders are scaffolded, Sprint 2 added the first runnable mobile/API shells, Sprint 3 added the first Supabase data/authentication foundation, Sprint 4 added the academic profile/dashboard slice, Sprint 5 added the document library foundation, and Sprint 6 adds the minimum useful BLIE chat slice. Keep implementation aligned with Volume G2 and never commit Supabase or AI provider secrets.
+Implementation folders are scaffolded, Sprint 2 added the first runnable mobile/API shells, Sprint 3 added the first Supabase data/authentication foundation, Sprint 4 added the academic profile/dashboard slice, Sprint 5 added the document library foundation, Sprint 6 added the minimum useful BLIE chat slice, and Sprint 7 adds the basic PLKG foundation. Keep implementation aligned with Volume G2 and never commit Supabase or AI provider secrets.
 
 ## Architecture Invariants
 
@@ -185,6 +185,19 @@ Sprint 6 BLIE notes:
 - No AI provider API keys, model secrets, or real provider credentials are committed.
 - Context assembly must retrieve academic, subject, document, and PLKG placeholder context before response generation.
 - Request logging must avoid student question text and response content.
+
+Sprint 7 PLKG endpoints:
+
+- `GET /api/v1/plkg/summary`
+- `GET /api/v1/plkg/nodes`
+- `GET /api/v1/plkg/edges`
+- `POST /api/v1/plkg/learning-activity`
+
+Sprint 7 PLKG notes:
+
+- PLKG nodes and edges are student-owned.
+- BLIE context assembly retrieves PLKG context before generation.
+- Supabase persistence is prepared by migration/reference SQL but local API uses in-memory fixtures until live project linking is complete.
 
 ## Security Rules
 

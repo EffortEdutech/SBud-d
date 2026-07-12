@@ -1,7 +1,7 @@
 # AI Study Buddy Roadmap
 
 Status: Living roadmap
-Current sprint: Sprint 6 - BLIE Minimum Useful Chat
+Current sprint: Sprint 7 - Basic PLKG Foundation
 Last updated: 2026-07-12
 
 ---
@@ -12,10 +12,10 @@ AI Study Buddy is moving from documentation-first architecture into implementati
 
 Current focus:
 
-- Add the first BLIE chat endpoint.
-- Add provider-independent AI orchestration boundary.
-- Add retrieval-before-generation context assembly placeholder.
-- Wire the mobile BLIE tab to API chat with loading and error states.
+- Add the first student-owned PLKG node and edge model.
+- Add basic PLKG query endpoints.
+- Connect BLIE retrieval to PLKG context.
+- Wire the mobile PLKG tab to graph growth, gaps, and nodes.
 
 ---
 
@@ -198,9 +198,9 @@ Sprint 5 is complete.
 
 ---
 
-# 9. Sprint 6 Current Scope
+# 9. Sprint 6 Completion
 
-Sprint 6 establishes:
+Sprint 6 established:
 
 - BLIE chat request and response contract.
 - API-side BLIE service boundary.
@@ -208,3 +208,18 @@ Sprint 6 establishes:
 - Retrieval-first context assembly using academic, subject, document, and PLKG placeholder context.
 - Mobile BLIE chat screen with subject context selector.
 - Safe request logging without question or response content.
+
+Sprint 6 is complete.
+
+---
+
+# 10. Sprint 7 Current Scope
+
+Sprint 7 establishes:
+
+- PLKG node and edge shared types.
+- Student-owned PLKG schema and RLS reference.
+- API PLKG summary, nodes, edges, and learning-activity endpoints.
+- Initial graph seeded from academic profile, subjects, documents, and BLIE activity.
+- BLIE retrieval from PLKG context before generation.
+- Mobile PLKG overview with growth metrics and knowledge gaps.

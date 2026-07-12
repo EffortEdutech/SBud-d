@@ -28,6 +28,16 @@ export type {
 } from "./document-library.js";
 export type { HealthStatus, HealthStatusValue } from "./health.js";
 export type {
+  CreatePlkgLearningActivityInput,
+  PlkgEdge,
+  PlkgEdgeType,
+  PlkgKnowledgeGap,
+  PlkgLearningStatus,
+  PlkgNode,
+  PlkgNodeType,
+  PlkgSummary,
+} from "./plkg.js";
+export type {
   CreateStudentProfileInput,
   OnboardingStatus,
   StudentProfile,

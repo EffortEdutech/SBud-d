@@ -13,6 +13,8 @@ import type {
   DashboardSummary,
   DocumentLibrarySummary,
   LearningDocument,
+  PlkgNode,
+  PlkgSummary,
 } from "@sbud-d/types";
 
 import { fallbackBlieResponse, sendBlieChat } from "./src/blie/blie-service";
@@ -23,13 +25,19 @@ import {
   fallbackDocumentLibrarySummary,
   fetchDocumentLibrarySummary,
 } from "./src/documents/document-service";
+import {
+  createPlkgLearningActivity,
+  fallbackPlkgSummary,
+  fetchPlkgSummary,
+} from "./src/plkg/plkg-service";
 
-type TabKey = "dashboard" | "buddy" | "library";
+type TabKey = "dashboard" | "buddy" | "library" | "plkg";
 
 const tabs: Array<{ key: TabKey; label: string }> = [
   { key: "dashboard", label: "Dashboard" },
   { key: "buddy", label: "BLIE" },
   { key: "library", label: "Library" },
+  { key: "plkg", label: "PLKG" },
 ];
 
 export default function App(): React.JSX.Element {
@@ -38,8 +46,10 @@ export default function App(): React.JSX.Element {
   const [documentLibrary, setDocumentLibrary] = useState<DocumentLibrarySummary>(
     fallbackDocumentLibrarySummary,
   );
+  const [plkgSummary, setPlkgSummary] = useState<PlkgSummary>(fallbackPlkgSummary);
   const [apiStatus, setApiStatus] = useState("Loading dashboard...");
   const [libraryStatus, setLibraryStatus] = useState("Loading library...");
+  const [plkgStatus, setPlkgStatus] = useState("Loading PLKG...");
   const [uploadState, setUploadState] = useState("Ready for metadata upload");
   const [blieQuestion, setBlieQuestion] = useState("Explain recursion with a simple example");
   const [blieStatus, setBlieStatus] = useState("Ready for context-aware chat");
@@ -76,6 +86,20 @@ export default function App(): React.JSX.Element {
         if (isMounted) {
           setDocumentLibrary(fallbackDocumentLibrarySummary);
           setLibraryStatus("Using offline library fallback");
+        }
+      });
+
+    fetchPlkgSummary()
+      .then((summary) => {
+        if (isMounted) {
+          setPlkgSummary(summary);
+          setPlkgStatus("Connected to PLKG API");
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setPlkgSummary(fallbackPlkgSummary);
+          setPlkgStatus("Using offline PLKG fallback");
         }
       });
 
@@ -121,6 +145,25 @@ export default function App(): React.JSX.Element {
     } catch {
       setBlieResponse(fallbackBlieResponse);
       setBlieStatus("BLIE request failed");
+    }
+  };
+
+  const handleAddLearningActivity = async (): Promise<void> => {
+    setPlkgStatus("Adding learning activity...");
+
+    try {
+      await createPlkgLearningActivity({
+        subjectId: selectedSubjectId ?? dashboard.subjects[0]?.id ?? null,
+        label: "Reviewed BLIE explanation",
+        description: "Student reviewed one BLIE explanation and added it to PLKG memory.",
+        sourceId: blieResponse?.id ?? "mobile-plkg-action",
+      });
+      const summary = await fetchPlkgSummary();
+
+      setPlkgSummary(summary);
+      setPlkgStatus("Learning activity added");
+    } catch {
+      setPlkgStatus("PLKG update failed");
     }
   };
 
@@ -291,6 +334,66 @@ export default function App(): React.JSX.Element {
     </>
   );
 
+  const renderPlkgNode = (node: PlkgNode): React.JSX.Element => (
+    <View key={node.id} style={styles.documentRow}>
+      <View style={styles.documentHeader}>
+        <Text style={styles.subjectName}>{node.label}</Text>
+        <Text style={styles.statusPill}>{node.learningStatus}</Text>
+      </View>
+      <Text style={styles.mutedText}>
+        {node.type} - mastery {node.masteryScore}% - confidence {node.confidenceLevel}%
+      </Text>
+      <View style={styles.progressTrack}>
+        <View style={[styles.progressFill, { width: `${node.masteryScore}%` }]} />
+      </View>
+    </View>
+  );
+
+  const renderPlkg = (): React.JSX.Element => (
+    <>
+      <View style={styles.panel}>
+        <Text style={styles.panelTitle}>Knowledge Growth</Text>
+        <Text style={styles.metricText}>{plkgSummary.statusLabel}</Text>
+        <Text style={styles.mutedText}>{plkgStatus}</Text>
+        <Text style={styles.mutedText}>{plkgSummary.growthLabel}</Text>
+        <View style={styles.graphMetricRow}>
+          <Text style={styles.graphMetric}>{plkgSummary.nodeCount} nodes</Text>
+          <Text style={styles.graphMetric}>{plkgSummary.edgeCount} links</Text>
+          <Text style={styles.graphMetric}>{plkgSummary.averageMasteryScore}% mastery</Text>
+        </View>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => {
+            void handleAddLearningActivity();
+          }}
+          style={styles.primaryButton}
+        >
+          <Text style={styles.primaryButtonText}>Add learning activity</Text>
+        </Pressable>
+      </View>
+
+      <View style={styles.panel}>
+        <Text style={styles.panelTitle}>Knowledge Gaps</Text>
+        {plkgSummary.knowledgeGaps.length === 0 ? (
+          <Text style={styles.mutedText}>No knowledge gaps loaded yet.</Text>
+        ) : (
+          plkgSummary.knowledgeGaps.map((gap) => (
+            <View key={gap.nodeId} style={styles.documentRow}>
+              <Text style={styles.subjectName}>{gap.label}</Text>
+              <Text style={styles.mutedText}>{gap.reason}</Text>
+              <Text style={styles.mutedText}>{gap.recommendedAction}</Text>
+            </View>
+          ))
+        )}
+      </View>
+
+      <View style={styles.panel}>
+        <Text style={styles.panelTitle}>Knowledge Nodes</Text>
+        {plkgSummary.nodes.slice(0, 6).map(renderPlkgNode)}
+      </View>
+    </>
+  );
+
   return (
     <SafeAreaView style={styles.screen}>
       <ScrollView contentContainerStyle={styles.container}>
@@ -310,6 +413,7 @@ export default function App(): React.JSX.Element {
         {activeTab === "dashboard" && renderDashboard()}
         {activeTab === "buddy" && renderBuddy()}
         {activeTab === "library" && renderLibrary()}
+        {activeTab === "plkg" && renderPlkg()}
 
         <View style={styles.tabs}>
           {tabs.map((tab) => {
@@ -479,6 +583,21 @@ const styles = StyleSheet.create({
     color: "#14323b",
     fontSize: 15,
     fontWeight: "800",
+  },
+  graphMetricRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+  },
+  graphMetric: {
+    backgroundColor: "#e8f0ee",
+    borderRadius: 8,
+    color: "#24463f",
+    fontSize: 13,
+    fontWeight: "800",
+    overflow: "hidden",
+    paddingHorizontal: 8,
+    paddingVertical: 6,
   },
   documentRow: {
     borderTopColor: "#edf1f3",

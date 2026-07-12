@@ -1,6 +1,6 @@
 # AI Study Buddy Local Development
 
-Status: Sprint 6 baseline
+Status: Sprint 7 baseline
 Last updated: 2026-07-12
 
 ---
@@ -59,6 +59,14 @@ Sprint 6 BLIE chat endpoint:
 http://localhost:4801/api/v1/blie/chat
 ```
 
+Sprint 7 PLKG endpoints:
+
+```text
+http://localhost:4801/api/v1/plkg/summary
+http://localhost:4801/api/v1/plkg/nodes
+http://localhost:4801/api/v1/plkg/edges
+```
+
 Start the mobile app:
 
 ```powershell
@@ -100,6 +108,9 @@ path convention in SQL. Real file upload still requires live Supabase project li
 
 Sprint 6 uses a local deterministic BLIE provider abstraction. Do not commit AI provider
 keys or real provider credentials.
+
+Sprint 7 uses in-memory PLKG fixtures for local API/mobile flow. Supabase persistence is
+prepared by migration/reference SQL but still requires live project linking.
 
 ---
 

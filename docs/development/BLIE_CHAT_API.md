@@ -49,7 +49,7 @@ Every Sprint 6 request follows the approved BLIE sequence:
 3. Retrieve academic profile context.
 4. Retrieve subject context.
 5. Retrieve document context.
-6. Add the PLKG placeholder retrieval hook.
+6. Retrieve PLKG context for the selected subject.
 7. Generate a structured educational response through the provider abstraction.
 8. Validate the response shape.
 
@@ -68,7 +68,8 @@ BLIE responses include:
 - reasoning trace
 
 The trace exposes the current intent, retrieval status, provider, validation status, and context
-summary so students can see that BLIE is grounded before generation.
+summary so students can see that BLIE is grounded before generation. Sprint 7 connects this
+grounding path to the basic student-owned PLKG.
 
 ---
 
