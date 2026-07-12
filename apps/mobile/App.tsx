@@ -1,7 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
-import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, View } from "react-native";
-import type { DashboardSummary, DocumentLibrarySummary, LearningDocument } from "@sbud-d/types";
+import {
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import type {
+  BlieChatResponse,
+  DashboardSummary,
+  DocumentLibrarySummary,
+  LearningDocument,
+} from "@sbud-d/types";
 
+import { fallbackBlieResponse, sendBlieChat } from "./src/blie/blie-service";
 import { getApiBaseUrl } from "./src/config/environment";
 import { fallbackDashboardSummary, fetchDashboardSummary } from "./src/dashboard/dashboard-service";
 import {
@@ -27,6 +41,10 @@ export default function App(): React.JSX.Element {
   const [apiStatus, setApiStatus] = useState("Loading dashboard...");
   const [libraryStatus, setLibraryStatus] = useState("Loading library...");
   const [uploadState, setUploadState] = useState("Ready for metadata upload");
+  const [blieQuestion, setBlieQuestion] = useState("Explain recursion with a simple example");
+  const [blieStatus, setBlieStatus] = useState("Ready for context-aware chat");
+  const [blieResponse, setBlieResponse] = useState<BlieChatResponse | null>(null);
+  const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null);
   const apiBaseUrl = useMemo(() => getApiBaseUrl(), []);
 
   useEffect(() => {
@@ -37,6 +55,7 @@ export default function App(): React.JSX.Element {
         if (isMounted) {
           setDashboard(summary);
           setApiStatus("Connected to API");
+          setSelectedSubjectId(summary.subjects[0]?.id ?? null);
         }
       })
       .catch(() => {
@@ -84,6 +103,24 @@ export default function App(): React.JSX.Element {
       setUploadState("Upload metadata ready for processing");
     } catch {
       setUploadState("Upload metadata failed");
+    }
+  };
+
+  const handleSendBlieQuestion = async (): Promise<void> => {
+    setBlieStatus("Thinking with retrieved context...");
+
+    try {
+      const response = await sendBlieChat({
+        message: blieQuestion,
+        subjectId: selectedSubjectId,
+        preferredMode: "simple",
+      });
+
+      setBlieResponse(response);
+      setBlieStatus("Learning response ready");
+    } catch {
+      setBlieResponse(fallbackBlieResponse);
+      setBlieStatus("BLIE request failed");
     }
   };
 
@@ -175,14 +212,83 @@ export default function App(): React.JSX.Element {
     </>
   );
 
-  const renderBuddy = (): React.JSX.Element => (
+  const renderBuddyResponse = (response: BlieChatResponse): React.JSX.Element => (
     <View style={styles.panel}>
-      <Text style={styles.panelTitle}>BLIE</Text>
-      <Text style={styles.metricText}>Minimum useful chat starts in Sprint 6</Text>
-      <Text style={styles.mutedText}>
-        Sprint 5 prepares document context so BLIE can later retrieve trusted learning materials.
+      <Text style={styles.panelTitle}>BLIE Response</Text>
+      <Text style={styles.metricText}>{response.response.explanation}</Text>
+      <Text style={styles.mutedText}>{response.response.connection}</Text>
+      <Text style={styles.responseLabel}>Example</Text>
+      <Text style={styles.mutedText}>{response.response.example}</Text>
+      <Text style={styles.responseLabel}>Check Understanding</Text>
+      <Text style={styles.mutedText}>{response.response.checkUnderstanding}</Text>
+      <Text style={styles.responseLabel}>Next Step</Text>
+      <Text style={styles.mutedText}>{response.response.nextStep}</Text>
+      <Text style={styles.statusMeta}>
+        {response.trace.intent} - {response.trace.retrievalStatus} - {response.trace.provider}
       </Text>
     </View>
+  );
+
+  const renderBuddy = (): React.JSX.Element => (
+    <>
+      <View style={styles.panel}>
+        <Text style={styles.panelTitle}>BLIE Chat</Text>
+        <Text style={styles.metricText}>{blieStatus}</Text>
+        <Text style={styles.mutedText}>
+          Subject context:{" "}
+          {dashboard.subjects.find((subject) => subject.id === selectedSubjectId)?.name ??
+            "First available subject"}
+        </Text>
+        <View style={styles.subjectSelector}>
+          {dashboard.subjects.map((subject) => {
+            const isSelected = subject.id === selectedSubjectId;
+
+            return (
+              <Pressable
+                accessibilityRole="button"
+                accessibilityState={{ selected: isSelected }}
+                key={subject.id}
+                onPress={() => setSelectedSubjectId(subject.id)}
+                style={[styles.subjectChip, isSelected && styles.activeSubjectChip]}
+              >
+                <Text style={[styles.subjectChipText, isSelected && styles.activeSubjectChipText]}>
+                  {subject.code}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+        <TextInput
+          accessibilityLabel="BLIE learning question"
+          multiline
+          onChangeText={setBlieQuestion}
+          placeholder="Ask BLIE a learning question"
+          style={styles.chatInput}
+          value={blieQuestion}
+        />
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => {
+            void handleSendBlieQuestion();
+          }}
+          style={styles.primaryButton}
+        >
+          <Text style={styles.primaryButtonText}>Ask BLIE</Text>
+        </Pressable>
+      </View>
+
+      {blieResponse ? (
+        renderBuddyResponse(blieResponse)
+      ) : (
+        <View style={styles.panel}>
+          <Text style={styles.panelTitle}>Retrieved Context</Text>
+          <Text style={styles.mutedText}>
+            BLIE will assemble academic profile, subject, document, and PLKG placeholder context
+            before generating a response.
+          </Text>
+        </View>
+      )}
+    </>
   );
 
   return (
@@ -304,6 +410,52 @@ const styles = StyleSheet.create({
     color: "#52666d",
     fontSize: 14,
     lineHeight: 20,
+  },
+  responseLabel: {
+    color: "#24464f",
+    fontSize: 13,
+    fontWeight: "800",
+    letterSpacing: 0,
+    marginTop: 4,
+    textTransform: "uppercase",
+  },
+  subjectSelector: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+  },
+  subjectChip: {
+    alignItems: "center",
+    borderColor: "#cad5da",
+    borderRadius: 8,
+    borderWidth: 1,
+    minHeight: 36,
+    justifyContent: "center",
+    paddingHorizontal: 12,
+  },
+  activeSubjectChip: {
+    backgroundColor: "#14323b",
+    borderColor: "#14323b",
+  },
+  subjectChipText: {
+    color: "#30474f",
+    fontSize: 13,
+    fontWeight: "800",
+  },
+  activeSubjectChipText: {
+    color: "#ffffff",
+  },
+  chatInput: {
+    backgroundColor: "#ffffff",
+    borderColor: "#cad5da",
+    borderRadius: 8,
+    borderWidth: 1,
+    color: "#162b32",
+    fontSize: 15,
+    lineHeight: 21,
+    minHeight: 96,
+    padding: 12,
+    textAlignVertical: "top",
   },
   subjectRow: {
     alignItems: "center",

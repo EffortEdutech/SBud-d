@@ -9,7 +9,7 @@ The product is built around:
 - A cloud-first, offline-capable learning experience.
 - A TypeScript monorepo architecture.
 
-This repository is currently in Sprint 5: Document Library Foundation.
+This repository is currently in Sprint 6: BLIE Minimum Useful Chat.
 
 ---
 
@@ -156,6 +156,13 @@ with student-owned object paths:
 ```text
 {studentId}/{subjectId}/{documentId}/{fileName}
 ```
+
+Sprint 6 BLIE endpoint:
+
+- `POST /api/v1/blie/chat`
+
+Sprint 6 uses a local provider abstraction for deterministic learning responses. Do not commit
+AI provider secrets; real provider wiring remains behind the provider interface.
 
 ---
 

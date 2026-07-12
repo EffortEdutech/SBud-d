@@ -42,7 +42,7 @@ Before making changes:
 
 ## Current Project State
 
-This project is in Sprint 5: Document Library Foundation.
+This project is in Sprint 6: BLIE Minimum Useful Chat.
 
 The approved monorepo skeleton from Volume G2 now exists:
 
@@ -58,7 +58,7 @@ The approved monorepo skeleton from Volume G2 now exists:
 - `tools`
 - `tests`
 
-Implementation folders are scaffolded, Sprint 2 added the first runnable mobile/API shells, Sprint 3 added the first Supabase data/authentication foundation, Sprint 4 added the academic profile/dashboard slice, and Sprint 5 adds the document library foundation. Keep implementation aligned with Volume G2 and never commit Supabase secrets.
+Implementation folders are scaffolded, Sprint 2 added the first runnable mobile/API shells, Sprint 3 added the first Supabase data/authentication foundation, Sprint 4 added the academic profile/dashboard slice, Sprint 5 added the document library foundation, and Sprint 6 adds the minimum useful BLIE chat slice. Keep implementation aligned with Volume G2 and never commit Supabase or AI provider secrets.
 
 ## Architecture Invariants
 
@@ -174,6 +174,17 @@ Sprint 5 storage notes:
 - Private Supabase Storage bucket: `student-documents`.
 - Student-owned object path pattern: `{studentId}/{subjectId}/{documentId}/{fileName}`.
 - Current implementation stores document metadata in memory for local API/mobile flow; Supabase persistence and real file upload are prepared by migration/reference SQL but still require live project linking.
+
+Sprint 6 BLIE endpoint:
+
+- `POST /api/v1/blie/chat`
+
+Sprint 6 BLIE notes:
+
+- BLIE uses a local deterministic provider through an AI provider abstraction.
+- No AI provider API keys, model secrets, or real provider credentials are committed.
+- Context assembly must retrieve academic, subject, document, and PLKG placeholder context before response generation.
+- Request logging must avoid student question text and response content.
 
 ## Security Rules
 

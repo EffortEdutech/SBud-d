@@ -7,6 +7,15 @@ export type {
   UpdateAcademicProfileInput,
 } from "./academic.js";
 export type { AuthenticatedUser, AuthSessionState, EmailPasswordCredentials } from "./auth.js";
+export type {
+  BlieChatRequest,
+  BlieChatResponse,
+  BlieChatStatus,
+  BlieIntent,
+  BlieLearningResponse,
+  BlieReasoningTrace,
+  BlieRetrievedContext,
+} from "./blie.js";
 export type { Database } from "./database.js";
 export type { DashboardSummary } from "./dashboard.js";
 export type {

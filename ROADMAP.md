@@ -1,7 +1,7 @@
 # AI Study Buddy Roadmap
 
 Status: Living roadmap
-Current sprint: Sprint 5 - Document Library Foundation
+Current sprint: Sprint 6 - BLIE Minimum Useful Chat
 Last updated: 2026-07-12
 
 ---
@@ -12,10 +12,10 @@ AI Study Buddy is moving from documentation-first architecture into implementati
 
 Current focus:
 
-- Add document library metadata endpoints.
-- Add upload validation and processing status placeholders.
-- Prepare student-owned Supabase Storage paths and RLS policies.
-- Wire the mobile Library tab to the API with offline fallback.
+- Add the first BLIE chat endpoint.
+- Add provider-independent AI orchestration boundary.
+- Add retrieval-before-generation context assembly placeholder.
+- Wire the mobile BLIE tab to API chat with loading and error states.
 
 ---
 
@@ -183,9 +183,9 @@ Sprint 4 is complete.
 
 ---
 
-# 8. Sprint 5 Current Scope
+# 8. Sprint 5 Completion
 
-Sprint 5 establishes:
+Sprint 5 established:
 
 - Document metadata and processing status types.
 - Document library and document detail endpoints.
@@ -193,3 +193,18 @@ Sprint 5 establishes:
 - Student-owned storage path convention.
 - Private storage bucket policy reference.
 - Mobile Library tab with empty, loading, connected, and metadata-upload states.
+
+Sprint 5 is complete.
+
+---
+
+# 9. Sprint 6 Current Scope
+
+Sprint 6 establishes:
+
+- BLIE chat request and response contract.
+- API-side BLIE service boundary.
+- Local provider abstraction for deterministic learning responses.
+- Retrieval-first context assembly using academic, subject, document, and PLKG placeholder context.
+- Mobile BLIE chat screen with subject context selector.
+- Safe request logging without question or response content.

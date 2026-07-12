@@ -20,11 +20,11 @@ When work progresses, update this checklist in the same commit or handoff as the
 
 # Current Sprint
 
-Current sprint: Sprint 5 - Document Library Foundation
+Current sprint: Sprint 6 - BLIE Minimum Useful Chat
 
 Current goal:
 
-Allow a student to view a document library, create document metadata, and see processing status placeholders through API and mobile UI.
+Allow a student to ask BLIE a subject-contextual learning question and receive a structured, retrieval-grounded response through API and mobile UI.
 
 ---
 
@@ -215,25 +215,25 @@ Allow a student to view a document library, create document metadata, and see pr
 
 ## BLIE Service
 
-- [ ] Create BLIE service boundary.
-- [ ] Create AI provider abstraction.
-- [ ] Create chat request/response types.
-- [ ] Add context assembly placeholder.
-- [ ] Add retrieval-before-generation hook.
+- [x] Create BLIE service boundary.
+- [x] Create AI provider abstraction.
+- [x] Create chat request/response types.
+- [x] Add context assembly placeholder.
+- [x] Add retrieval-before-generation hook.
 
 ## Mobile Experience
 
-- [ ] BLIE chat screen.
-- [ ] Subject context selector.
-- [ ] Loading state.
-- [ ] Error state.
-- [ ] Response display.
+- [x] BLIE chat screen.
+- [x] Subject context selector.
+- [x] Loading state.
+- [x] Error state.
+- [x] Response display.
 
 ## Safety
 
-- [ ] Do not commit AI provider secrets.
-- [ ] Add request logging without sensitive content.
-- [ ] Add response validation placeholder.
+- [x] Do not commit AI provider secrets.
+- [x] Add request logging without sensitive content.
+- [x] Add response validation placeholder.
 
 ---
 

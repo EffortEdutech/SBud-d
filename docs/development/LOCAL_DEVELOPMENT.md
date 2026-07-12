@@ -1,6 +1,6 @@
 # AI Study Buddy Local Development
 
-Status: Sprint 5 baseline
+Status: Sprint 6 baseline
 Last updated: 2026-07-12
 
 ---
@@ -53,6 +53,12 @@ http://localhost:4801/api/v1/documents/library
 http://localhost:4801/api/v1/documents
 ```
 
+Sprint 6 BLIE chat endpoint:
+
+```text
+http://localhost:4801/api/v1/blie/chat
+```
+
 Start the mobile app:
 
 ```powershell
@@ -91,6 +97,9 @@ docs/development/SUPABASE_SETUP.md
 
 Sprint 5 prepares the private `student-documents` storage bucket and student-owned
 path convention in SQL. Real file upload still requires live Supabase project linking.
+
+Sprint 6 uses a local deterministic BLIE provider abstraction. Do not commit AI provider
+keys or real provider credentials.
 
 ---
 
