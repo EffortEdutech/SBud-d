@@ -11,11 +11,12 @@
   },
   "dependencies": {
     "@sbud-d/types": "workspace:*",
-    "expo": "^52.0.23",
-    "react": "^18.3.1",
-    "react-native": "^0.76.5"
+    "@supabase/supabase-js": "2.110.2",
+    "expo": "^56.0.15",
+    "react": "^19.2.3",
+    "react-native": "^0.85.3"
   },
   "devDependencies": {
-    "@types/react": "^18.3.18"
+    "@types/react": "^19.2.17"
   }
 }

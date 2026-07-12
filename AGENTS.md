@@ -42,7 +42,7 @@ Before making changes:
 
 ## Current Project State
 
-This project is in Sprint 2: Application and Backend Shells.
+This project is in Sprint 3: Data and Authentication Foundation.
 
 The approved monorepo skeleton from Volume G2 now exists:
 
@@ -58,7 +58,7 @@ The approved monorepo skeleton from Volume G2 now exists:
 - `tools`
 - `tests`
 
-Implementation folders are scaffolded and Sprint 2 has started the first runnable mobile and API shells. Keep implementation aligned with Volume G2 and do not introduce Supabase setup until the data/authentication sprint.
+Implementation folders are scaffolded, Sprint 2 added the first runnable mobile/API shells, and Sprint 3 adds the first Supabase data/authentication foundation. Keep implementation aligned with Volume G2 and never commit Supabase secrets.
 
 ## Architecture Invariants
 
@@ -145,6 +145,14 @@ Current command behavior:
 - `graph:update` refreshes Graphify through `scripts/graphify.ps1`.
 
 These commands are baseline workspace commands. Supabase is not configured yet and is deferred until the data/authentication sprint.
+
+Sprint 3 Supabase notes:
+
+- Supabase project linking is not complete yet.
+- Use `.env.example` for variable names only.
+- Do not commit `.env` files, service-role keys, JWT secrets, API keys, or private tokens.
+- Migration files created by Supabase CLI live under `database/supabase/migrations`.
+- Student-owned RLS policies must combine `TO authenticated` with an ownership predicate such as `(select auth.uid()) = id`.
 
 ## Security Rules
 

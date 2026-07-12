@@ -9,7 +9,7 @@ The product is built around:
 - A cloud-first, offline-capable learning experience.
 - A TypeScript monorepo architecture.
 
-This repository is currently in Sprint 2: Application and Backend Shells.
+This repository is currently in Sprint 3: Data and Authentication Foundation.
 
 ---
 
@@ -125,6 +125,15 @@ Local ports:
 - Expo: `http://localhost:4800`
 
 See `docs/development/LOCAL_DEVELOPMENT.md`.
+
+Sprint 3 Supabase foundation:
+
+- Migration workflow: `database/supabase/migrations`
+- Student profile schema: `public.student_profiles`
+- RLS policy reference: `database/policies/student_profiles_rls.sql`
+- Setup guide: `docs/development/SUPABASE_SETUP.md`
+
+Supabase is not linked to a live project yet. Use `.env.example` for required variable names only, and keep real `.env` files local.
 
 ---
 

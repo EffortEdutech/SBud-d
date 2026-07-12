@@ -20,11 +20,11 @@ When work progresses, update this checklist in the same commit or handoff as the
 
 # Current Sprint
 
-Current sprint: Sprint 2 - Application and Backend Shells
+Current sprint: Sprint 3 - Data and Authentication Foundation
 
 Current goal:
 
-Create the first runnable mobile and API shells while preserving the approved architecture.
+Create the first student-owned data and authentication foundation without committing secrets.
 
 ---
 
@@ -141,25 +141,25 @@ Create the first runnable mobile and API shells while preserving the approved ar
 
 ## Database
 
-- [ ] Create `database/schema`.
-- [ ] Create `database/migrations`.
-- [ ] Create `database/policies`.
-- [ ] Define migration workflow.
-- [ ] Create student profile schema.
+- [x] Create `database/schema`.
+- [x] Create `database/migrations`.
+- [x] Create `database/policies`.
+- [x] Define migration workflow.
+- [x] Create student profile schema.
 
 ## Authentication
 
-- [ ] Configure Supabase Auth integration pattern.
-- [ ] Implement sign-up.
-- [ ] Implement sign-in.
-- [ ] Implement sign-out.
-- [ ] Implement authenticated API user context.
+- [x] Configure Supabase Auth integration pattern.
+- [x] Implement sign-up.
+- [x] Implement sign-in.
+- [x] Implement sign-out.
+- [x] Implement authenticated API user context.
 
 ## Security
 
-- [ ] Add no-secrets documentation.
-- [ ] Define Row Level Security baseline.
-- [ ] Validate student data isolation.
+- [x] Add no-secrets documentation.
+- [x] Define Row Level Security baseline.
+- [x] Validate student data isolation.
 
 ---
 

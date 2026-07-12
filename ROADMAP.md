@@ -1,7 +1,7 @@
 # AI Study Buddy Roadmap
 
 Status: Living roadmap
-Current sprint: Sprint 2 - Application and Backend Shells
+Current sprint: Sprint 3 - Data and Authentication Foundation
 Last updated: 2026-07-11
 
 ---
@@ -12,10 +12,10 @@ AI Study Buddy is moving from documentation-first architecture into implementati
 
 Current focus:
 
-- Create the first Expo mobile shell.
-- Create the first NestJS API shell.
-- Add shared TypeScript package foundations.
-- Keep Supabase deferred until the data/authentication sprint.
+- Establish the first Supabase database migration.
+- Add student profile ownership and RLS baseline.
+- Add environment-safe Supabase Auth integration patterns.
+- Keep live Supabase project linking and secrets out of the repository.
 
 ---
 
@@ -142,7 +142,7 @@ Sprint 1 is complete.
 
 # 5. Sprint 2 Current Scope
 
-Sprint 2 establishes:
+Sprint 2 established:
 
 - Expo mobile shell using localhost port `4800` for local development.
 - NestJS API shell using localhost port `4801` for local development.
@@ -150,4 +150,16 @@ Sprint 2 establishes:
 - Mobile/API connection strategy.
 - Baseline checks across the new workspace packages.
 
-Supabase remains deferred until Sprint 3.
+Sprint 2 is complete.
+
+---
+
+# 6. Sprint 3 Current Scope
+
+Sprint 3 establishes:
+
+- Supabase migration workflow under `database/supabase`.
+- Student profile schema with student-owned RLS policies.
+- Supabase Auth client pattern for mobile sign-up, sign-in, and sign-out.
+- Backend authenticated user context pattern.
+- No committed secrets or live project credentials.

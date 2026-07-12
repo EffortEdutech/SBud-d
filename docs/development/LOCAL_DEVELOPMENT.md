@@ -1,7 +1,7 @@
 # AI Study Buddy Local Development
 
-Status: Sprint 2 baseline
-Last updated: 2026-07-11
+Status: Sprint 3 baseline
+Last updated: 2026-07-12
 
 ---
 
@@ -69,3 +69,42 @@ http://localhost:4801/api/v1
 ```
 
 Do not commit `.env` files. Supabase is not configured in Sprint 2.
+
+Sprint 3 Supabase variables are documented in:
+
+```text
+docs/development/SUPABASE_SETUP.md
+```
+
+---
+
+# 4. Expo Go Compatibility
+
+The mobile shell uses Expo SDK 56.
+
+If Expo Go reports an SDK mismatch, update dependencies from the mobile workspace:
+
+```powershell
+corepack pnpm --filter @sbud-d/mobile exec expo install expo@~56 react react-native @types/react
+```
+
+Then restart Metro:
+
+```powershell
+corepack pnpm --filter @sbud-d/mobile dev
+```
+
+---
+
+# 5. Browser Appears Offline
+
+Starting Expo Metro should not make Chrome or the machine go offline.
+
+If Chrome reports offline right after starting Expo, check:
+
+- whether Wi-Fi briefly reconnected,
+- whether VPN, proxy, firewall, or antivirus changed LAN access,
+- whether another process is using port `4800`,
+- whether Windows prompted for network access behind another window.
+
+Expo advertises the local LAN URL for device testing. That may trigger firewall or network prompts, but it should not disable internet access.
