@@ -1,8 +1,8 @@
 # AI Study Buddy Roadmap
 
 Status: Living roadmap
-Current sprint: Sprint 7 - Basic PLKG Foundation
-Last updated: 2026-07-12
+Current sprint: Sprint 8 - Study Preparation and Revision MVP
+Last updated: 2026-07-13
 
 ---
 
@@ -12,10 +12,10 @@ AI Study Buddy is moving from documentation-first architecture into implementati
 
 Current focus:
 
-- Add the first student-owned PLKG node and edge model.
-- Add basic PLKG query endpoints.
-- Connect BLIE retrieval to PLKG context.
-- Wire the mobile PLKG tab to graph growth, gaps, and nodes.
+- Add preparation plans for current subject topics.
+- Add revision items from PLKG mastery and knowledge gap state.
+- Add deterministic flashcard and quiz placeholders.
+- Wire the mobile Study tab to preparation, revision, and traceable recommendations.
 
 ---
 
@@ -213,9 +213,9 @@ Sprint 6 is complete.
 
 ---
 
-# 10. Sprint 7 Current Scope
+# 10. Sprint 7 Completion
 
-Sprint 7 establishes:
+Sprint 7 established:
 
 - PLKG node and edge shared types.
 - Student-owned PLKG schema and RLS reference.
@@ -223,3 +223,17 @@ Sprint 7 establishes:
 - Initial graph seeded from academic profile, subjects, documents, and BLIE activity.
 - BLIE retrieval from PLKG context before generation.
 - Mobile PLKG overview with growth metrics and knowledge gaps.
+
+Sprint 7 is complete.
+
+---
+
+# 11. Sprint 8 Current Scope
+
+Sprint 8 establishes:
+
+- Preparation plan and revision item shared types.
+- Student-owned study preparation/revision schema and RLS reference.
+- API study summary, preparation, revision, and reflection endpoints.
+- Flashcard and quiz placeholders generated from PLKG context.
+- Mobile Study tab with readiness, preparation, revision, and review actions.

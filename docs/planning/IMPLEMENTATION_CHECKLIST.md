@@ -20,11 +20,11 @@ When work progresses, update this checklist in the same commit or handoff as the
 
 # Current Sprint
 
-Current sprint: Sprint 7 - Basic PLKG Foundation
+Current sprint: Sprint 8 - Study Preparation and Revision MVP
 
 Current goal:
 
-Allow a student to view a basic Personal Learning Knowledge Graph and let BLIE retrieve PLKG context before responding.
+Provide subject-aware preparation plans and PLKG-aware revision guidance with flashcard and quiz placeholders.
 
 ---
 
@@ -264,22 +264,22 @@ Allow a student to view a basic Personal Learning Knowledge Graph and let BLIE r
 
 ## Preparation
 
-- [ ] Preparation plan model.
-- [ ] Prerequisite recommendation placeholder.
-- [ ] Dashboard preparation card.
+- [x] Preparation plan model.
+- [x] Prerequisite recommendation placeholder.
+- [x] Dashboard preparation card.
 
 ## Revision
 
-- [ ] Revision item model.
-- [ ] Flashcard placeholder.
-- [ ] Quiz placeholder.
-- [ ] Revision progress state.
+- [x] Revision item model.
+- [x] Flashcard placeholder.
+- [x] Quiz placeholder.
+- [x] Revision progress state.
 
 ## BLIE/PLKG Integration
 
-- [ ] Preparation uses subject context.
-- [ ] Revision uses PLKG context.
-- [ ] Recommendations are traceable to learning state.
+- [x] Preparation uses subject context.
+- [x] Revision uses PLKG context.
+- [x] Recommendations are traceable to learning state.
 
 ---
 

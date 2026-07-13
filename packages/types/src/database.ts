@@ -281,6 +281,94 @@ export interface Database {
           strength?: number;
         };
       };
+      study_preparation_plans: {
+        Row: {
+          id: string;
+          student_id: string;
+          subject_id: string;
+          topic_label: string;
+          readiness_status: "not_started" | "preparing" | "ready" | "needs_support";
+          state: "upcoming" | "preparing" | "learning" | "revising" | "mastered";
+          prerequisite_labels: string[];
+          learning_outcomes: string[];
+          tasks: unknown[];
+          trace: Record<string, unknown>;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          student_id: string;
+          subject_id: string;
+          topic_label: string;
+          readiness_status?: "not_started" | "preparing" | "ready" | "needs_support";
+          state?: "upcoming" | "preparing" | "learning" | "revising" | "mastered";
+          prerequisite_labels?: string[];
+          learning_outcomes?: string[];
+          tasks?: unknown[];
+          trace?: Record<string, unknown>;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          subject_id?: string;
+          topic_label?: string;
+          readiness_status?: "not_started" | "preparing" | "ready" | "needs_support";
+          state?: "upcoming" | "preparing" | "learning" | "revising" | "mastered";
+          prerequisite_labels?: string[];
+          learning_outcomes?: string[];
+          tasks?: unknown[];
+          trace?: Record<string, unknown>;
+          updated_at?: string;
+        };
+      };
+      study_revision_items: {
+        Row: {
+          id: string;
+          student_id: string;
+          subject_id: string;
+          topic_label: string;
+          status: "queued" | "in_progress" | "completed" | "needs_support";
+          priority_label: "low" | "medium" | "high";
+          mastery_score: number;
+          due_label: string;
+          recommended_action: string;
+          flashcards: unknown[];
+          quiz_questions: unknown[];
+          trace: Record<string, unknown>;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          student_id: string;
+          subject_id: string;
+          topic_label: string;
+          status?: "queued" | "in_progress" | "completed" | "needs_support";
+          priority_label?: "low" | "medium" | "high";
+          mastery_score?: number;
+          due_label?: string;
+          recommended_action: string;
+          flashcards?: unknown[];
+          quiz_questions?: unknown[];
+          trace?: Record<string, unknown>;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          subject_id?: string;
+          topic_label?: string;
+          status?: "queued" | "in_progress" | "completed" | "needs_support";
+          priority_label?: "low" | "medium" | "high";
+          mastery_score?: number;
+          due_label?: string;
+          recommended_action?: string;
+          flashcards?: unknown[];
+          quiz_questions?: unknown[];
+          trace?: Record<string, unknown>;
+          updated_at?: string;
+        };
+      };
     };
   };
 }

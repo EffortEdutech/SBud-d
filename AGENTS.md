@@ -42,7 +42,7 @@ Before making changes:
 
 ## Current Project State
 
-This project is in Sprint 7: Basic PLKG Foundation.
+This project is in Sprint 8: Study Preparation and Revision MVP.
 
 The approved monorepo skeleton from Volume G2 now exists:
 
@@ -58,7 +58,7 @@ The approved monorepo skeleton from Volume G2 now exists:
 - `tools`
 - `tests`
 
-Implementation folders are scaffolded, Sprint 2 added the first runnable mobile/API shells, Sprint 3 added the first Supabase data/authentication foundation, Sprint 4 added the academic profile/dashboard slice, Sprint 5 added the document library foundation, Sprint 6 added the minimum useful BLIE chat slice, and Sprint 7 adds the basic PLKG foundation. Keep implementation aligned with Volume G2 and never commit Supabase or AI provider secrets.
+Implementation folders are scaffolded, Sprint 2 added the first runnable mobile/API shells, Sprint 3 added the first Supabase data/authentication foundation, Sprint 4 added the academic profile/dashboard slice, Sprint 5 added the document library foundation, Sprint 6 added the minimum useful BLIE chat slice, Sprint 7 added the basic PLKG foundation, and Sprint 8 adds the first study preparation and revision MVP. Keep implementation aligned with Volume G2 and never commit Supabase or AI provider secrets.
 
 ## Architecture Invariants
 
@@ -198,6 +198,19 @@ Sprint 7 PLKG notes:
 - PLKG nodes and edges are student-owned.
 - BLIE context assembly retrieves PLKG context before generation.
 - Supabase persistence is prepared by migration/reference SQL but local API uses in-memory fixtures until live project linking is complete.
+
+Sprint 8 study endpoints:
+
+- `GET /api/v1/study/summary`
+- `GET /api/v1/study/preparation`
+- `GET /api/v1/study/revision`
+- `POST /api/v1/study/revision/reflection`
+
+Sprint 8 study notes:
+
+- Preparation and revision guidance is tied to subjects and PLKG context.
+- Flashcards and quiz prompts are deterministic MVP placeholders.
+- Supabase persistence is prepared by migration/reference SQL but local API uses in-memory fixtures until live project persistence is complete.
 
 ## Security Rules
 

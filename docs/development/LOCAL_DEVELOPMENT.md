@@ -1,7 +1,7 @@
 # AI Study Buddy Local Development
 
-Status: Sprint 7 baseline
-Last updated: 2026-07-12
+Status: Sprint 8 baseline
+Last updated: 2026-07-13
 
 ---
 
@@ -67,6 +67,14 @@ http://localhost:4801/api/v1/plkg/nodes
 http://localhost:4801/api/v1/plkg/edges
 ```
 
+Sprint 8 study preparation and revision endpoints:
+
+```text
+http://localhost:4801/api/v1/study/summary
+http://localhost:4801/api/v1/study/preparation
+http://localhost:4801/api/v1/study/revision
+```
+
 Start the mobile app:
 
 ```powershell
@@ -111,6 +119,9 @@ keys or real provider credentials.
 
 Sprint 7 uses in-memory PLKG fixtures for local API/mobile flow. Supabase persistence is
 prepared by migration/reference SQL but still requires live project linking.
+
+Sprint 8 uses in-memory study preparation and revision guidance for local API/mobile flow.
+Supabase persistence is prepared by migration/reference SQL.
 
 ---
 

@@ -15,6 +15,9 @@ import type {
   LearningDocument,
   PlkgNode,
   PlkgSummary,
+  StudyPreparationPlan,
+  StudyRevisionItem,
+  StudySummary,
 } from "@sbud-d/types";
 
 import { fallbackBlieResponse, sendBlieChat } from "./src/blie/blie-service";
@@ -30,11 +33,17 @@ import {
   fallbackPlkgSummary,
   fetchPlkgSummary,
 } from "./src/plkg/plkg-service";
+import {
+  createStudyReflection,
+  fallbackStudySummary,
+  fetchStudySummary,
+} from "./src/study/study-service";
 
-type TabKey = "dashboard" | "buddy" | "library" | "plkg";
+type TabKey = "dashboard" | "study" | "buddy" | "library" | "plkg";
 
 const tabs: Array<{ key: TabKey; label: string }> = [
   { key: "dashboard", label: "Dashboard" },
+  { key: "study", label: "Study" },
   { key: "buddy", label: "BLIE" },
   { key: "library", label: "Library" },
   { key: "plkg", label: "PLKG" },
@@ -47,9 +56,11 @@ export default function App(): React.JSX.Element {
     fallbackDocumentLibrarySummary,
   );
   const [plkgSummary, setPlkgSummary] = useState<PlkgSummary>(fallbackPlkgSummary);
+  const [studySummary, setStudySummary] = useState<StudySummary>(fallbackStudySummary);
   const [apiStatus, setApiStatus] = useState("Loading dashboard...");
   const [libraryStatus, setLibraryStatus] = useState("Loading library...");
   const [plkgStatus, setPlkgStatus] = useState("Loading PLKG...");
+  const [studyStatus, setStudyStatus] = useState("Loading study guidance...");
   const [uploadState, setUploadState] = useState("Ready for metadata upload");
   const [blieQuestion, setBlieQuestion] = useState("Explain recursion with a simple example");
   const [blieStatus, setBlieStatus] = useState("Ready for context-aware chat");
@@ -100,6 +111,20 @@ export default function App(): React.JSX.Element {
         if (isMounted) {
           setPlkgSummary(fallbackPlkgSummary);
           setPlkgStatus("Using offline PLKG fallback");
+        }
+      });
+
+    fetchStudySummary()
+      .then((summary) => {
+        if (isMounted) {
+          setStudySummary(summary);
+          setStudyStatus("Connected to study API");
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setStudySummary(fallbackStudySummary);
+          setStudyStatus("Using offline study fallback");
         }
       });
 
@@ -167,6 +192,28 @@ export default function App(): React.JSX.Element {
     }
   };
 
+  const handleStudyReflection = async (revisionItem: StudyRevisionItem): Promise<void> => {
+    setStudyStatus("Recording revision reflection...");
+
+    try {
+      const updated = await createStudyReflection({
+        revisionItemId: revisionItem.id,
+        confidenceLevel: 75,
+        reflection: `Reviewed ${revisionItem.topicLabel} from the mobile Study tab.`,
+      });
+
+      setStudySummary((current) => ({
+        ...current,
+        revisionItems: current.revisionItems.map((item) =>
+          item.id === updated.id ? updated : item,
+        ),
+      }));
+      setStudyStatus("Revision reflection recorded");
+    } catch {
+      setStudyStatus("Revision reflection failed");
+    }
+  };
+
   const renderDashboard = (): React.JSX.Element => (
     <>
       <View style={styles.panel}>
@@ -202,6 +249,96 @@ export default function App(): React.JSX.Element {
         <Text style={styles.panelTitle}>BLIE Guidance</Text>
         <Text style={styles.metricText}>{dashboard.blieRecommendation.title}</Text>
         <Text style={styles.mutedText}>{dashboard.blieRecommendation.body}</Text>
+      </View>
+    </>
+  );
+
+  const renderPreparationPlan = (plan: StudyPreparationPlan): React.JSX.Element => (
+    <View key={plan.id} style={styles.documentRow}>
+      <View style={styles.documentHeader}>
+        <Text style={styles.subjectName}>{plan.topicLabel}</Text>
+        <Text style={styles.statusPill}>{plan.readinessStatus}</Text>
+      </View>
+      <Text style={styles.mutedText}>{plan.subjectName}</Text>
+      <Text style={styles.mutedText}>Prerequisites: {plan.prerequisiteLabels.join(", ")}</Text>
+      {plan.tasks.slice(0, 2).map((task) => (
+        <View key={task.id} style={styles.taskBlock}>
+          <Text style={styles.responseLabel}>{task.title}</Text>
+          <Text style={styles.mutedText}>
+            {task.guidance} - {task.estimatedMinutes} min
+          </Text>
+        </View>
+      ))}
+      <Text style={styles.statusMeta}>{plan.trace.reason}</Text>
+    </View>
+  );
+
+  const renderRevisionItem = (item: StudyRevisionItem): React.JSX.Element => (
+    <View key={item.id} style={styles.documentRow}>
+      <View style={styles.documentHeader}>
+        <Text style={styles.subjectName}>{item.topicLabel}</Text>
+        <Text style={styles.statusPill}>{item.priorityLabel}</Text>
+      </View>
+      <Text style={styles.mutedText}>
+        {item.subjectName} - {item.status} - due {item.dueLabel}
+      </Text>
+      <Text style={styles.mutedText}>{item.recommendedAction}</Text>
+      <View style={styles.progressTrack}>
+        <View style={[styles.progressFill, { width: `${item.masteryScore}%` }]} />
+      </View>
+      {item.flashcards[0] ? (
+        <View style={styles.taskBlock}>
+          <Text style={styles.responseLabel}>Flashcard</Text>
+          <Text style={styles.mutedText}>{item.flashcards[0].front}</Text>
+          <Text style={styles.mutedText}>{item.flashcards[0].back}</Text>
+        </View>
+      ) : null}
+      {item.quizQuestions[0] ? (
+        <View style={styles.taskBlock}>
+          <Text style={styles.responseLabel}>Quiz</Text>
+          <Text style={styles.mutedText}>{item.quizQuestions[0].prompt}</Text>
+        </View>
+      ) : null}
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => {
+          void handleStudyReflection(item);
+        }}
+        style={styles.secondaryButton}
+      >
+        <Text style={styles.secondaryButtonText}>Mark reviewed</Text>
+      </Pressable>
+    </View>
+  );
+
+  const renderStudy = (): React.JSX.Element => (
+    <>
+      <View style={styles.panel}>
+        <Text style={styles.panelTitle}>Study Readiness</Text>
+        <Text style={styles.metricText}>{studySummary.recommendedFocusLabel}</Text>
+        <Text style={styles.mutedText}>{studyStatus}</Text>
+        <View style={styles.graphMetricRow}>
+          <Text style={styles.graphMetric}>{studySummary.preparationReadinessLabel}</Text>
+          <Text style={styles.graphMetric}>{studySummary.revisionProgressLabel}</Text>
+        </View>
+      </View>
+
+      <View style={styles.panel}>
+        <Text style={styles.panelTitle}>Preparation</Text>
+        {studySummary.preparationPlans.length === 0 ? (
+          <Text style={styles.mutedText}>No preparation plans loaded yet.</Text>
+        ) : (
+          studySummary.preparationPlans.map(renderPreparationPlan)
+        )}
+      </View>
+
+      <View style={styles.panel}>
+        <Text style={styles.panelTitle}>Revision</Text>
+        {studySummary.revisionItems.length === 0 ? (
+          <Text style={styles.mutedText}>No revision items loaded yet.</Text>
+        ) : (
+          studySummary.revisionItems.map(renderRevisionItem)
+        )}
       </View>
     </>
   );
@@ -411,6 +548,7 @@ export default function App(): React.JSX.Element {
         </View>
 
         {activeTab === "dashboard" && renderDashboard()}
+        {activeTab === "study" && renderStudy()}
         {activeTab === "buddy" && renderBuddy()}
         {activeTab === "library" && renderLibrary()}
         {activeTab === "plkg" && renderPlkg()}
@@ -645,6 +783,24 @@ const styles = StyleSheet.create({
     color: "#ffffff",
     fontSize: 14,
     fontWeight: "800",
+  },
+  secondaryButton: {
+    alignItems: "center",
+    borderColor: "#14323b",
+    borderRadius: 8,
+    borderWidth: 1,
+    minHeight: 40,
+    justifyContent: "center",
+    marginTop: 4,
+    paddingHorizontal: 12,
+  },
+  secondaryButtonText: {
+    color: "#14323b",
+    fontSize: 13,
+    fontWeight: "800",
+  },
+  taskBlock: {
+    gap: 4,
   },
   tabs: {
     flexDirection: "row",

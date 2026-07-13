@@ -9,7 +9,7 @@ The product is built around:
 - A cloud-first, offline-capable learning experience.
 - A TypeScript monorepo architecture.
 
-This repository is currently in Sprint 7: Basic PLKG Foundation.
+This repository is currently in Sprint 8: Study Preparation and Revision MVP.
 
 ---
 
@@ -172,6 +172,16 @@ Sprint 7 PLKG endpoints:
 - `POST /api/v1/plkg/learning-activity`
 
 Sprint 7 introduces the first student-owned PLKG node and edge model with Supabase-ready RLS.
+
+Sprint 8 study endpoints:
+
+- `GET /api/v1/study/summary`
+- `GET /api/v1/study/preparation`
+- `GET /api/v1/study/revision`
+- `POST /api/v1/study/revision/reflection`
+
+Sprint 8 adds preparation plans, revision items, deterministic flashcard/quiz placeholders, and
+traceable recommendations from subject and PLKG context.
 
 ---
 

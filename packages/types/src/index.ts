@@ -43,3 +43,17 @@ export type {
   StudentProfile,
   SubscriptionStatus,
 } from "./student-profile.js";
+export type {
+  CreateStudyReflectionInput,
+  StudyActivityKind,
+  StudyFlashcard,
+  StudyPreparationPlan,
+  StudyPreparationState,
+  StudyPreparationTask,
+  StudyQuizQuestion,
+  StudyReadinessStatus,
+  StudyRecommendationTrace,
+  StudyRevisionItem,
+  StudyRevisionStatus,
+  StudySummary,
+} from "./study.js";
