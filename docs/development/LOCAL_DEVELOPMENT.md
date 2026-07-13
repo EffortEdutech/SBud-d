@@ -1,6 +1,6 @@
 # AI Study Buddy Local Development
 
-Status: Sprint 9 baseline
+Status: Sprint 10 baseline
 Last updated: 2026-07-13
 
 ---
@@ -26,6 +26,12 @@ Run all checks:
 
 ```powershell
 corepack pnpm check
+```
+
+Run the MVP release readiness gate:
+
+```powershell
+corepack pnpm mvp:readiness
 ```
 
 Start the API:
@@ -132,6 +138,12 @@ Supabase persistence is prepared by migration/reference SQL.
 
 Sprint 9 uses an in-memory mobile cache and pending queue for the local offline baseline.
 Durable encrypted local storage is deferred until a mobile storage dependency is approved.
+
+Sprint 10 release readiness docs live in:
+
+```text
+docs/release
+```
 
 ---
 

@@ -1,7 +1,7 @@
 # AI Study Buddy Roadmap
 
 Status: Living roadmap
-Current sprint: Sprint 9 - Offline and Synchronization Baseline
+Current sprint: Sprint 10 - MVP Quality, Security, and Release Readiness
 Last updated: 2026-07-13
 
 ---
@@ -12,10 +12,10 @@ AI Study Buddy is moving from documentation-first architecture into implementati
 
 Current focus:
 
-- Add local learning snapshot cache for offline access.
-- Add pending sync queue for offline learning actions.
-- Add sync status and conflict-rule endpoints.
-- Wire the mobile Sync tab to pending queue and reconnect behavior.
+- Add MVP readiness integration coverage.
+- Add no-tracked-secret-file release validation.
+- Add release readiness, security review, known issues, and release notes docs.
+- Add a local MVP release gate command.
 
 ---
 
@@ -242,12 +242,26 @@ Sprint 8 is complete.
 
 ---
 
-# 12. Sprint 9 Current Scope
+# 12. Sprint 9 Completion
 
-Sprint 9 establishes:
+Sprint 9 established:
 
 - Sync queue shared types.
 - API sync status, conflict-rules, and push endpoints.
 - Student-owned sync queue schema and RLS reference.
 - Mobile learning snapshot cache for offline access.
 - Mobile pending queue and Sync tab for reconnect behavior.
+
+Sprint 9 is complete.
+
+---
+
+# 13. Sprint 10 Current Scope
+
+Sprint 10 establishes:
+
+- MVP readiness integration test.
+- Local release gate script and `mvp:readiness` command.
+- Tracked secret-file validation.
+- Required migration file validation.
+- Release readiness docs, security review, known issues, and release notes draft.

@@ -42,7 +42,7 @@ Before making changes:
 
 ## Current Project State
 
-This project is in Sprint 9: Offline and Synchronization Baseline.
+This project is in Sprint 10: MVP Quality, Security, and Release Readiness.
 
 The approved monorepo skeleton from Volume G2 now exists:
 
@@ -58,7 +58,7 @@ The approved monorepo skeleton from Volume G2 now exists:
 - `tools`
 - `tests`
 
-Implementation folders are scaffolded, Sprint 2 added the first runnable mobile/API shells, Sprint 3 added the first Supabase data/authentication foundation, Sprint 4 added the academic profile/dashboard slice, Sprint 5 added the document library foundation, Sprint 6 added the minimum useful BLIE chat slice, Sprint 7 added the basic PLKG foundation, Sprint 8 added the first study preparation and revision MVP, and Sprint 9 adds the offline and synchronization baseline. Keep implementation aligned with Volume G2 and never commit Supabase or AI provider secrets.
+Implementation folders are scaffolded, Sprint 2 added the first runnable mobile/API shells, Sprint 3 added the first Supabase data/authentication foundation, Sprint 4 added the academic profile/dashboard slice, Sprint 5 added the document library foundation, Sprint 6 added the minimum useful BLIE chat slice, Sprint 7 added the basic PLKG foundation, Sprint 8 added the first study preparation and revision MVP, Sprint 9 added the offline and synchronization baseline, and Sprint 10 adds MVP quality, security, and release readiness. Keep implementation aligned with Volume G2 and never commit Supabase or AI provider secrets.
 
 ## Architecture Invariants
 
@@ -118,6 +118,7 @@ corepack pnpm lint
 corepack pnpm typecheck
 corepack pnpm test
 corepack pnpm check
+corepack pnpm mvp:readiness
 corepack pnpm graph:update
 ~~~
 
@@ -142,6 +143,7 @@ Current command behavior:
 - `typecheck` runs TypeScript.
 - `test` runs Vitest.
 - `check` runs format check, lint, typecheck, and test.
+- `mvp:readiness` runs install, build, check, tracked-secret-file validation, and required migration presence validation.
 - `graph:update` refreshes Graphify through `scripts/graphify.ps1`.
 
 These commands are baseline workspace commands. Supabase is not configured yet and is deferred until the data/authentication sprint.
@@ -223,6 +225,12 @@ Sprint 9 sync notes:
 - Mobile caches dashboard, document library, PLKG, and study snapshots for offline access.
 - Offline document metadata, PLKG learning activity, and study reflection actions are queued locally until sync.
 - Local queue storage is in-memory for the baseline; durable encrypted device storage requires an approved mobile storage dependency.
+
+Sprint 10 release readiness notes:
+
+- MVP release readiness docs live under `docs/release`.
+- `corepack pnpm mvp:readiness` is the local release gate.
+- The current MVP is suitable for controlled local/staging validation, not broad production release.
 
 ## Security Rules
 

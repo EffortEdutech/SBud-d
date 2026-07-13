@@ -14,6 +14,7 @@
     "test": "vitest run --passWithNoTests && pnpm -r --if-present test",
     "typecheck": "pnpm --filter @sbud-d/types build && pnpm --filter @sbud-d/shared build && tsc --noEmit --project tsconfig.json && pnpm -r --if-present typecheck",
     "check": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test",
+    "mvp:readiness": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -ExecutionPolicy Bypass -File scripts/mvp-readiness.ps1",
     "graph:update": "powershell -ExecutionPolicy Bypass -File scripts/graphify.ps1 update ."
   },
   "devDependencies": {

@@ -20,11 +20,11 @@ When work progresses, update this checklist in the same commit or handoff as the
 
 # Current Sprint
 
-Current sprint: Sprint 9 - Offline and Synchronization Baseline
+Current sprint: Sprint 10 - MVP Quality, Security, and Release Readiness
 
 Current goal:
 
-Support cached offline learning access and safe synchronization of pending learning actions.
+Prepare the MVP for controlled validation with release gates, security review, and release documentation.
 
 ---
 
@@ -305,27 +305,27 @@ Support cached offline learning access and safe synchronization of pending learn
 
 ## Testing
 
-- [ ] Functional tests for core flows.
-- [ ] Integration tests for API/data.
-- [ ] BLIE behavior checks.
-- [ ] PLKG consistency checks.
-- [ ] Offline/sync checks.
+- [x] Functional tests for core flows.
+- [x] Integration tests for API/data.
+- [x] BLIE behavior checks.
+- [x] PLKG consistency checks.
+- [x] Offline/sync checks.
 
 ## Security
 
-- [ ] Auth review.
-- [ ] Authorization review.
-- [ ] Storage access review.
-- [ ] Data isolation review.
-- [ ] No-secrets review.
+- [x] Auth review.
+- [x] Authorization review.
+- [x] Storage access review.
+- [x] Data isolation review.
+- [x] No-secrets review.
 
 ## Release
 
-- [ ] Deployment checklist.
-- [ ] Rollback notes.
-- [ ] Monitoring plan.
-- [ ] MVP known issues.
-- [ ] Release notes draft.
+- [x] Deployment checklist.
+- [x] Rollback notes.
+- [x] Monitoring plan.
+- [x] MVP known issues.
+- [x] Release notes draft.
 
 ---
 

@@ -9,7 +9,7 @@ The product is built around:
 - A cloud-first, offline-capable learning experience.
 - A TypeScript monorepo architecture.
 
-This repository is currently in Sprint 9: Offline and Synchronization Baseline.
+This repository is currently in Sprint 10: MVP Quality, Security, and Release Readiness.
 
 ---
 
@@ -87,6 +87,7 @@ corepack pnpm lint
 corepack pnpm typecheck
 corepack pnpm test
 corepack pnpm check
+corepack pnpm mvp:readiness
 corepack pnpm graph:update
 ```
 
@@ -100,6 +101,7 @@ Current command behavior:
 - `pnpm test` runs Vitest.
 - `pnpm typecheck` runs TypeScript.
 - `pnpm check` runs format check, lint, typecheck, and test.
+- `pnpm mvp:readiness` runs the release readiness gate.
 - `pnpm graph:update` refreshes Graphify.
 
 Sprint 1 installs development-only tooling dependencies. Production dependencies still require explicit approval.
@@ -191,6 +193,19 @@ Sprint 9 sync endpoints:
 
 Sprint 9 adds a mobile Sync tab, local learning snapshot cache, pending offline queue, and
 Supabase-ready sync queue event schema.
+
+Sprint 10 release readiness:
+
+- `docs/release/MVP_RELEASE_READINESS.md`
+- `docs/release/SECURITY_REVIEW.md`
+- `docs/release/RELEASE_NOTES_DRAFT.md`
+- `docs/release/MVP_KNOWN_ISSUES.md`
+
+Run the local release gate:
+
+```powershell
+corepack pnpm mvp:readiness
+```
 
 ---
 
