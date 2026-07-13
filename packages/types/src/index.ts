@@ -57,3 +57,14 @@ export type {
   StudyRevisionStatus,
   StudySummary,
 } from "./study.js";
+export type {
+  SyncConflictRule,
+  SyncConnectionStatus,
+  SyncEntityType,
+  SyncOperation,
+  SyncPushRequest,
+  SyncPushResponse,
+  SyncQueueItem,
+  SyncQueueStatus,
+  SyncStatusSummary,
+} from "./sync.js";

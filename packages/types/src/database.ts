@@ -369,6 +369,59 @@ export interface Database {
           updated_at?: string;
         };
       };
+      sync_queue_events: {
+        Row: {
+          id: string;
+          student_id: string;
+          entity_type:
+            | "dashboard_snapshot"
+            | "document_metadata"
+            | "plkg_learning_activity"
+            | "study_reflection"
+            | "study_snapshot";
+          entity_id: string;
+          operation: "create" | "update" | "delete";
+          status: "pending" | "syncing" | "synced" | "failed";
+          payload: Record<string, unknown>;
+          retry_count: number;
+          last_error: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          student_id: string;
+          entity_type:
+            | "dashboard_snapshot"
+            | "document_metadata"
+            | "plkg_learning_activity"
+            | "study_reflection"
+            | "study_snapshot";
+          entity_id: string;
+          operation: "create" | "update" | "delete";
+          status?: "pending" | "syncing" | "synced" | "failed";
+          payload?: Record<string, unknown>;
+          retry_count?: number;
+          last_error?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          entity_type?:
+            | "dashboard_snapshot"
+            | "document_metadata"
+            | "plkg_learning_activity"
+            | "study_reflection"
+            | "study_snapshot";
+          entity_id?: string;
+          operation?: "create" | "update" | "delete";
+          status?: "pending" | "syncing" | "synced" | "failed";
+          payload?: Record<string, unknown>;
+          retry_count?: number;
+          last_error?: string | null;
+          updated_at?: string;
+        };
+      };
     };
   };
 }

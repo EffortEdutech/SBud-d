@@ -9,7 +9,7 @@ The product is built around:
 - A cloud-first, offline-capable learning experience.
 - A TypeScript monorepo architecture.
 
-This repository is currently in Sprint 8: Study Preparation and Revision MVP.
+This repository is currently in Sprint 9: Offline and Synchronization Baseline.
 
 ---
 
@@ -182,6 +182,15 @@ Sprint 8 study endpoints:
 
 Sprint 8 adds preparation plans, revision items, deterministic flashcard/quiz placeholders, and
 traceable recommendations from subject and PLKG context.
+
+Sprint 9 sync endpoints:
+
+- `GET /api/v1/sync/status`
+- `GET /api/v1/sync/conflict-rules`
+- `POST /api/v1/sync/push`
+
+Sprint 9 adds a mobile Sync tab, local learning snapshot cache, pending offline queue, and
+Supabase-ready sync queue event schema.
 
 ---
 

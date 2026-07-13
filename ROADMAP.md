@@ -1,7 +1,7 @@
 # AI Study Buddy Roadmap
 
 Status: Living roadmap
-Current sprint: Sprint 8 - Study Preparation and Revision MVP
+Current sprint: Sprint 9 - Offline and Synchronization Baseline
 Last updated: 2026-07-13
 
 ---
@@ -12,10 +12,10 @@ AI Study Buddy is moving from documentation-first architecture into implementati
 
 Current focus:
 
-- Add preparation plans for current subject topics.
-- Add revision items from PLKG mastery and knowledge gap state.
-- Add deterministic flashcard and quiz placeholders.
-- Wire the mobile Study tab to preparation, revision, and traceable recommendations.
+- Add local learning snapshot cache for offline access.
+- Add pending sync queue for offline learning actions.
+- Add sync status and conflict-rule endpoints.
+- Wire the mobile Sync tab to pending queue and reconnect behavior.
 
 ---
 
@@ -228,12 +228,26 @@ Sprint 7 is complete.
 
 ---
 
-# 11. Sprint 8 Current Scope
+# 11. Sprint 8 Completion
 
-Sprint 8 establishes:
+Sprint 8 established:
 
 - Preparation plan and revision item shared types.
 - Student-owned study preparation/revision schema and RLS reference.
 - API study summary, preparation, revision, and reflection endpoints.
 - Flashcard and quiz placeholders generated from PLKG context.
 - Mobile Study tab with readiness, preparation, revision, and review actions.
+
+Sprint 8 is complete.
+
+---
+
+# 12. Sprint 9 Current Scope
+
+Sprint 9 establishes:
+
+- Sync queue shared types.
+- API sync status, conflict-rules, and push endpoints.
+- Student-owned sync queue schema and RLS reference.
+- Mobile learning snapshot cache for offline access.
+- Mobile pending queue and Sync tab for reconnect behavior.

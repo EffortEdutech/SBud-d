@@ -18,6 +18,7 @@ import type {
   StudyPreparationPlan,
   StudyRevisionItem,
   StudySummary,
+  SyncStatusSummary,
 } from "@sbud-d/types";
 
 import { fallbackBlieResponse, sendBlieChat } from "./src/blie/blie-service";
@@ -38,8 +39,17 @@ import {
   fallbackStudySummary,
   fetchStudySummary,
 } from "./src/study/study-service";
+import {
+  cacheLearningSnapshot,
+  enqueueOfflineChange,
+  fallbackSyncStatus,
+  fetchSyncStatus,
+  getLearningSnapshot,
+  getLocalSyncStatus,
+  pushPendingQueue,
+} from "./src/sync/sync-service";
 
-type TabKey = "dashboard" | "study" | "buddy" | "library" | "plkg";
+type TabKey = "dashboard" | "study" | "buddy" | "library" | "plkg" | "sync";
 
 const tabs: Array<{ key: TabKey; label: string }> = [
   { key: "dashboard", label: "Dashboard" },
@@ -47,6 +57,7 @@ const tabs: Array<{ key: TabKey; label: string }> = [
   { key: "buddy", label: "BLIE" },
   { key: "library", label: "Library" },
   { key: "plkg", label: "PLKG" },
+  { key: "sync", label: "Sync" },
 ];
 
 export default function App(): React.JSX.Element {
@@ -57,10 +68,12 @@ export default function App(): React.JSX.Element {
   );
   const [plkgSummary, setPlkgSummary] = useState<PlkgSummary>(fallbackPlkgSummary);
   const [studySummary, setStudySummary] = useState<StudySummary>(fallbackStudySummary);
+  const [syncStatus, setSyncStatus] = useState<SyncStatusSummary>(fallbackSyncStatus);
   const [apiStatus, setApiStatus] = useState("Loading dashboard...");
   const [libraryStatus, setLibraryStatus] = useState("Loading library...");
   const [plkgStatus, setPlkgStatus] = useState("Loading PLKG...");
   const [studyStatus, setStudyStatus] = useState("Loading study guidance...");
+  const [syncStatusLabel, setSyncStatusLabel] = useState("Checking sync status...");
   const [uploadState, setUploadState] = useState("Ready for metadata upload");
   const [blieQuestion, setBlieQuestion] = useState("Explain recursion with a simple example");
   const [blieStatus, setBlieStatus] = useState("Ready for context-aware chat");
@@ -77,12 +90,16 @@ export default function App(): React.JSX.Element {
           setDashboard(summary);
           setApiStatus("Connected to API");
           setSelectedSubjectId(summary.subjects[0]?.id ?? null);
+          cacheLearningSnapshot({ dashboard: summary });
         }
       })
       .catch(() => {
         if (isMounted) {
-          setDashboard(fallbackDashboardSummary);
-          setApiStatus("Using offline fallback");
+          const cachedDashboard = getLearningSnapshot().dashboard;
+
+          setDashboard(cachedDashboard ?? fallbackDashboardSummary);
+          setApiStatus(cachedDashboard ? "Using cached dashboard" : "Using offline fallback");
+          setSyncStatus(getLocalSyncStatus());
         }
       });
 
@@ -91,12 +108,18 @@ export default function App(): React.JSX.Element {
         if (isMounted) {
           setDocumentLibrary(summary);
           setLibraryStatus("Connected to document API");
+          cacheLearningSnapshot({ documentLibrary: summary });
         }
       })
       .catch(() => {
         if (isMounted) {
-          setDocumentLibrary(fallbackDocumentLibrarySummary);
-          setLibraryStatus("Using offline library fallback");
+          const cachedLibrary = getLearningSnapshot().documentLibrary;
+
+          setDocumentLibrary(cachedLibrary ?? fallbackDocumentLibrarySummary);
+          setLibraryStatus(
+            cachedLibrary ? "Using cached library" : "Using offline library fallback",
+          );
+          setSyncStatus(getLocalSyncStatus());
         }
       });
 
@@ -105,12 +128,16 @@ export default function App(): React.JSX.Element {
         if (isMounted) {
           setPlkgSummary(summary);
           setPlkgStatus("Connected to PLKG API");
+          cacheLearningSnapshot({ plkgSummary: summary });
         }
       })
       .catch(() => {
         if (isMounted) {
-          setPlkgSummary(fallbackPlkgSummary);
-          setPlkgStatus("Using offline PLKG fallback");
+          const cachedPlkg = getLearningSnapshot().plkgSummary;
+
+          setPlkgSummary(cachedPlkg ?? fallbackPlkgSummary);
+          setPlkgStatus(cachedPlkg ? "Using cached PLKG" : "Using offline PLKG fallback");
+          setSyncStatus(getLocalSyncStatus());
         }
       });
 
@@ -119,12 +146,30 @@ export default function App(): React.JSX.Element {
         if (isMounted) {
           setStudySummary(summary);
           setStudyStatus("Connected to study API");
+          cacheLearningSnapshot({ studySummary: summary });
         }
       })
       .catch(() => {
         if (isMounted) {
-          setStudySummary(fallbackStudySummary);
-          setStudyStatus("Using offline study fallback");
+          const cachedStudy = getLearningSnapshot().studySummary;
+
+          setStudySummary(cachedStudy ?? fallbackStudySummary);
+          setStudyStatus(cachedStudy ? "Using cached study plan" : "Using offline study fallback");
+          setSyncStatus(getLocalSyncStatus());
+        }
+      });
+
+    fetchSyncStatus()
+      .then((status) => {
+        if (isMounted) {
+          setSyncStatus(status);
+          setSyncStatusLabel("Connected to sync API");
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setSyncStatus(getLocalSyncStatus());
+          setSyncStatusLabel("Using local sync queue");
         }
       });
 
@@ -151,7 +196,13 @@ export default function App(): React.JSX.Element {
       }));
       setUploadState("Upload metadata ready for processing");
     } catch {
-      setUploadState("Upload metadata failed");
+      const item = enqueueOfflineChange("document_metadata", "sample-study-note.pdf", {
+        fileName: "sample-study-note.pdf",
+        subjectId: dashboard.subjects[0]?.id ?? "subject-programming",
+      });
+
+      setSyncStatus(getLocalSyncStatus());
+      setUploadState(`Queued offline metadata: ${item.id}`);
     }
   };
 
@@ -188,7 +239,14 @@ export default function App(): React.JSX.Element {
       setPlkgSummary(summary);
       setPlkgStatus("Learning activity added");
     } catch {
-      setPlkgStatus("PLKG update failed");
+      const item = enqueueOfflineChange("plkg_learning_activity", "mobile-plkg-action", {
+        label: "Reviewed BLIE explanation",
+        subjectId: selectedSubjectId ?? dashboard.subjects[0]?.id ?? null,
+        sourceId: blieResponse?.id ?? "mobile-plkg-action",
+      });
+
+      setSyncStatus(getLocalSyncStatus());
+      setPlkgStatus(`Queued offline PLKG activity: ${item.id}`);
     }
   };
 
@@ -210,7 +268,28 @@ export default function App(): React.JSX.Element {
       }));
       setStudyStatus("Revision reflection recorded");
     } catch {
-      setStudyStatus("Revision reflection failed");
+      const item = enqueueOfflineChange("study_reflection", revisionItem.id, {
+        confidenceLevel: 75,
+        reflection: `Reviewed ${revisionItem.topicLabel} from the mobile Study tab.`,
+      });
+
+      setSyncStatus(getLocalSyncStatus());
+      setStudyStatus(`Queued offline reflection: ${item.id}`);
+    }
+  };
+
+  const handleSyncNow = async (): Promise<void> => {
+    setSyncStatusLabel("Synchronizing pending changes...");
+
+    try {
+      await pushPendingQueue();
+      const status = await fetchSyncStatus();
+
+      setSyncStatus(status);
+      setSyncStatusLabel("Sync complete");
+    } catch {
+      setSyncStatus(getLocalSyncStatus());
+      setSyncStatusLabel("Sync failed; pending changes preserved locally");
     }
   };
 
@@ -531,6 +610,74 @@ export default function App(): React.JSX.Element {
     </>
   );
 
+  const renderSync = (): React.JSX.Element => (
+    <>
+      <View style={styles.panel}>
+        <Text style={styles.panelTitle}>Synchronization</Text>
+        <Text style={styles.metricText}>{syncStatus.connectionStatus}</Text>
+        <Text style={styles.mutedText}>{syncStatusLabel}</Text>
+        <View style={styles.graphMetricRow}>
+          <Text style={styles.graphMetric}>{syncStatus.pendingCount} pending</Text>
+          <Text style={styles.graphMetric}>{syncStatus.failedCount} failed</Text>
+          <Text style={styles.graphMetric}>
+            {syncStatus.lastSyncedAt ? "Synced recently" : "No sync yet"}
+          </Text>
+        </View>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => {
+            void handleSyncNow();
+          }}
+          style={styles.primaryButton}
+        >
+          <Text style={styles.primaryButtonText}>Sync now</Text>
+        </Pressable>
+      </View>
+
+      <View style={styles.panel}>
+        <Text style={styles.panelTitle}>Offline Access</Text>
+        {syncStatus.offlineAvailableSections.map((section) => (
+          <View key={section} style={styles.subjectRow}>
+            <Text style={styles.subjectName}>{section}</Text>
+            <Text style={styles.statusPill}>cached</Text>
+          </View>
+        ))}
+      </View>
+
+      <View style={styles.panel}>
+        <Text style={styles.panelTitle}>Pending Queue</Text>
+        {syncStatus.queue.length === 0 ? (
+          <Text style={styles.mutedText}>No pending offline changes.</Text>
+        ) : (
+          syncStatus.queue.slice(0, 5).map((item) => (
+            <View key={item.id} style={styles.documentRow}>
+              <View style={styles.documentHeader}>
+                <Text style={styles.subjectName}>{item.entityType}</Text>
+                <Text style={styles.statusPill}>{item.status}</Text>
+              </View>
+              <Text style={styles.mutedText}>
+                {item.operation} - {item.entityId}
+              </Text>
+              <Text style={styles.statusMeta}>Retries: {item.retryCount}</Text>
+            </View>
+          ))
+        )}
+      </View>
+
+      <View style={styles.panel}>
+        <Text style={styles.panelTitle}>Conflict Rules</Text>
+        {syncStatus.conflictRules.map((rule) => (
+          <View key={rule.entityType} style={styles.documentRow}>
+            <Text style={styles.subjectName}>{rule.entityType}</Text>
+            <Text style={styles.mutedText}>
+              {rule.strategy} - {rule.description}
+            </Text>
+          </View>
+        ))}
+      </View>
+    </>
+  );
+
   return (
     <SafeAreaView style={styles.screen}>
       <ScrollView contentContainerStyle={styles.container}>
@@ -552,6 +699,7 @@ export default function App(): React.JSX.Element {
         {activeTab === "buddy" && renderBuddy()}
         {activeTab === "library" && renderLibrary()}
         {activeTab === "plkg" && renderPlkg()}
+        {activeTab === "sync" && renderSync()}
 
         <View style={styles.tabs}>
           {tabs.map((tab) => {

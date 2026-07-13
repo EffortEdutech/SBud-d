@@ -42,7 +42,7 @@ Before making changes:
 
 ## Current Project State
 
-This project is in Sprint 8: Study Preparation and Revision MVP.
+This project is in Sprint 9: Offline and Synchronization Baseline.
 
 The approved monorepo skeleton from Volume G2 now exists:
 
@@ -58,7 +58,7 @@ The approved monorepo skeleton from Volume G2 now exists:
 - `tools`
 - `tests`
 
-Implementation folders are scaffolded, Sprint 2 added the first runnable mobile/API shells, Sprint 3 added the first Supabase data/authentication foundation, Sprint 4 added the academic profile/dashboard slice, Sprint 5 added the document library foundation, Sprint 6 added the minimum useful BLIE chat slice, Sprint 7 added the basic PLKG foundation, and Sprint 8 adds the first study preparation and revision MVP. Keep implementation aligned with Volume G2 and never commit Supabase or AI provider secrets.
+Implementation folders are scaffolded, Sprint 2 added the first runnable mobile/API shells, Sprint 3 added the first Supabase data/authentication foundation, Sprint 4 added the academic profile/dashboard slice, Sprint 5 added the document library foundation, Sprint 6 added the minimum useful BLIE chat slice, Sprint 7 added the basic PLKG foundation, Sprint 8 added the first study preparation and revision MVP, and Sprint 9 adds the offline and synchronization baseline. Keep implementation aligned with Volume G2 and never commit Supabase or AI provider secrets.
 
 ## Architecture Invariants
 
@@ -211,6 +211,18 @@ Sprint 8 study notes:
 - Preparation and revision guidance is tied to subjects and PLKG context.
 - Flashcards and quiz prompts are deterministic MVP placeholders.
 - Supabase persistence is prepared by migration/reference SQL but local API uses in-memory fixtures until live project persistence is complete.
+
+Sprint 9 sync endpoints:
+
+- `GET /api/v1/sync/status`
+- `GET /api/v1/sync/conflict-rules`
+- `POST /api/v1/sync/push`
+
+Sprint 9 sync notes:
+
+- Mobile caches dashboard, document library, PLKG, and study snapshots for offline access.
+- Offline document metadata, PLKG learning activity, and study reflection actions are queued locally until sync.
+- Local queue storage is in-memory for the baseline; durable encrypted device storage requires an approved mobile storage dependency.
 
 ## Security Rules
 

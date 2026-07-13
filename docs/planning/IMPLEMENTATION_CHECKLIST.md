@@ -20,11 +20,11 @@ When work progresses, update this checklist in the same commit or handoff as the
 
 # Current Sprint
 
-Current sprint: Sprint 8 - Study Preparation and Revision MVP
+Current sprint: Sprint 9 - Offline and Synchronization Baseline
 
 Current goal:
 
-Provide subject-aware preparation plans and PLKG-aware revision guidance with flashcard and quiz placeholders.
+Support cached offline learning access and safe synchronization of pending learning actions.
 
 ---
 
@@ -287,17 +287,17 @@ Provide subject-aware preparation plans and PLKG-aware revision guidance with fl
 
 ## Offline
 
-- [ ] Local storage strategy.
-- [ ] Offline dashboard access.
-- [ ] Offline subject resources.
-- [ ] Pending changes queue.
+- [x] Local storage strategy.
+- [x] Offline dashboard access.
+- [x] Offline subject resources.
+- [x] Pending changes queue.
 
 ## Synchronization
 
-- [ ] Sync status model.
-- [ ] Sync status UI.
-- [ ] Conflict rules for MVP entities.
-- [ ] Reconnect behavior.
+- [x] Sync status model.
+- [x] Sync status UI.
+- [x] Conflict rules for MVP entities.
+- [x] Reconnect behavior.
 
 ---
 
