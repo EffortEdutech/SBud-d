@@ -144,7 +144,7 @@ Current command behavior:
 - `test` runs Vitest.
 - `check` runs format check, lint, typecheck, and test.
 - `mvp:readiness` runs install, build, check, tracked-secret-file validation, and required migration presence validation.
-- `graph:update` refreshes Graphify through `scripts/graphify.ps1`.
+- `graph:update` refreshes Graphify through `scripts/graphify.ps1` using the pinned Windows PowerShell path.
 
 These commands are baseline workspace commands. Supabase is not configured yet and is deferred until the data/authentication sprint.
 
@@ -231,6 +231,7 @@ Sprint 10 release readiness notes:
 - MVP release readiness docs live under `docs/release`.
 - `corepack pnpm mvp:readiness` is the local release gate.
 - The current MVP is suitable for controlled local/staging validation, not broad production release.
+- Cross-cutting audit status is captured in `docs/release/CROSS_CUTTING_AUDIT.md`.
 
 ## Security Rules
 

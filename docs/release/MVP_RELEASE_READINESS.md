@@ -15,6 +15,7 @@ The MVP can move toward controlled testing when all required checks pass:
 - Supabase migration history matches local migration files
 - no `.env` or secret-like files are tracked
 - release notes and known issues are current
+- cross-cutting audit is current
 
 ---
 
@@ -72,7 +73,22 @@ Local and remote migration IDs must match.
 
 ---
 
-# 5. Rollback Plan
+# 5. Cross-Cutting Gate
+
+The release gate verifies required architecture and release documents exist, including:
+
+- Engineering Constitution,
+- Monorepo architecture,
+- Technology stack,
+- MVP roadmap,
+- security review,
+- known issues,
+- release notes draft,
+- cross-cutting audit.
+
+---
+
+# 6. Rollback Plan
 
 For the current MVP baseline:
 
@@ -84,7 +100,7 @@ For the current MVP baseline:
 
 ---
 
-# 6. Post-Release Monitoring
+# 7. Post-Release Monitoring
 
 For controlled testing, monitor:
 

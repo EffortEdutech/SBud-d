@@ -102,7 +102,7 @@ Current command behavior:
 - `pnpm typecheck` runs TypeScript.
 - `pnpm check` runs format check, lint, typecheck, and test.
 - `pnpm mvp:readiness` runs the release readiness gate.
-- `pnpm graph:update` refreshes Graphify.
+- `pnpm graph:update` refreshes Graphify through the pinned Windows PowerShell path.
 
 Sprint 1 installs development-only tooling dependencies. Production dependencies still require explicit approval.
 
@@ -200,6 +200,7 @@ Sprint 10 release readiness:
 - `docs/release/SECURITY_REVIEW.md`
 - `docs/release/RELEASE_NOTES_DRAFT.md`
 - `docs/release/MVP_KNOWN_ISSUES.md`
+- `docs/release/CROSS_CUTTING_AUDIT.md`
 
 Run the local release gate:
 

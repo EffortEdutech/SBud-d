@@ -48,10 +48,41 @@ function Assert-RequiredMigrationsExist {
   }
 }
 
+function Assert-ArchitectureReferencesExist {
+  $requiredV1Patterns = @(
+    "Volume A*Product Vision*Strategy.md",
+    "Volume B*Product Requirements Document*.md",
+    "Volume G0*Engineering Constitution.md",
+    "Volume G2*Monorepo*Repository Architecture.md",
+    "Volume G3*Technology Stack Specification.md",
+    "Volume G13*MVP Delivery Roadmap.md"
+  )
+
+  $missingV1 = $requiredV1Patterns | Where-Object {
+    -not (Get-ChildItem -LiteralPath "docs/v1" -Filter $_)
+  }
+
+  $requiredReleaseDocs = @(
+    "docs/release/MVP_RELEASE_READINESS.md",
+    "docs/release/SECURITY_REVIEW.md",
+    "docs/release/MVP_KNOWN_ISSUES.md",
+    "docs/release/RELEASE_NOTES_DRAFT.md",
+    "docs/release/CROSS_CUTTING_AUDIT.md"
+  )
+
+  $missingRelease = $requiredReleaseDocs | Where-Object { -not (Test-Path -LiteralPath $_) }
+  $missing = @($missingV1) + @($missingRelease)
+
+  if ($missing.Count -gt 0) {
+    Write-Error "Required architecture/release document(s) missing: $($missing -join ', ')"
+  }
+}
+
 Invoke-Checked @("corepack", "pnpm", "install", "--frozen-lockfile")
 Invoke-Checked @("corepack", "pnpm", "build")
 Invoke-Checked @("corepack", "pnpm", "check")
 Assert-NoTrackedSecretFiles
 Assert-RequiredMigrationsExist
+Assert-ArchitectureReferencesExist
 
 Write-Output "MVP readiness checks passed."

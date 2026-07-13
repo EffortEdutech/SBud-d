@@ -2,7 +2,7 @@
 
 Version: 0.1
 Status: Living checklist
-Last updated: 2026-07-11
+Last updated: 2026-07-13
 
 ---
 
@@ -20,11 +20,11 @@ When work progresses, update this checklist in the same commit or handoff as the
 
 # Current Sprint
 
-Current sprint: Sprint 10 - MVP Quality, Security, and Release Readiness
+Current sprint: Cross-Cutting Checklist
 
 Current goal:
 
-Prepare the MVP for controlled validation with release gates, security review, and release documentation.
+Complete architecture, documentation, Graphify, and security audit checks across the MVP baseline.
 
 ---
 
@@ -333,27 +333,27 @@ Prepare the MVP for controlled validation with release gates, security review, a
 
 ## Architecture Compliance
 
-- [ ] Changes follow Volume G0 Engineering Constitution.
-- [ ] Repository structure follows Volume G2.
-- [ ] Technology choices follow Volume G3.
-- [ ] Delivery remains aligned with Volume G13.
+- [x] Changes follow Volume G0 Engineering Constitution.
+- [x] Repository structure follows Volume G2.
+- [x] Technology choices follow Volume G3.
+- [x] Delivery remains aligned with Volume G13.
 
 ## Documentation
 
-- [ ] Update docs when commands change.
-- [ ] Update docs when schemas change.
-- [ ] Update docs when APIs change.
-- [ ] Update docs when architecture decisions change.
+- [x] Update docs when commands change.
+- [x] Update docs when schemas change.
+- [x] Update docs when APIs change.
+- [x] Update docs when architecture decisions change.
 
 ## Graphify
 
-- [ ] Query Graphify before broad source inspection.
-- [ ] Refresh Graphify after meaningful code structure changes.
-- [ ] If Graphify is incomplete, request central rebuild.
+- [x] Query Graphify before broad source inspection.
+- [x] Refresh Graphify after meaningful code structure changes.
+- [x] If Graphify is incomplete, request central rebuild.
 
 ## Security
 
-- [ ] Never read or print `.env` files.
-- [ ] Never commit secrets.
-- [ ] Keep student-owned data isolated.
-- [ ] Minimize data sent to external AI providers.
+- [x] Never read or print `.env` files.
+- [x] Never commit secrets.
+- [x] Keep student-owned data isolated.
+- [x] Minimize data sent to external AI providers.
