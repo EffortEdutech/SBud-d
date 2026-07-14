@@ -1,8 +1,10 @@
-import { createClient } from "@supabase/supabase-js";
-import type { AuthenticatedUser, Database } from "@sbud-d/types";
+import type { AuthenticatedUser } from "@sbud-d/types";
 
 import { extractBearerToken } from "./bearer-token.js";
-import { getApiEnvironment } from "../config/environment.js";
+import {
+  createSupabaseApiClient,
+  SupabaseApiConfigurationError,
+} from "../supabase/supabase-api-client.js";
 
 export class SupabaseAuthConfigurationError extends Error {
   constructor() {
@@ -25,21 +27,17 @@ export async function getAuthenticatedUserFromHeader(
     throw new MissingBearerTokenError();
   }
 
-  const environment = getApiEnvironment();
+  let supabase;
 
-  if (!environment.supabaseUrl || !environment.supabasePublishableKey) {
-    throw new SupabaseAuthConfigurationError();
+  try {
+    supabase = createSupabaseApiClient();
+  } catch (error) {
+    if (error instanceof SupabaseApiConfigurationError) {
+      throw new SupabaseAuthConfigurationError();
+    }
+
+    throw error;
   }
-
-  const supabase = createClient<Database>(
-    environment.supabaseUrl,
-    environment.supabasePublishableKey,
-    {
-      auth: {
-        persistSession: false,
-      },
-    },
-  );
 
   const { data, error } = await supabase.auth.getUser(token);
 
@@ -48,6 +46,40 @@ export async function getAuthenticatedUserFromHeader(
   }
 
   return {
+    id: data.user.id,
+    email: data.user.email ?? null,
+  };
+}
+
+export async function getAuthenticatedUserAndTokenFromHeader(
+  authorizationHeader: string | undefined,
+): Promise<AuthenticatedUser & { accessToken: string }> {
+  const token = extractBearerToken(authorizationHeader);
+
+  if (!token) {
+    throw new MissingBearerTokenError();
+  }
+
+  let supabase;
+
+  try {
+    supabase = createSupabaseApiClient();
+  } catch (error) {
+    if (error instanceof SupabaseApiConfigurationError) {
+      throw new SupabaseAuthConfigurationError();
+    }
+
+    throw error;
+  }
+
+  const { data, error } = await supabase.auth.getUser(token);
+
+  if (error || !data.user) {
+    throw error ?? new MissingBearerTokenError();
+  }
+
+  return {
+    accessToken: token,
     id: data.user.id,
     email: data.user.email ?? null,
   };

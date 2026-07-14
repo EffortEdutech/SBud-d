@@ -1,7 +1,7 @@
 # Academic Profile API
 
-Status: Sprint 4 baseline
-Last updated: 2026-07-12
+Status: MVP Stabilization Pass 1 partial Supabase wiring
+Last updated: 2026-07-14
 
 ---
 
@@ -9,7 +9,12 @@ Last updated: 2026-07-12
 
 Sprint 4 adds the first academic profile and dashboard API slice.
 
-The API currently uses an in-memory development repository. Supabase schema and RLS files are prepared, but live persistence is still pending project linking and migration application.
+The API defaults to an in-memory fixture repository for local/demo validation. MVP
+Stabilization Pass 1 adds a Supabase-backed repository path for academic profile,
+subjects, and dashboard aggregation when `SBUD_API_DATA_MODE=supabase`.
+
+In Supabase mode, requests must include an authenticated bearer token. Mobile clients
+still call the API; they must not write directly to Supabase tables.
 
 ---
 
@@ -58,7 +63,7 @@ GET /dashboard
 
 # 4. Persistence Path
 
-The future Supabase-backed version maps to:
+Supabase-backed academic persistence maps to:
 
 - `public.academic_profiles`
 - `public.academic_semesters`
@@ -69,3 +74,6 @@ RLS policy references live in:
 ```text
 database/policies/academic_profile_rls.sql
 ```
+
+The repository reads and writes using a server-side Supabase client with the request
+bearer token so RLS can evaluate the authenticated student.

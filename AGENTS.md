@@ -236,6 +236,9 @@ MVP Stabilization Pass 1 planning notes:
 
 - Planning artifact: `docs/planning/MVP_STABILIZATION_PASS_1.md`.
 - Goal: wire Supabase-backed persistence behind API repository boundaries while preserving fixture mode for local/demo validation.
+- `SBUD_API_DATA_MODE=fixture|supabase` controls API persistence mode; fixture mode remains the default.
+- The server-only Supabase API client boundary lives under `services/api/src/supabase`.
+- Academic profile, subjects, and dashboard aggregation are the first Supabase-backed repository slice.
 - Initial persistence targets: academic profile, subjects, document metadata, PLKG nodes/edges, study preparation/revision, sync queue events, and dashboard aggregation.
 - Mobile clients must continue using API endpoints; do not bypass the API boundary with direct database writes.
 - Do not introduce service-role keys into mobile or tracked files.

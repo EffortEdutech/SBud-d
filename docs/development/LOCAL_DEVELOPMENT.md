@@ -1,7 +1,7 @@
 # AI Study Buddy Local Development
 
-Status: Sprint 10 baseline
-Last updated: 2026-07-13
+Status: MVP Stabilization Pass 1 baseline
+Last updated: 2026-07-14
 
 ---
 
@@ -118,6 +118,21 @@ http://localhost:4801/api/v1
 
 Do not commit `.env` files.
 
+The API data mode is controlled by:
+
+```text
+SBUD_API_DATA_MODE=fixture
+```
+
+Supported values:
+
+- `fixture`: default local/demo mode using deterministic in-memory repositories.
+- `supabase`: server-side Supabase repository mode for wired domains.
+
+When `SBUD_API_DATA_MODE=supabase`, the API requires `SUPABASE_URL`,
+`SUPABASE_PUBLISHABLE_KEY`, and authenticated bearer tokens for Supabase-backed
+endpoints. Do not commit real values.
+
 Sprint 3 Supabase variables are documented in:
 
 ```text
@@ -126,6 +141,10 @@ docs/development/SUPABASE_SETUP.md
 
 Sprint 5 prepares the private `student-documents` storage bucket and student-owned
 path convention in SQL. Real file upload still requires repository wiring and live validation.
+
+MVP Stabilization Pass 1 begins Supabase repository wiring with the academic profile,
+subjects, and dashboard slice. Other domains still use fixture-backed repositories until
+their adapters are implemented.
 
 Sprint 6 uses a local deterministic BLIE provider abstraction. Do not commit AI provider
 keys or real provider credentials.

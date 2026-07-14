@@ -212,6 +212,7 @@ Next planned stabilization target:
 
 - Plan: `docs/planning/MVP_STABILIZATION_PASS_1.md`
 - Focus: wire Supabase-backed persistence behind API repositories while preserving fixture mode for local/demo validation.
+- API data mode: `SBUD_API_DATA_MODE=fixture|supabase`
 - Guardrail: mobile clients continue using API endpoints; no service-role key or secret is committed.
 
 ---

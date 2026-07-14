@@ -8,7 +8,7 @@ import { StudyService } from "../../services/api/src/study/study.service.js";
 import { SyncService } from "../../services/api/src/sync/sync.service.js";
 
 describe("MVP release readiness", () => {
-  it("supports the core student learning journey across MVP services", () => {
+  it("supports the core student learning journey across MVP services", async () => {
     const academic = new AcademicService();
     const documents = new DocumentService();
     const blie = new BlieService();
@@ -16,7 +16,7 @@ describe("MVP release readiness", () => {
     const study = new StudyService();
     const sync = new SyncService();
 
-    const dashboard = academic.getDashboardSummary();
+    const dashboard = await academic.getDashboardSummary();
     const library = documents.getLibrarySummary();
     const chat = blie.chat({
       message: "Explain recursion for revision",

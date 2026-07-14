@@ -368,22 +368,22 @@ Wire Supabase-backed persistence behind existing API repository boundaries while
 - [x] Confirm Supabase CLI project linking and migration history alignment were completed by the project owner.
 - [x] Query Graphify before planning the repository wiring path.
 - [x] Prepare dedicated stabilization plan.
-- [ ] Confirm data mode environment variable names in `.env.example`.
+- [x] Confirm data mode environment variable names in `.env.example`.
 - [ ] Confirm live validation test user approach without committing secrets.
 
 ## Data Mode and API Boundary
 
-- [ ] Add a server-side data mode switch for `fixture` and `supabase`.
-- [ ] Keep fixture mode as the default local/demo mode when Supabase variables are unavailable.
-- [ ] Keep mobile clients behind API endpoints.
-- [ ] Keep service-role keys out of mobile and tracked files.
-- [ ] Document the mode switch and failure behavior.
+- [x] Add a server-side data mode switch for `fixture` and `supabase`.
+- [x] Keep fixture mode as the default local/demo mode when Supabase variables are unavailable.
+- [x] Keep mobile clients behind API endpoints.
+- [x] Keep service-role keys out of mobile and tracked files.
+- [x] Document the mode switch and failure behavior.
 
 ## Supabase Repository Wiring
 
-- [ ] Add a server-only Supabase client boundary.
-- [ ] Wire academic profile persistence.
-- [ ] Wire subject persistence.
+- [x] Add a server-only Supabase client boundary.
+- [x] Wire academic profile persistence.
+- [x] Wire subject persistence.
 - [ ] Wire document metadata persistence.
 - [ ] Wire PLKG node persistence.
 - [ ] Wire PLKG edge persistence.
@@ -393,16 +393,16 @@ Wire Supabase-backed persistence behind existing API repository boundaries while
 
 ## Validation
 
-- [ ] Add mocked Supabase adapter tests.
+- [x] Add mocked Supabase adapter tests.
 - [ ] Keep fixture-mode MVP readiness passing.
 - [ ] Validate live Supabase RLS with authenticated student access.
 - [ ] Validate cross-student access is blocked.
-- [ ] Validate migration list remains aligned.
+- [!] Validate migration list remains aligned. Blocked on 2026-07-14 by Supabase CLI access-control response: `LegacyDbConfigLoginRoleStatusError` / HTTP 403.
 - [ ] Refresh Graphify after meaningful structure changes.
 
 ## Documentation
 
-- [ ] Update Supabase setup docs after repository wiring.
-- [ ] Update local development docs with fixture/Supabase mode commands.
-- [ ] Update API docs if response behavior changes.
-- [ ] Update release known issues after persistence wiring status changes.
+- [x] Update Supabase setup docs after repository wiring.
+- [x] Update local development docs with fixture/Supabase mode commands.
+- [x] Update API docs if response behavior changes.
+- [x] Update release known issues after persistence wiring status changes.

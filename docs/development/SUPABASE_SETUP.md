@@ -59,10 +59,14 @@ EXPO_PUBLIC_API_BASE_URL
 API server variables:
 
 ```text
+SBUD_API_DATA_MODE
 SUPABASE_URL
 SUPABASE_PUBLISHABLE_KEY
 PORT
 ```
+
+Use `SBUD_API_DATA_MODE=fixture` for default local/demo validation. Use
+`SBUD_API_DATA_MODE=supabase` only when local Supabase variables are configured.
 
 Do not expose or commit service-role keys.
 
@@ -97,7 +101,21 @@ Continue to add real values to local `.env` files only. Do not commit `.env` fil
 
 # 6. Next Supabase Work
 
-MVP Stabilization Pass 1 will wire API repositories to Supabase persistence.
+MVP Stabilization Pass 1 wires API repositories to Supabase persistence behind the
+existing API boundary.
+
+Current wired API persistence:
+
+- Academic profile.
+- Academic subjects.
+- Dashboard academic aggregation.
+
+Still fixture-backed:
+
+- Document metadata.
+- PLKG nodes and edges.
+- Study preparation and revision.
+- Sync queue events.
 
 Before controlled live validation:
 

@@ -1,7 +1,7 @@
 # MVP Known Issues
 
-Status: Sprint 10 baseline
-Last updated: 2026-07-13
+Status: MVP Stabilization Pass 1 baseline
+Last updated: 2026-07-14
 
 ---
 
@@ -9,9 +9,13 @@ Last updated: 2026-07-13
 
 ## In-Memory Local Data
 
-Several API modules use deterministic in-memory fixtures for local MVP validation. Data resets when the API restarts.
+Fixture mode uses deterministic in-memory repositories for local MVP validation. Data resets when the API restarts.
 
 Impact: acceptable for local validation; not acceptable for production persistence.
+
+MVP Stabilization Pass 1 has started Supabase repository wiring for the academic profile,
+subjects, and dashboard slice. Document metadata, PLKG, study, and sync repositories still
+need Supabase adapters.
 
 ## Offline Queue Is Not Durable
 

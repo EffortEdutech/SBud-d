@@ -1,6 +1,6 @@
 # MVP Stabilization Pass 1 - Supabase Persistence Wiring
 
-Status: Planned
+Status: In Progress
 Last updated: 2026-07-14
 
 ---
@@ -76,6 +76,8 @@ These files are the likely implementation entry points. Source files must still 
 - Keep fixture mode as the safe local fallback.
 - Fail clearly if Supabase mode is selected without required server variables.
 
+Status: Done.
+
 ## Step 2 - Supabase API Boundary
 
 - Add a server-only Supabase client factory.
@@ -83,12 +85,16 @@ These files are the likely implementation entry points. Source files must still 
 - Ensure logs never print Supabase keys or bearer tokens.
 - Keep mobile using API base URL only.
 
+Status: Done.
+
 ## Step 3 - Academic Persistence
 
 - Wire academic profile reads and updates.
 - Wire subject reads and creation.
 - Preserve existing endpoint contracts.
 - Add mocked repository tests.
+
+Status: First implementation complete. Live RLS validation is still pending.
 
 ## Step 4 - Document Metadata Persistence
 
@@ -127,14 +133,14 @@ These files are the likely implementation entry points. Source files must still 
 - [x] Confirm next target.
 - [x] Query Graphify for relevant modules.
 - [x] Prepare this plan.
-- [ ] Confirm data mode variable names.
+- [x] Confirm data mode variable names.
 - [ ] Confirm live validation user approach.
 
 ## Implementation
 
-- [ ] Data mode config.
-- [ ] Supabase API client boundary.
-- [ ] Academic repository adapter.
+- [x] Data mode config.
+- [x] Supabase API client boundary.
+- [x] Academic repository adapter.
 - [ ] Document repository adapter.
 - [ ] PLKG repository adapter.
 - [ ] Study repository adapter.
@@ -144,10 +150,10 @@ These files are the likely implementation entry points. Source files must still 
 ## Validation
 
 - [ ] Unit tests for fixture mode.
-- [ ] Mocked Supabase adapter tests.
+- [x] Mocked Supabase adapter tests.
 - [ ] `corepack pnpm check`.
 - [ ] `corepack pnpm mvp:readiness`.
-- [ ] `npx --yes supabase@latest migration list --workdir database`.
+- [!] `npx --yes supabase@latest migration list --workdir database`.
 - [ ] Live RLS read/write validation with authenticated student users.
 - [ ] Cross-student access denial validation.
 - [ ] Graphify refresh.
@@ -172,3 +178,9 @@ This pass is complete when:
 4. Existing API contracts remain compatible with the mobile app.
 5. No secrets or local environment files are tracked.
 6. Documentation and Graphify are current.
+
+---
+
+# 8. Current Blockers
+
+- 2026-07-14: `npx --yes supabase@latest migration list --workdir database` reached Supabase but returned `LegacyDbConfigLoginRoleStatusError` with HTTP 403. Migration-history confirmation requires a Supabase account/role with the required project access.
