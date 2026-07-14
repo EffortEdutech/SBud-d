@@ -11,12 +11,12 @@ export class BlieService {
 
   constructor(private readonly provider: BlieProvider = new LocalLearningProvider()) {}
 
-  chat(input: BlieChatRequest): BlieChatResponse {
+  async chat(input: BlieChatRequest): Promise<BlieChatResponse> {
     if (!input.message?.trim() || input.message.trim().length < MIN_MESSAGE_LENGTH) {
       throw new BadRequestException("message must contain a learning question.");
     }
 
-    const context = assembleBlieContext(input);
+    const context = await assembleBlieContext(input);
 
     this.logger.log(
       `BLIE chat request accepted intent=${context.intent} subjectId=${context.subjectId ?? "none"} contextItems=${context.retrievedContext.length}`,

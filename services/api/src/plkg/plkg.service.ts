@@ -8,32 +8,47 @@ import type {
 } from "@sbud-d/types";
 
 import { PlkgRepository } from "./plkg.repository.js";
+import { getAuthenticatedUserAndTokenFromHeader } from "../auth/supabase-auth-client.js";
+import { getApiEnvironment, type ApiEnvironment } from "../config/environment.js";
+
+interface PlkgRequestContext {
+  authorizationHeader?: string | undefined;
+}
 
 export class PlkgService {
-  constructor(private readonly repository: PlkgRepository = new PlkgRepository()) {}
+  constructor(
+    private readonly repository: PlkgRepository = new PlkgRepository(),
+    private readonly environment: ApiEnvironment = getApiEnvironment(),
+  ) {}
 
-  getSummary(): PlkgSummary {
-    return this.repository.getSummary();
+  async getSummary(context: PlkgRequestContext = {}): Promise<PlkgSummary> {
+    return this.repository.getSummary(await this.getRepositoryContext(context));
   }
 
-  listNodes(): PlkgNode[] {
-    return this.repository.listNodes();
+  async listNodes(context: PlkgRequestContext = {}): Promise<PlkgNode[]> {
+    return this.repository.listNodes(await this.getRepositoryContext(context));
   }
 
-  listEdges(): PlkgEdge[] {
-    return this.repository.listEdges();
+  async listEdges(context: PlkgRequestContext = {}): Promise<PlkgEdge[]> {
+    return this.repository.listEdges(await this.getRepositoryContext(context));
   }
 
-  addLearningActivity(input: CreatePlkgLearningActivityInput): PlkgNode {
+  async addLearningActivity(
+    input: CreatePlkgLearningActivityInput,
+    context: PlkgRequestContext = {},
+  ): Promise<PlkgNode> {
     if (!input.label?.trim()) {
       throw new BadRequestException("label is required.");
     }
 
-    return this.repository.addLearningActivity(input);
+    return this.repository.addLearningActivity(input, await this.getRepositoryContext(context));
   }
 
-  retrieveContextForBlie(subjectId: string | null): BlieRetrievedContext[] {
-    const summary = this.repository.getSummary();
+  async retrieveContextForBlie(
+    subjectId: string | null,
+    context: PlkgRequestContext = {},
+  ): Promise<BlieRetrievedContext[]> {
+    const summary = await this.repository.getSummary(await this.getRepositoryContext(context));
     const subjectNodes = subjectId
       ? summary.nodes.filter((node) => node.subjectId === subjectId)
       : summary.nodes;
@@ -49,5 +64,18 @@ export class PlkgService {
       snippet: `${node.type}; status: ${node.learningStatus}; mastery: ${node.masteryScore}%.`,
       relevanceLabel: "Student PLKG context",
     }));
+  }
+
+  private async getRepositoryContext(context: PlkgRequestContext) {
+    if (this.environment.dataMode !== "supabase") {
+      return {};
+    }
+
+    const user = await getAuthenticatedUserAndTokenFromHeader(context.authorizationHeader);
+
+    return {
+      accessToken: user.accessToken,
+      studentId: user.id,
+    };
   }
 }

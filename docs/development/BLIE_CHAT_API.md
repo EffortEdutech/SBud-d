@@ -1,7 +1,7 @@
 # BLIE Chat API
 
-Status: Sprint 6 foundation
-Last updated: 2026-07-12
+Status: MVP Stabilization Pass 1 PLKG-aware baseline
+Last updated: 2026-07-14
 
 ---
 
@@ -70,6 +70,9 @@ BLIE responses include:
 The trace exposes the current intent, retrieval status, provider, validation status, and context
 summary so students can see that BLIE is grounded before generation. Sprint 7 connects this
 grounding path to the basic student-owned PLKG.
+
+MVP Stabilization Pass 1 keeps BLIE provider-independent while allowing PLKG retrieval to use
+Supabase-backed PLKG nodes in `SBUD_API_DATA_MODE=supabase`.
 
 ---
 

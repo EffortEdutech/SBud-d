@@ -110,10 +110,10 @@ Current wired API persistence:
 - Academic subjects.
 - Dashboard academic aggregation.
 - Document metadata.
+- PLKG nodes and edges.
 
 Still fixture-backed:
 
-- PLKG nodes and edges.
 - Study preparation and revision.
 - Sync queue events.
 

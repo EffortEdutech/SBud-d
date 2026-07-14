@@ -47,7 +47,7 @@ export function detectBlieIntent(message: string): BlieIntent {
   return "general_learning";
 }
 
-export function assembleBlieContext(input: BlieChatRequest): BlieContextPackage {
+export async function assembleBlieContext(input: BlieChatRequest): Promise<BlieContextPackage> {
   const plkgService = new PlkgService();
   const intent = detectBlieIntent(input.message);
   const requestedSubject = demoSubjects.find((subject) => subject.id === input.subjectId);
@@ -88,7 +88,7 @@ export function assembleBlieContext(input: BlieChatRequest): BlieContextPackage 
     })),
   );
 
-  retrievedContext.push(...plkgService.retrieveContextForBlie(subject?.id ?? null));
+  retrievedContext.push(...(await plkgService.retrieveContextForBlie(subject?.id ?? null)));
 
   return {
     intent,

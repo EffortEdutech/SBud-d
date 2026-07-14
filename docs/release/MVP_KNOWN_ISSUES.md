@@ -14,8 +14,8 @@ Fixture mode uses deterministic in-memory repositories for local MVP validation.
 Impact: acceptable for local validation; not acceptable for production persistence.
 
 MVP Stabilization Pass 1 has started Supabase repository wiring for the academic profile,
-subjects, dashboard, and document metadata slices. PLKG, study, and sync repositories still
-need Supabase adapters.
+subjects, dashboard, document metadata, and PLKG node/edge slices. Study and sync
+repositories still need Supabase adapters.
 
 ## Offline Queue Is Not Durable
 

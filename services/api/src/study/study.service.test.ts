@@ -3,9 +3,9 @@ import { describe, expect, it } from "vitest";
 import { StudyService } from "./study.service.js";
 
 describe("StudyService", () => {
-  it("builds preparation and revision guidance from subject and PLKG context", () => {
+  it("builds preparation and revision guidance from subject and PLKG context", async () => {
     const service = new StudyService();
-    const summary = service.getSummary();
+    const summary = await service.getSummary();
 
     expect(summary.preparationPlans.length).toBeGreaterThan(0);
     expect(summary.revisionItems.length).toBeGreaterThan(0);
@@ -14,13 +14,13 @@ describe("StudyService", () => {
     expect(summary.revisionItems[0]?.quizQuestions.length).toBeGreaterThan(0);
   });
 
-  it("records revision reflection as completed when confidence is strong", () => {
+  it("records revision reflection as completed when confidence is strong", async () => {
     const service = new StudyService();
-    const revisionItem = service.getSummary().revisionItems[0];
+    const revisionItem = (await service.getSummary()).revisionItems[0];
 
     expect(revisionItem).toBeDefined();
 
-    const updated = service.recordReflection({
+    const updated = await service.recordReflection({
       revisionItemId: revisionItem!.id,
       confidenceLevel: 80,
       reflection: "I can explain the idea now.",

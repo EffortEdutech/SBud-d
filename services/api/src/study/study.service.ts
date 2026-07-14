@@ -11,19 +11,19 @@ import { StudyRepository } from "./study.repository.js";
 export class StudyService {
   constructor(private readonly repository: StudyRepository = new StudyRepository()) {}
 
-  getSummary(): StudySummary {
+  async getSummary(): Promise<StudySummary> {
     return this.repository.getSummary();
   }
 
-  listPreparationPlans(): StudyPreparationPlan[] {
+  async listPreparationPlans(): Promise<StudyPreparationPlan[]> {
     return this.repository.listPreparationPlans();
   }
 
-  listRevisionItems(): StudyRevisionItem[] {
+  async listRevisionItems(): Promise<StudyRevisionItem[]> {
     return this.repository.listRevisionItems();
   }
 
-  recordReflection(input: CreateStudyReflectionInput): StudyRevisionItem {
+  async recordReflection(input: CreateStudyReflectionInput): Promise<StudyRevisionItem> {
     if (!input.revisionItemId?.trim()) {
       throw new BadRequestException("revisionItemId is required.");
     }
@@ -37,7 +37,7 @@ export class StudyService {
     }
 
     try {
-      return this.repository.recordReflection(input);
+      return await this.repository.recordReflection(input);
     } catch {
       throw new NotFoundException("Revision item was not found.");
     }

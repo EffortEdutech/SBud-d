@@ -18,12 +18,12 @@ describe("MVP release readiness", () => {
 
     const dashboard = await academic.getDashboardSummary();
     const library = await documents.getLibrarySummary();
-    const chat = blie.chat({
+    const chat = await blie.chat({
       message: "Explain recursion for revision",
       subjectId: "subject-programming",
     });
-    const graph = plkg.getSummary();
-    const studySummary = study.getSummary();
+    const graph = await plkg.getSummary();
+    const studySummary = await study.getSummary();
     const syncStatus = sync.getStatus();
 
     expect(dashboard.subjects.length).toBeGreaterThan(0);

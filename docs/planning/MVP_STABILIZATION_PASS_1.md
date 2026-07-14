@@ -110,6 +110,8 @@ Status: First implementation complete. Real file upload and background processin
 - Ensure BLIE context assembly retrieves PLKG context through the repository boundary.
 - Validate edge creation only connects nodes owned by the authenticated student.
 
+Status: First implementation complete. Live RLS validation is still pending.
+
 ## Step 6 - Study and Sync Persistence
 
 - Wire study preparation/revision persistence.
@@ -144,7 +146,7 @@ Status: First implementation complete. Real file upload and background processin
 - [x] Supabase API client boundary.
 - [x] Academic repository adapter.
 - [x] Document repository adapter.
-- [ ] PLKG repository adapter.
+- [x] PLKG repository adapter.
 - [ ] Study repository adapter.
 - [ ] Sync repository adapter.
 - [ ] Dashboard persisted aggregation.

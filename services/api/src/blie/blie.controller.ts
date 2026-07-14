@@ -8,7 +8,7 @@ export class BlieController {
   private readonly blieService = new BlieService();
 
   @Post("chat")
-  chat(@Body() input: BlieChatRequest): BlieChatResponse {
+  chat(@Body() input: BlieChatRequest): Promise<BlieChatResponse> {
     return this.blieService.chat(input);
   }
 }

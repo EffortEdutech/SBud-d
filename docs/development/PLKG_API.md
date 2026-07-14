@@ -1,17 +1,20 @@
 # PLKG API
 
-Status: Sprint 7 foundation
-Last updated: 2026-07-12
+Status: MVP Stabilization Pass 1 Supabase PLKG wiring
+Last updated: 2026-07-14
 
 ---
 
 # 1. Scope
 
-Sprint 7 introduces the first Personal Learning Knowledge Graph foundation.
+Sprint 7 introduced the first Personal Learning Knowledge Graph foundation.
 
 The local API uses in-memory graph fixtures seeded from academic profile, subject, document,
-and BLIE interaction context. Supabase persistence is prepared through migration and reference
-SQL, and repository wiring is planned for MVP Stabilization Pass 1.
+and BLIE interaction context by default. MVP Stabilization Pass 1 adds a Supabase-backed
+PLKG path when `SBUD_API_DATA_MODE=supabase`.
+
+In Supabase mode, requests must include an authenticated bearer token. Mobile clients still
+call the API; they must not write directly to Supabase tables.
 
 ---
 
@@ -50,6 +53,11 @@ Sprint 7 models:
 - `plkg_nodes`
 - `plkg_edges`
 
+Supabase-backed PLKG persistence reads and writes:
+
+- `public.plkg_nodes`
+- `public.plkg_edges`
+
 Node states follow Volume H7:
 
 - `introduced`
@@ -71,7 +79,7 @@ Relationship types include:
 
 # 4. BLIE Integration
 
-Sprint 7 replaces the Sprint 6 PLKG placeholder with real PLKG context retrieval.
+Sprint 7 replaced the Sprint 6 PLKG placeholder with real PLKG context retrieval.
 
 BLIE context assembly now includes:
 
@@ -79,6 +87,9 @@ BLIE context assembly now includes:
 - selected subject context
 - document context
 - PLKG node context
+
+MVP Stabilization Pass 1 keeps retrieval-before-generation intact by awaiting PLKG context
+assembly before BLIE response generation.
 
 ---
 

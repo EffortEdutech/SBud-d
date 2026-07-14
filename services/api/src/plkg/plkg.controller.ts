@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, Headers, Post } from "@nestjs/common";
 import type {
   CreatePlkgLearningActivityInput,
   PlkgEdge,
@@ -13,22 +13,25 @@ export class PlkgController {
   private readonly plkgService = new PlkgService();
 
   @Get("summary")
-  getSummary(): PlkgSummary {
-    return this.plkgService.getSummary();
+  getSummary(@Headers("authorization") authorizationHeader?: string): Promise<PlkgSummary> {
+    return this.plkgService.getSummary({ authorizationHeader });
   }
 
   @Get("nodes")
-  listNodes(): PlkgNode[] {
-    return this.plkgService.listNodes();
+  listNodes(@Headers("authorization") authorizationHeader?: string): Promise<PlkgNode[]> {
+    return this.plkgService.listNodes({ authorizationHeader });
   }
 
   @Get("edges")
-  listEdges(): PlkgEdge[] {
-    return this.plkgService.listEdges();
+  listEdges(@Headers("authorization") authorizationHeader?: string): Promise<PlkgEdge[]> {
+    return this.plkgService.listEdges({ authorizationHeader });
   }
 
   @Post("learning-activity")
-  addLearningActivity(@Body() input: CreatePlkgLearningActivityInput): PlkgNode {
-    return this.plkgService.addLearningActivity(input);
+  addLearningActivity(
+    @Body() input: CreatePlkgLearningActivityInput,
+    @Headers("authorization") authorizationHeader?: string,
+  ): Promise<PlkgNode> {
+    return this.plkgService.addLearningActivity(input, { authorizationHeader });
   }
 }

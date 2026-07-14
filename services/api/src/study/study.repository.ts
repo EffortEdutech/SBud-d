@@ -14,8 +14,8 @@ const CREATED_AT = "2026-07-13T00:00:00.000Z";
 export class StudyRepository {
   constructor(private readonly plkgRepository: PlkgRepository = new PlkgRepository()) {}
 
-  getSummary(): StudySummary {
-    const plkgSummary = this.plkgRepository.getSummary();
+  async getSummary(): Promise<StudySummary> {
+    const plkgSummary = await this.plkgRepository.getSummary();
     const preparationPlans = this.buildPreparationPlans(plkgSummary);
     const revisionItems = this.buildRevisionItems(plkgSummary);
     const readyCount = preparationPlans.filter((plan) => plan.readinessStatus === "ready").length;
@@ -36,16 +36,16 @@ export class StudyRepository {
     };
   }
 
-  listPreparationPlans(): StudyPreparationPlan[] {
-    return this.getSummary().preparationPlans;
+  async listPreparationPlans(): Promise<StudyPreparationPlan[]> {
+    return (await this.getSummary()).preparationPlans;
   }
 
-  listRevisionItems(): StudyRevisionItem[] {
-    return this.getSummary().revisionItems;
+  async listRevisionItems(): Promise<StudyRevisionItem[]> {
+    return (await this.getSummary()).revisionItems;
   }
 
-  recordReflection(input: CreateStudyReflectionInput): StudyRevisionItem {
-    const revisionItem = this.getSummary().revisionItems.find(
+  async recordReflection(input: CreateStudyReflectionInput): Promise<StudyRevisionItem> {
+    const revisionItem = (await this.getSummary()).revisionItems.find(
       (item) => item.id === input.revisionItemId,
     );
 

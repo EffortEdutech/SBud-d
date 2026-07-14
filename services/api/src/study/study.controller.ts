@@ -13,22 +13,22 @@ export class StudyController {
   private readonly studyService = new StudyService();
 
   @Get("summary")
-  getSummary(): StudySummary {
+  getSummary(): Promise<StudySummary> {
     return this.studyService.getSummary();
   }
 
   @Get("preparation")
-  listPreparationPlans(): StudyPreparationPlan[] {
+  listPreparationPlans(): Promise<StudyPreparationPlan[]> {
     return this.studyService.listPreparationPlans();
   }
 
   @Get("revision")
-  listRevisionItems(): StudyRevisionItem[] {
+  listRevisionItems(): Promise<StudyRevisionItem[]> {
     return this.studyService.listRevisionItems();
   }
 
   @Post("revision/reflection")
-  recordReflection(@Body() input: CreateStudyReflectionInput): StudyRevisionItem {
+  recordReflection(@Body() input: CreateStudyReflectionInput): Promise<StudyRevisionItem> {
     return this.studyService.recordReflection(input);
   }
 }
