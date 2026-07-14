@@ -1,21 +1,21 @@
 # AI Study Buddy Roadmap
 
 Status: Living roadmap
-Current sprint: Sprint 10 - MVP Quality, Security, and Release Readiness
-Last updated: 2026-07-13
+Current sprint: MVP Stabilization Pass 1 - Supabase Persistence Wiring
+Last updated: 2026-07-14
 
 ---
 
 # 1. Current Phase
 
-AI Study Buddy is moving from documentation-first architecture into implementation.
+AI Study Buddy has completed the local MVP baseline and is moving into controlled stabilization.
 
 Current focus:
 
-- Add MVP readiness integration coverage.
-- Add no-tracked-secret-file release validation.
-- Add release readiness, security review, known issues, and release notes docs.
-- Add a local MVP release gate command.
+- Preserve the completed Sprint 10 and Cross-Cutting Checklist baseline.
+- Replace in-memory API repositories with Supabase-backed adapters behind the existing API boundary.
+- Keep fixture mode available for local/demo validation.
+- Validate student-owned RLS behavior against the linked Supabase project without committing secrets.
 
 ---
 
@@ -256,12 +256,46 @@ Sprint 9 is complete.
 
 ---
 
-# 13. Sprint 10 Current Scope
+# 13. Sprint 10 Completion
 
-Sprint 10 establishes:
+Sprint 10 established:
 
 - MVP readiness integration test.
 - Local release gate script and `mvp:readiness` command.
 - Tracked secret-file validation.
 - Required migration file validation.
 - Release readiness docs, security review, known issues, and release notes draft.
+
+Sprint 10 is complete.
+
+---
+
+# 14. Cross-Cutting Checklist Completion
+
+The cross-cutting checklist established:
+
+- Architecture compliance audit.
+- Documentation completeness audit.
+- Graphify refresh confirmation.
+- Security audit for no tracked secret files and student-owned data guardrails.
+
+The cross-cutting checklist is complete.
+
+---
+
+# 15. MVP Stabilization Pass 1 Current Scope
+
+MVP Stabilization Pass 1 prepares the local MVP baseline for controlled live-data validation.
+
+Planned scope:
+
+- Add a documented data mode strategy for fixture mode and Supabase mode.
+- Wire Supabase-backed repositories behind existing API services.
+- Start with academic profile, subjects, document metadata, PLKG nodes/edges, study preparation/revision, sync queue events, and dashboard aggregation.
+- Keep mobile clients behind API endpoints.
+- Validate RLS ownership behavior with authenticated test users.
+- Keep all Supabase URLs, keys, JWT secrets, and service-role keys out of tracked files.
+
+Detailed plan:
+
+- `docs/planning/MVP_STABILIZATION_PASS_1.md`

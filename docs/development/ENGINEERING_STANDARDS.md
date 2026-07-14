@@ -68,7 +68,7 @@ Development-only dependencies may be added when they directly support the approv
 - validated through `corepack pnpm check`,
 - limited to tooling, testing, formatting, linting, or local automation.
 
-Supabase is approved by the architecture but is not configured yet. Supabase setup is deferred until the data/authentication sprint and must not commit secrets or environment files.
+Supabase is approved by the architecture and the CLI project has been linked by the project owner. Supabase repository wiring must not commit secrets or environment files.
 
 Sprint 2 adds approved runtime dependencies for the first application shells:
 

@@ -125,13 +125,13 @@ docs/development/SUPABASE_SETUP.md
 ```
 
 Sprint 5 prepares the private `student-documents` storage bucket and student-owned
-path convention in SQL. Real file upload still requires live Supabase project linking.
+path convention in SQL. Real file upload still requires repository wiring and live validation.
 
 Sprint 6 uses a local deterministic BLIE provider abstraction. Do not commit AI provider
 keys or real provider credentials.
 
 Sprint 7 uses in-memory PLKG fixtures for local API/mobile flow. Supabase persistence is
-prepared by migration/reference SQL but still requires live project linking.
+prepared by migration/reference SQL but still requires repository wiring.
 
 Sprint 8 uses in-memory study preparation and revision guidance for local API/mobile flow.
 Supabase persistence is prepared by migration/reference SQL.

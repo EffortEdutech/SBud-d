@@ -2,7 +2,7 @@
 
 Version: 0.1
 Status: Living implementation plan
-Last updated: 2026-07-11
+Last updated: 2026-07-14
 
 ---
 
@@ -25,19 +25,20 @@ This document is operational. It may be updated as work progresses, but it must 
 
 # 2. Current Status
 
-The project is currently documentation-first.
+The project has completed the local MVP baseline through Sprint 10 and the Cross-Cutting Checklist.
 
 Existing repository state:
 
 - Architecture and UX documents exist under `docs/v1`.
 - Project guidance exists in `AGENTS.md` and `CLAUDE.md`.
 - Graphify output exists under `graphify-out`.
-- Source implementation folders have not yet been created.
+- Source implementation folders exist under the approved Volume G2 monorepo layout.
+- API/mobile MVP slices exist through academic profile, documents, BLIE chat, PLKG, study, sync, and release readiness.
 
 Current implementation status:
 
-- Current phase: Pre-implementation / Phase 1 preparation.
-- Next target: Sprint 0 - Engineering workspace foundation.
+- Current phase: Post-MVP stabilization.
+- Next target: MVP Stabilization Pass 1 - Supabase Persistence Wiring.
 
 ---
 
@@ -424,6 +425,43 @@ Exit criteria:
 
 ---
 
+## MVP Stabilization Pass 1 - Supabase Persistence Wiring
+
+Goal:
+
+Move the local MVP baseline from fixture-backed API data toward controlled Supabase-backed persistence while preserving fixture mode for local/demo validation.
+
+Primary references:
+
+- Volume F1 Database & Data Model Specification.
+- Volume F3 Synchronization & Offline Architecture.
+- Volume F6 Security, Privacy & Student Data Protection.
+- Volume F15 API & Backend Service Architecture.
+- Volume G0 Engineering Constitution.
+- `docs/planning/MVP_STABILIZATION_PASS_1.md`.
+
+Deliverables:
+
+- Data mode strategy for fixture mode and Supabase mode.
+- Server-side Supabase client boundary for API repositories.
+- Supabase-backed repository adapters for academic profile and subjects.
+- Supabase-backed repository adapters for document metadata.
+- Supabase-backed repository adapters for PLKG nodes and edges.
+- Supabase-backed repository adapters for study preparation/revision and sync queue events.
+- Dashboard aggregation from persisted API data.
+- Mocked adapter tests plus live validation checklist for RLS.
+- Updated setup, security, and release docs.
+
+Exit criteria:
+
+- Fixture mode still passes `corepack pnpm mvp:readiness`.
+- Supabase mode can read/write the targeted MVP entities for an authenticated student.
+- Cross-student access is blocked by RLS in live validation.
+- Mobile clients continue to call API endpoints rather than direct database writes.
+- No `.env`, service-role key, JWT secret, API key, or private token is tracked.
+
+---
+
 # 6. MVP Release Gate
 
 The MVP is release-ready only when:
@@ -450,4 +488,3 @@ At the end of every sprint:
 3. Refresh Graphify after meaningful structure changes.
 4. Record blockers and carry-over items.
 5. Keep architecture changes out of implementation unless explicitly approved.
-

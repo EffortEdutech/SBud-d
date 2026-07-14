@@ -1,13 +1,13 @@
 # Supabase Setup
 
-Status: Sprint 3 baseline
-Last updated: 2026-07-11
+Status: Linked project baseline
+Last updated: 2026-07-14
 
 ---
 
 # 1. Current State
 
-Supabase is not linked to a live project yet.
+The Supabase CLI project has been initialized, linked, and aligned with the current local migration history by the project owner.
 
 Sprint 3 adds:
 
@@ -83,12 +83,26 @@ The first table, `public.student_profiles`, is owned by `student_profiles.id`, w
 
 ---
 
-# 5. Deferred Until Live Supabase Setup
+# 5. Completed Live Setup Baseline
 
-When the Supabase project exists:
+The project owner has completed:
 
-1. Add real values to local `.env` files only.
-2. Apply migrations to a development database.
+1. Supabase CLI initialization under `database/supabase`.
+2. Project linking.
+3. Migration history alignment for the MVP migration files.
+
+Continue to add real values to local `.env` files only. Do not commit `.env` files or secrets.
+
+---
+
+# 6. Next Supabase Work
+
+MVP Stabilization Pass 1 will wire API repositories to Supabase persistence.
+
+Before controlled live validation:
+
+1. Run `npx --yes supabase@latest migration list --workdir database`.
+2. Confirm local and remote migration IDs match.
 3. Run Supabase database advisors.
 4. Confirm Data API exposure/grants match the project settings.
 5. Verify RLS with at least two authenticated test users.

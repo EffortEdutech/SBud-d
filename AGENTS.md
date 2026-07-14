@@ -42,7 +42,7 @@ Before making changes:
 
 ## Current Project State
 
-This project is in Sprint 10: MVP Quality, Security, and Release Readiness.
+This project has completed Sprint 10: MVP Quality, Security, and Release Readiness, plus the Cross-Cutting Checklist audit. The next planned target is MVP Stabilization Pass 1: Supabase Persistence Wiring.
 
 The approved monorepo skeleton from Volume G2 now exists:
 
@@ -58,7 +58,7 @@ The approved monorepo skeleton from Volume G2 now exists:
 - `tools`
 - `tests`
 
-Implementation folders are scaffolded, Sprint 2 added the first runnable mobile/API shells, Sprint 3 added the first Supabase data/authentication foundation, Sprint 4 added the academic profile/dashboard slice, Sprint 5 added the document library foundation, Sprint 6 added the minimum useful BLIE chat slice, Sprint 7 added the basic PLKG foundation, Sprint 8 added the first study preparation and revision MVP, Sprint 9 added the offline and synchronization baseline, and Sprint 10 adds MVP quality, security, and release readiness. Keep implementation aligned with Volume G2 and never commit Supabase or AI provider secrets.
+Implementation folders are scaffolded, Sprint 2 added the first runnable mobile/API shells, Sprint 3 added the first Supabase data/authentication foundation, Sprint 4 added the academic profile/dashboard slice, Sprint 5 added the document library foundation, Sprint 6 added the minimum useful BLIE chat slice, Sprint 7 added the basic PLKG foundation, Sprint 8 added the first study preparation and revision MVP, Sprint 9 added the offline and synchronization baseline, Sprint 10 added MVP quality, security, and release readiness, and the Cross-Cutting Checklist completed the MVP baseline audit. Keep implementation aligned with Volume G2 and never commit Supabase or AI provider secrets.
 
 ## Architecture Invariants
 
@@ -146,11 +146,10 @@ Current command behavior:
 - `mvp:readiness` runs install, build, check, tracked-secret-file validation, and required migration presence validation.
 - `graph:update` refreshes Graphify through `scripts/graphify.ps1` using the pinned Windows PowerShell path.
 
-These commands are baseline workspace commands. Supabase is not configured yet and is deferred until the data/authentication sprint.
+These commands are baseline workspace commands. Supabase CLI project linking and migration history repair have been completed by the project owner; live secret values remain local only.
 
 Sprint 3 Supabase notes:
 
-- Supabase project linking is not complete yet.
 - Use `.env.example` for variable names only.
 - Do not commit `.env` files, service-role keys, JWT secrets, API keys, or private tokens.
 - Migration files created by Supabase CLI live under `database/supabase/migrations`.
@@ -175,7 +174,7 @@ Sprint 5 storage notes:
 
 - Private Supabase Storage bucket: `student-documents`.
 - Student-owned object path pattern: `{studentId}/{subjectId}/{documentId}/{fileName}`.
-- Current implementation stores document metadata in memory for local API/mobile flow; Supabase persistence and real file upload are prepared by migration/reference SQL but still require live project linking.
+- Current implementation stores document metadata in memory for local API/mobile flow; Supabase persistence and real file upload are prepared by migration/reference SQL but still require repository wiring and live validation.
 
 Sprint 6 BLIE endpoint:
 
@@ -199,7 +198,7 @@ Sprint 7 PLKG notes:
 
 - PLKG nodes and edges are student-owned.
 - BLIE context assembly retrieves PLKG context before generation.
-- Supabase persistence is prepared by migration/reference SQL but local API uses in-memory fixtures until live project linking is complete.
+- Supabase persistence is prepared by migration/reference SQL but local API uses in-memory fixtures until repository wiring is implemented.
 
 Sprint 8 study endpoints:
 
@@ -232,6 +231,14 @@ Sprint 10 release readiness notes:
 - `corepack pnpm mvp:readiness` is the local release gate.
 - The current MVP is suitable for controlled local/staging validation, not broad production release.
 - Cross-cutting audit status is captured in `docs/release/CROSS_CUTTING_AUDIT.md`.
+
+MVP Stabilization Pass 1 planning notes:
+
+- Planning artifact: `docs/planning/MVP_STABILIZATION_PASS_1.md`.
+- Goal: wire Supabase-backed persistence behind API repository boundaries while preserving fixture mode for local/demo validation.
+- Initial persistence targets: academic profile, subjects, document metadata, PLKG nodes/edges, study preparation/revision, sync queue events, and dashboard aggregation.
+- Mobile clients must continue using API endpoints; do not bypass the API boundary with direct database writes.
+- Do not introduce service-role keys into mobile or tracked files.
 
 ## Security Rules
 

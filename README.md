@@ -9,7 +9,7 @@ The product is built around:
 - A cloud-first, offline-capable learning experience.
 - A TypeScript monorepo architecture.
 
-This repository is currently in Sprint 10: MVP Quality, Security, and Release Readiness.
+This repository has completed the local MVP baseline through Sprint 10 and the Cross-Cutting Checklist. The next planned target is MVP Stabilization Pass 1: Supabase Persistence Wiring.
 
 ---
 
@@ -112,7 +112,7 @@ Local validation script:
 .\scripts\check.ps1
 ```
 
-Supabase is approved in the architecture, but the project is not connected to Supabase yet. Supabase setup is deferred until the data/authentication sprint and must not introduce secrets into the repository.
+Supabase is approved in the architecture. The CLI project has been linked and migration history has been aligned by the project owner; real environment values remain local only and must not be committed.
 
 Sprint 2 local development:
 
@@ -135,7 +135,7 @@ Sprint 3 Supabase foundation:
 - RLS policy reference: `database/policies/student_profiles_rls.sql`
 - Setup guide: `docs/development/SUPABASE_SETUP.md`
 
-Supabase is not linked to a live project yet. Use `.env.example` for required variable names only, and keep real `.env` files local.
+Use `.env.example` for required variable names only, and keep real `.env` files local.
 
 Sprint 4 academic endpoints:
 
@@ -207,6 +207,12 @@ Run the local release gate:
 ```powershell
 corepack pnpm mvp:readiness
 ```
+
+Next planned stabilization target:
+
+- Plan: `docs/planning/MVP_STABILIZATION_PASS_1.md`
+- Focus: wire Supabase-backed persistence behind API repositories while preserving fixture mode for local/demo validation.
+- Guardrail: mobile clients continue using API endpoints; no service-role key or secret is committed.
 
 ---
 

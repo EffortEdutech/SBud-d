@@ -11,7 +11,7 @@ Sprint 7 introduces the first Personal Learning Knowledge Graph foundation.
 
 The local API uses in-memory graph fixtures seeded from academic profile, subject, document,
 and BLIE interaction context. Supabase persistence is prepared through migration and reference
-SQL, but live project linking is still pending.
+SQL, and repository wiring is planned for MVP Stabilization Pass 1.
 
 ---
 

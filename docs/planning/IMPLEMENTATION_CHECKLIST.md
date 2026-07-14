@@ -2,7 +2,7 @@
 
 Version: 0.1
 Status: Living checklist
-Last updated: 2026-07-13
+Last updated: 2026-07-14
 
 ---
 
@@ -20,11 +20,11 @@ When work progresses, update this checklist in the same commit or handoff as the
 
 # Current Sprint
 
-Current sprint: Cross-Cutting Checklist
+Current sprint: MVP Stabilization Pass 1 - Supabase Persistence Wiring
 
 Current goal:
 
-Complete architecture, documentation, Graphify, and security audit checks across the MVP baseline.
+Wire Supabase-backed persistence behind existing API repository boundaries while preserving fixture mode and the completed local MVP baseline.
 
 ---
 
@@ -357,3 +357,52 @@ Complete architecture, documentation, Graphify, and security audit checks across
 - [x] Never commit secrets.
 - [x] Keep student-owned data isolated.
 - [x] Minimize data sent to external AI providers.
+
+---
+
+# MVP Stabilization Pass 1 - Supabase Persistence Wiring
+
+## Planning
+
+- [x] Confirm Sprint 10 and Cross-Cutting Checklist baseline is complete.
+- [x] Confirm Supabase CLI project linking and migration history alignment were completed by the project owner.
+- [x] Query Graphify before planning the repository wiring path.
+- [x] Prepare dedicated stabilization plan.
+- [ ] Confirm data mode environment variable names in `.env.example`.
+- [ ] Confirm live validation test user approach without committing secrets.
+
+## Data Mode and API Boundary
+
+- [ ] Add a server-side data mode switch for `fixture` and `supabase`.
+- [ ] Keep fixture mode as the default local/demo mode when Supabase variables are unavailable.
+- [ ] Keep mobile clients behind API endpoints.
+- [ ] Keep service-role keys out of mobile and tracked files.
+- [ ] Document the mode switch and failure behavior.
+
+## Supabase Repository Wiring
+
+- [ ] Add a server-only Supabase client boundary.
+- [ ] Wire academic profile persistence.
+- [ ] Wire subject persistence.
+- [ ] Wire document metadata persistence.
+- [ ] Wire PLKG node persistence.
+- [ ] Wire PLKG edge persistence.
+- [ ] Wire study preparation/revision persistence.
+- [ ] Wire sync queue event persistence.
+- [ ] Wire dashboard aggregation from persisted data.
+
+## Validation
+
+- [ ] Add mocked Supabase adapter tests.
+- [ ] Keep fixture-mode MVP readiness passing.
+- [ ] Validate live Supabase RLS with authenticated student access.
+- [ ] Validate cross-student access is blocked.
+- [ ] Validate migration list remains aligned.
+- [ ] Refresh Graphify after meaningful structure changes.
+
+## Documentation
+
+- [ ] Update Supabase setup docs after repository wiring.
+- [ ] Update local development docs with fixture/Supabase mode commands.
+- [ ] Update API docs if response behavior changes.
+- [ ] Update release known issues after persistence wiring status changes.
