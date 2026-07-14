@@ -11,12 +11,21 @@ import {
   MAX_DOCUMENT_FILE_SIZE_BYTES,
 } from "./document.fixtures.js";
 import { DocumentRepository } from "./document.repository.js";
+import { getAuthenticatedUserAndTokenFromHeader } from "../auth/supabase-auth-client.js";
+import { getApiEnvironment, type ApiEnvironment } from "../config/environment.js";
+
+interface DocumentRequestContext {
+  authorizationHeader?: string | undefined;
+}
 
 export class DocumentService {
-  constructor(private readonly repository: DocumentRepository = new DocumentRepository()) {}
+  constructor(
+    private readonly repository: DocumentRepository = new DocumentRepository(),
+    private readonly environment: ApiEnvironment = getApiEnvironment(),
+  ) {}
 
-  getLibrarySummary(): DocumentLibrarySummary {
-    const documents = this.repository.listDocuments();
+  async getLibrarySummary(context: DocumentRequestContext = {}): Promise<DocumentLibrarySummary> {
+    const documents = await this.repository.listDocuments(await this.getRepositoryContext(context));
 
     return {
       documents,
@@ -33,12 +42,15 @@ export class DocumentService {
     };
   }
 
-  listDocuments(): LearningDocument[] {
-    return this.repository.listDocuments();
+  async listDocuments(context: DocumentRequestContext = {}): Promise<LearningDocument[]> {
+    return this.repository.listDocuments(await this.getRepositoryContext(context));
   }
 
-  getDocument(id: string): LearningDocument {
-    const document = this.repository.getDocument(id);
+  async getDocument(id: string, context: DocumentRequestContext = {}): Promise<LearningDocument> {
+    const document = await this.repository.getDocument(
+      id,
+      await this.getRepositoryContext(context),
+    );
 
     if (!document) {
       throw new NotFoundException("Document not found.");
@@ -47,7 +59,10 @@ export class DocumentService {
     return document;
   }
 
-  createDocument(input: CreateLearningDocumentInput): LearningDocument {
+  async createDocument(
+    input: CreateLearningDocumentInput,
+    context: DocumentRequestContext = {},
+  ): Promise<LearningDocument> {
     if (!input.subjectId?.trim()) {
       throw new BadRequestException("subjectId is required.");
     }
@@ -72,6 +87,19 @@ export class DocumentService {
       throw new BadRequestException("Document exceeds the maximum supported size.");
     }
 
-    return this.repository.createDocument(input);
+    return this.repository.createDocument(input, await this.getRepositoryContext(context));
+  }
+
+  private async getRepositoryContext(context: DocumentRequestContext) {
+    if (this.environment.dataMode !== "supabase") {
+      return {};
+    }
+
+    const user = await getAuthenticatedUserAndTokenFromHeader(context.authorizationHeader);
+
+    return {
+      accessToken: user.accessToken,
+      studentId: user.id,
+    };
   }
 }

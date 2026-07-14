@@ -143,8 +143,8 @@ Sprint 5 prepares the private `student-documents` storage bucket and student-own
 path convention in SQL. Real file upload still requires repository wiring and live validation.
 
 MVP Stabilization Pass 1 begins Supabase repository wiring with the academic profile,
-subjects, and dashboard slice. Other domains still use fixture-backed repositories until
-their adapters are implemented.
+subjects, dashboard, and document metadata slices. PLKG, study, and sync still use
+fixture-backed repositories until their adapters are implemented.
 
 Sprint 6 uses a local deterministic BLIE provider abstraction. Do not commit AI provider
 keys or real provider credentials.

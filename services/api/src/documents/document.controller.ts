@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Headers, Param, Post } from "@nestjs/common";
 import type {
   CreateLearningDocumentInput,
   DocumentLibrarySummary,
@@ -12,22 +12,32 @@ export class DocumentController {
   private readonly documentService = new DocumentService();
 
   @Get("documents/library")
-  getLibrarySummary(): DocumentLibrarySummary {
-    return this.documentService.getLibrarySummary();
+  getLibrarySummary(
+    @Headers("authorization") authorizationHeader?: string,
+  ): Promise<DocumentLibrarySummary> {
+    return this.documentService.getLibrarySummary({ authorizationHeader });
   }
 
   @Get("documents")
-  listDocuments(): LearningDocument[] {
-    return this.documentService.listDocuments();
+  listDocuments(
+    @Headers("authorization") authorizationHeader?: string,
+  ): Promise<LearningDocument[]> {
+    return this.documentService.listDocuments({ authorizationHeader });
   }
 
   @Get("documents/:id")
-  getDocument(@Param("id") id: string): LearningDocument {
-    return this.documentService.getDocument(id);
+  getDocument(
+    @Param("id") id: string,
+    @Headers("authorization") authorizationHeader?: string,
+  ): Promise<LearningDocument> {
+    return this.documentService.getDocument(id, { authorizationHeader });
   }
 
   @Post("documents")
-  createDocument(@Body() input: CreateLearningDocumentInput): LearningDocument {
-    return this.documentService.createDocument(input);
+  createDocument(
+    @Body() input: CreateLearningDocumentInput,
+    @Headers("authorization") authorizationHeader?: string,
+  ): Promise<LearningDocument> {
+    return this.documentService.createDocument(input, { authorizationHeader });
   }
 }

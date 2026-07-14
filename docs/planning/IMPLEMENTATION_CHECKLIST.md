@@ -384,7 +384,7 @@ Wire Supabase-backed persistence behind existing API repository boundaries while
 - [x] Add a server-only Supabase client boundary.
 - [x] Wire academic profile persistence.
 - [x] Wire subject persistence.
-- [ ] Wire document metadata persistence.
+- [x] Wire document metadata persistence.
 - [ ] Wire PLKG node persistence.
 - [ ] Wire PLKG edge persistence.
 - [ ] Wire study preparation/revision persistence.
@@ -394,7 +394,7 @@ Wire Supabase-backed persistence behind existing API repository boundaries while
 ## Validation
 
 - [x] Add mocked Supabase adapter tests.
-- [ ] Keep fixture-mode MVP readiness passing.
+- [x] Keep fixture-mode MVP readiness passing.
 - [ ] Validate live Supabase RLS with authenticated student access.
 - [ ] Validate cross-student access is blocked.
 - [!] Validate migration list remains aligned. Blocked on 2026-07-14 by Supabase CLI access-control response: `LegacyDbConfigLoginRoleStatusError` / HTTP 403.

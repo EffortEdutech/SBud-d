@@ -102,6 +102,8 @@ Status: First implementation complete. Live RLS validation is still pending.
 - Preserve the student-owned storage path convention.
 - Leave real binary upload and document processing as a later pass unless explicitly approved.
 
+Status: First implementation complete. Real file upload and background processing remain deferred.
+
 ## Step 5 - PLKG Persistence
 
 - Wire PLKG summary, nodes, edges, and learning activity persistence.
@@ -141,7 +143,7 @@ Status: First implementation complete. Live RLS validation is still pending.
 - [x] Data mode config.
 - [x] Supabase API client boundary.
 - [x] Academic repository adapter.
-- [ ] Document repository adapter.
+- [x] Document repository adapter.
 - [ ] PLKG repository adapter.
 - [ ] Study repository adapter.
 - [ ] Sync repository adapter.
@@ -149,7 +151,7 @@ Status: First implementation complete. Live RLS validation is still pending.
 
 ## Validation
 
-- [ ] Unit tests for fixture mode.
+- [x] Unit tests for fixture mode.
 - [x] Mocked Supabase adapter tests.
 - [ ] `corepack pnpm check`.
 - [ ] `corepack pnpm mvp:readiness`.
@@ -160,11 +162,11 @@ Status: First implementation complete. Live RLS validation is still pending.
 
 ## Documentation
 
-- [ ] Update Supabase setup docs.
-- [ ] Update local development docs.
-- [ ] Update API docs if behavior changes.
+- [x] Update Supabase setup docs.
+- [x] Update local development docs.
+- [x] Update API docs if behavior changes.
 - [ ] Update MVP known issues.
-- [ ] Update roadmap/checklist status.
+- [x] Update roadmap/checklist status.
 
 ---
 

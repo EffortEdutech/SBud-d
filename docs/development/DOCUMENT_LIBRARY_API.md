@@ -1,18 +1,22 @@
 # Document Library API
 
-Status: Sprint 5 foundation
-Last updated: 2026-07-12
+Status: MVP Stabilization Pass 1 Supabase metadata wiring
+Last updated: 2026-07-14
 
 ---
 
 # 1. Scope
 
-Sprint 5 introduces the document library metadata contract.
+Sprint 5 introduced the document library metadata contract.
 
-The local API stores document metadata in memory so the mobile Library tab can exercise the
-student flow before Supabase Storage and background document intelligence workers are linked.
+The API defaults to an in-memory fixture repository so the mobile Library tab can exercise
+the student flow locally. MVP Stabilization Pass 1 adds a Supabase-backed metadata path
+when `SBUD_API_DATA_MODE=supabase`.
 
-No real file bytes are uploaded in this sprint.
+No real file bytes are uploaded in this pass. The API stores metadata only.
+
+In Supabase mode, requests must include an authenticated bearer token. Mobile clients still
+call the API; they must not write directly to Supabase tables.
 
 ---
 
@@ -74,6 +78,14 @@ Prepared object path pattern:
 ```
 
 This path pattern is required for student-owned storage policies.
+
+In Supabase mode the API creates metadata in:
+
+```text
+public.learning_documents
+```
+
+The stored path still follows the student-owned pattern above.
 
 ---
 

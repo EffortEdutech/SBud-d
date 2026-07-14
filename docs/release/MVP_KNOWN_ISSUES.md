@@ -14,7 +14,7 @@ Fixture mode uses deterministic in-memory repositories for local MVP validation.
 Impact: acceptable for local validation; not acceptable for production persistence.
 
 MVP Stabilization Pass 1 has started Supabase repository wiring for the academic profile,
-subjects, and dashboard slice. Document metadata, PLKG, study, and sync repositories still
+subjects, dashboard, and document metadata slices. PLKG, study, and sync repositories still
 need Supabase adapters.
 
 ## Offline Queue Is Not Durable
@@ -25,7 +25,9 @@ Impact: offline actions do not survive app restart.
 
 ## Document Upload Is Metadata-Only
 
-The document library supports metadata creation and storage path conventions, but real file upload and processing are not production-complete.
+The document library supports metadata creation and storage path conventions, including a
+Supabase-backed metadata repository mode. Real file upload and processing are not
+production-complete.
 
 Impact: document intelligence remains a prepared foundation.
 

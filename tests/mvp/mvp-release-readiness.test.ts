@@ -17,7 +17,7 @@ describe("MVP release readiness", () => {
     const sync = new SyncService();
 
     const dashboard = await academic.getDashboardSummary();
-    const library = documents.getLibrarySummary();
+    const library = await documents.getLibrarySummary();
     const chat = blie.chat({
       message: "Explain recursion for revision",
       subjectId: "subject-programming",
