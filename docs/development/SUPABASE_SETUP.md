@@ -108,15 +108,11 @@ Current wired API persistence:
 
 - Academic profile.
 - Academic subjects.
-- Dashboard academic aggregation.
+- Dashboard aggregation across academic, document, PLKG, and study summaries.
 - Document metadata.
 - PLKG nodes and edges.
 - Study preparation and revision.
 - Sync queue events.
-
-Still fixture-backed:
-
-- Dashboard persisted aggregation remains partial while the dashboard endpoint is finalized.
 
 Before controlled live validation:
 

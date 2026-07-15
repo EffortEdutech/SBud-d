@@ -130,6 +130,9 @@ queue durability remains deferred.
 - Run live Supabase validation checklist.
 - Refresh Graphify after code structure changes.
 
+Status: Dashboard aggregation now combines persisted academic, document, PLKG, and study summaries.
+Live Supabase RLS validation is still pending.
+
 ---
 
 # 6. Checklist
@@ -152,7 +155,7 @@ queue durability remains deferred.
 - [x] PLKG repository adapter.
 - [x] Study repository adapter.
 - [x] Sync repository adapter.
-- [ ] Dashboard persisted aggregation.
+- [x] Dashboard persisted aggregation.
 
 ## Validation
 
@@ -170,7 +173,7 @@ queue durability remains deferred.
 - [x] Update Supabase setup docs.
 - [x] Update local development docs.
 - [x] Update API docs if behavior changes.
-- [ ] Update MVP known issues.
+- [x] Update MVP known issues.
 - [x] Update roadmap/checklist status.
 
 ---

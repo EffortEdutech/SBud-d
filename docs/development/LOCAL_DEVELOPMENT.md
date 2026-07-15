@@ -146,6 +146,9 @@ MVP Stabilization Pass 1 begins Supabase repository wiring with the academic pro
 subjects, dashboard, document metadata, PLKG node/edge, study preparation/revision, and sync queue
 event slices.
 
+The dashboard endpoint keeps the existing response shape and derives its learning status and BLIE
+recommendation from academic profile, document library, PLKG, and study summaries.
+
 Sprint 6 uses a local deterministic BLIE provider abstraction. Do not commit AI provider
 keys or real provider credentials.
 
