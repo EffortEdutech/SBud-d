@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, Headers, Post } from "@nestjs/common";
 import type {
   CreateStudyReflectionInput,
   StudyPreparationPlan,
@@ -13,22 +13,29 @@ export class StudyController {
   private readonly studyService = new StudyService();
 
   @Get("summary")
-  getSummary(): Promise<StudySummary> {
-    return this.studyService.getSummary();
+  getSummary(@Headers("authorization") authorizationHeader?: string): Promise<StudySummary> {
+    return this.studyService.getSummary({ authorizationHeader });
   }
 
   @Get("preparation")
-  listPreparationPlans(): Promise<StudyPreparationPlan[]> {
-    return this.studyService.listPreparationPlans();
+  listPreparationPlans(
+    @Headers("authorization") authorizationHeader?: string,
+  ): Promise<StudyPreparationPlan[]> {
+    return this.studyService.listPreparationPlans({ authorizationHeader });
   }
 
   @Get("revision")
-  listRevisionItems(): Promise<StudyRevisionItem[]> {
-    return this.studyService.listRevisionItems();
+  listRevisionItems(
+    @Headers("authorization") authorizationHeader?: string,
+  ): Promise<StudyRevisionItem[]> {
+    return this.studyService.listRevisionItems({ authorizationHeader });
   }
 
   @Post("revision/reflection")
-  recordReflection(@Body() input: CreateStudyReflectionInput): Promise<StudyRevisionItem> {
-    return this.studyService.recordReflection(input);
+  recordReflection(
+    @Body() input: CreateStudyReflectionInput,
+    @Headers("authorization") authorizationHeader?: string,
+  ): Promise<StudyRevisionItem> {
+    return this.studyService.recordReflection(input, { authorizationHeader });
   }
 }

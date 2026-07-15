@@ -1,7 +1,7 @@
 # MVP Stabilization Pass 1 - Supabase Persistence Wiring
 
 Status: In Progress
-Last updated: 2026-07-14
+Last updated: 2026-07-15
 
 ---
 
@@ -119,6 +119,8 @@ Status: First implementation complete. Live RLS validation is still pending.
 - Wire sync queue event persistence.
 - Keep offline queue durability deferred until a storage dependency is approved.
 
+Status: Study preparation/revision persistence is complete. Sync queue event persistence is still pending.
+
 ## Step 7 - Dashboard and Release Readiness
 
 - Aggregate dashboard state from persisted API data.
@@ -147,7 +149,7 @@ Status: First implementation complete. Live RLS validation is still pending.
 - [x] Academic repository adapter.
 - [x] Document repository adapter.
 - [x] PLKG repository adapter.
-- [ ] Study repository adapter.
+- [x] Study repository adapter.
 - [ ] Sync repository adapter.
 - [ ] Dashboard persisted aggregation.
 

@@ -2,7 +2,7 @@
 
 Version: 0.1
 Status: Living checklist
-Last updated: 2026-07-14
+Last updated: 2026-07-15
 
 ---
 
@@ -387,7 +387,7 @@ Wire Supabase-backed persistence behind existing API repository boundaries while
 - [x] Wire document metadata persistence.
 - [x] Wire PLKG node persistence.
 - [x] Wire PLKG edge persistence.
-- [ ] Wire study preparation/revision persistence.
+- [x] Wire study preparation/revision persistence.
 - [ ] Wire sync queue event persistence.
 - [ ] Wire dashboard aggregation from persisted data.
 

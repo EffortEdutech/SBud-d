@@ -7,23 +7,35 @@ import type {
 } from "@sbud-d/types";
 
 import { StudyRepository } from "./study.repository.js";
+import { getAuthenticatedUserAndTokenFromHeader } from "../auth/supabase-auth-client.js";
+import { getApiEnvironment, type ApiEnvironment } from "../config/environment.js";
+
+interface StudyRequestContext {
+  authorizationHeader?: string | undefined;
+}
 
 export class StudyService {
-  constructor(private readonly repository: StudyRepository = new StudyRepository()) {}
+  constructor(
+    private readonly repository: StudyRepository = new StudyRepository(),
+    private readonly environment: ApiEnvironment = getApiEnvironment(),
+  ) {}
 
-  async getSummary(): Promise<StudySummary> {
-    return this.repository.getSummary();
+  async getSummary(context: StudyRequestContext = {}): Promise<StudySummary> {
+    return this.repository.getSummary(await this.getRepositoryContext(context));
   }
 
-  async listPreparationPlans(): Promise<StudyPreparationPlan[]> {
-    return this.repository.listPreparationPlans();
+  async listPreparationPlans(context: StudyRequestContext = {}): Promise<StudyPreparationPlan[]> {
+    return this.repository.listPreparationPlans(await this.getRepositoryContext(context));
   }
 
-  async listRevisionItems(): Promise<StudyRevisionItem[]> {
-    return this.repository.listRevisionItems();
+  async listRevisionItems(context: StudyRequestContext = {}): Promise<StudyRevisionItem[]> {
+    return this.repository.listRevisionItems(await this.getRepositoryContext(context));
   }
 
-  async recordReflection(input: CreateStudyReflectionInput): Promise<StudyRevisionItem> {
+  async recordReflection(
+    input: CreateStudyReflectionInput,
+    context: StudyRequestContext = {},
+  ): Promise<StudyRevisionItem> {
     if (!input.revisionItemId?.trim()) {
       throw new BadRequestException("revisionItemId is required.");
     }
@@ -37,9 +49,29 @@ export class StudyService {
     }
 
     try {
-      return await this.repository.recordReflection(input);
-    } catch {
-      throw new NotFoundException("Revision item was not found.");
+      return await this.repository.recordReflection(
+        input,
+        await this.getRepositoryContext(context),
+      );
+    } catch (error) {
+      if (error instanceof Error && error.message === "Revision item was not found.") {
+        throw new NotFoundException("Revision item was not found.");
+      }
+
+      throw error;
     }
+  }
+
+  private async getRepositoryContext(context: StudyRequestContext) {
+    if (this.environment.dataMode !== "supabase") {
+      return {};
+    }
+
+    const user = await getAuthenticatedUserAndTokenFromHeader(context.authorizationHeader);
+
+    return {
+      accessToken: user.accessToken,
+      studentId: user.id,
+    };
   }
 }

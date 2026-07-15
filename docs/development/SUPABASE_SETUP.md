@@ -1,7 +1,7 @@
 # Supabase Setup
 
 Status: Linked project baseline
-Last updated: 2026-07-14
+Last updated: 2026-07-15
 
 ---
 
@@ -111,10 +111,10 @@ Current wired API persistence:
 - Dashboard academic aggregation.
 - Document metadata.
 - PLKG nodes and edges.
+- Study preparation and revision.
 
 Still fixture-backed:
 
-- Study preparation and revision.
 - Sync queue events.
 
 Before controlled live validation:

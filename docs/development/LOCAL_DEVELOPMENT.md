@@ -1,7 +1,7 @@
 # AI Study Buddy Local Development
 
 Status: MVP Stabilization Pass 1 baseline
-Last updated: 2026-07-14
+Last updated: 2026-07-15
 
 ---
 
@@ -143,8 +143,8 @@ Sprint 5 prepares the private `student-documents` storage bucket and student-own
 path convention in SQL. Real file upload still requires repository wiring and live validation.
 
 MVP Stabilization Pass 1 begins Supabase repository wiring with the academic profile,
-subjects, dashboard, document metadata, and PLKG node/edge slices. Study and sync still
-use fixture-backed repositories until their adapters are implemented.
+subjects, dashboard, document metadata, PLKG node/edge, and study preparation/revision slices.
+Sync still uses fixture-backed repositories until its adapter is implemented.
 
 Sprint 6 uses a local deterministic BLIE provider abstraction. Do not commit AI provider
 keys or real provider credentials.
@@ -153,8 +153,9 @@ Sprint 7 uses in-memory PLKG fixtures for local API/mobile flow. Supabase persis
 wired for PLKG nodes, edges, summary, and learning activity writes when
 `SBUD_API_DATA_MODE=supabase`.
 
-Sprint 8 uses in-memory study preparation and revision guidance for local API/mobile flow.
-Supabase persistence is prepared by migration/reference SQL.
+Sprint 8 uses in-memory study preparation and revision guidance in fixture mode. Supabase mode
+persists preparation plans, revision items, and revision reflection status updates behind the API
+repository boundary.
 
 Sprint 9 uses an in-memory mobile cache and pending queue for the local offline baseline.
 Durable encrypted local storage is deferred until a mobile storage dependency is approved.
