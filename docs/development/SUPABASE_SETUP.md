@@ -121,3 +121,9 @@ Before controlled live validation:
 3. Run Supabase database advisors.
 4. Confirm Data API exposure/grants match the project settings.
 5. Verify RLS with at least two authenticated test users.
+
+Detailed runbook:
+
+```text
+docs/development/SUPABASE_LIVE_VALIDATION.md
+```

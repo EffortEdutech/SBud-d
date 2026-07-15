@@ -1,7 +1,7 @@
 # MVP Security Review
 
-Status: Sprint 10 baseline
-Last updated: 2026-07-13
+Status: MVP Stabilization Pass 1 live-validation baseline
+Last updated: 2026-07-15
 
 ---
 
@@ -48,7 +48,12 @@ Student-owned entities prepared with RLS:
 - `study_revision_items`,
 - `sync_queue_events`.
 
-The local API still uses deterministic in-memory fixtures for MVP development flows. Live persistence must be reviewed again when repositories are wired to Supabase.
+MVP Stabilization Pass 1 has wired Supabase repository paths for the student-owned MVP tables.
+Live persistence must be validated with:
+
+```text
+docs/development/SUPABASE_LIVE_VALIDATION.md
+```
 
 ---
 
@@ -69,6 +74,7 @@ These are not blockers for local MVP validation, but they are blockers for broad
 Before public release:
 
 - confirm Supabase RLS policies in the live project,
+- complete same-student and cross-student RLS validation with two authenticated test users,
 - confirm private Storage bucket policies,
 - confirm no service-role keys exist in client/mobile configuration,
 - confirm production logs do not contain student question text, AI responses, uploaded document content, or private tokens,

@@ -133,6 +133,8 @@ queue durability remains deferred.
 Status: Dashboard aggregation now combines persisted academic, document, PLKG, and study summaries.
 Live Supabase RLS validation is still pending.
 
+Live validation runbook: `docs/development/SUPABASE_LIVE_VALIDATION.md`.
+
 ---
 
 # 6. Checklist
@@ -144,7 +146,7 @@ Live Supabase RLS validation is still pending.
 - [x] Query Graphify for relevant modules.
 - [x] Prepare this plan.
 - [x] Confirm data mode variable names.
-- [ ] Confirm live validation user approach.
+- [/] Confirm live validation user approach.
 
 ## Implementation
 
@@ -175,6 +177,7 @@ Live Supabase RLS validation is still pending.
 - [x] Update API docs if behavior changes.
 - [x] Update MVP known issues.
 - [x] Update roadmap/checklist status.
+- [x] Add live Supabase validation runbook.
 
 ---
 
@@ -193,4 +196,5 @@ This pass is complete when:
 
 # 8. Current Blockers
 
-- 2026-07-14: `npx --yes supabase@latest migration list --workdir database` reached Supabase but returned `LegacyDbConfigLoginRoleStatusError` with HTTP 403. Migration-history confirmation requires a Supabase account/role with the required project access.
+- 2026-07-15: `npx --yes supabase@latest migration list --workdir database` reached Supabase but still returned `LegacyDbConfigLoginRoleStatusError` with HTTP 403. Migration-history confirmation requires a Supabase account/role with the required project access.
+- 2026-07-15: Live RLS validation requires two authenticated test users and local-only bearer tokens. Do not commit or paste tokens.

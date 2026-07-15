@@ -17,6 +17,15 @@ MVP Stabilization Pass 1 has wired Supabase repository paths for the academic pr
 dashboard aggregation, document metadata, PLKG node/edge, study preparation/revision, and sync queue
 event slices.
 
+## Live Supabase RLS Validation Pending
+
+The live validation runbook exists at `docs/development/SUPABASE_LIVE_VALIDATION.md`, but
+migration-history confirmation is currently blocked by Supabase project access returning
+`LegacyDbConfigLoginRoleStatusError` / HTTP 403.
+
+Impact: controlled live validation cannot be marked complete until project access is resolved and
+two authenticated test users pass same-student and cross-student RLS checks.
+
 ## Offline Queue Is Not Durable
 
 Sprint 9 uses an in-memory mobile queue and cache because no durable encrypted mobile storage dependency has been approved.

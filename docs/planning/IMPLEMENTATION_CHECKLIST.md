@@ -369,7 +369,7 @@ Wire Supabase-backed persistence behind existing API repository boundaries while
 - [x] Query Graphify before planning the repository wiring path.
 - [x] Prepare dedicated stabilization plan.
 - [x] Confirm data mode environment variable names in `.env.example`.
-- [ ] Confirm live validation test user approach without committing secrets.
+- [/] Confirm live validation test user approach without committing secrets.
 
 ## Data Mode and API Boundary
 
@@ -397,7 +397,7 @@ Wire Supabase-backed persistence behind existing API repository boundaries while
 - [x] Keep fixture-mode MVP readiness passing.
 - [ ] Validate live Supabase RLS with authenticated student access.
 - [ ] Validate cross-student access is blocked.
-- [!] Validate migration list remains aligned. Blocked on 2026-07-14 by Supabase CLI access-control response: `LegacyDbConfigLoginRoleStatusError` / HTTP 403.
+- [!] Validate migration list remains aligned. Blocked on 2026-07-15 by Supabase CLI access-control response: `LegacyDbConfigLoginRoleStatusError` / HTTP 403.
 - [ ] Refresh Graphify after meaningful structure changes.
 
 ## Documentation
@@ -406,3 +406,4 @@ Wire Supabase-backed persistence behind existing API repository boundaries while
 - [x] Update local development docs with fixture/Supabase mode commands.
 - [x] Update API docs if response behavior changes.
 - [x] Update release known issues after persistence wiring status changes.
+- [x] Add live Supabase validation runbook.
