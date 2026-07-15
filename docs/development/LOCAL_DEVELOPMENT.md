@@ -143,8 +143,8 @@ Sprint 5 prepares the private `student-documents` storage bucket and student-own
 path convention in SQL. Real file upload still requires repository wiring and live validation.
 
 MVP Stabilization Pass 1 begins Supabase repository wiring with the academic profile,
-subjects, dashboard, document metadata, PLKG node/edge, and study preparation/revision slices.
-Sync still uses fixture-backed repositories until its adapter is implemented.
+subjects, dashboard, document metadata, PLKG node/edge, study preparation/revision, and sync queue
+event slices.
 
 Sprint 6 uses a local deterministic BLIE provider abstraction. Do not commit AI provider
 keys or real provider credentials.
@@ -157,8 +157,9 @@ Sprint 8 uses in-memory study preparation and revision guidance in fixture mode.
 persists preparation plans, revision items, and revision reflection status updates behind the API
 repository boundary.
 
-Sprint 9 uses an in-memory mobile cache and pending queue for the local offline baseline.
-Durable encrypted local storage is deferred until a mobile storage dependency is approved.
+Sprint 9 uses an in-memory mobile cache and pending queue for the local offline baseline. Supabase
+mode persists accepted sync queue events behind the API repository boundary. Durable encrypted local
+storage is deferred until a mobile storage dependency is approved.
 
 Sprint 10 release readiness docs live in:
 

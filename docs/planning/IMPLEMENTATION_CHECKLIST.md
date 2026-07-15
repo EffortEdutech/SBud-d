@@ -388,7 +388,7 @@ Wire Supabase-backed persistence behind existing API repository boundaries while
 - [x] Wire PLKG node persistence.
 - [x] Wire PLKG edge persistence.
 - [x] Wire study preparation/revision persistence.
-- [ ] Wire sync queue event persistence.
+- [x] Wire sync queue event persistence.
 - [ ] Wire dashboard aggregation from persisted data.
 
 ## Validation

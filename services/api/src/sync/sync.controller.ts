@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, Headers, Post } from "@nestjs/common";
 import type {
   SyncConflictRule,
   SyncPushRequest,
@@ -13,8 +13,8 @@ export class SyncController {
   private readonly syncService = new SyncService();
 
   @Get("status")
-  getStatus(): SyncStatusSummary {
-    return this.syncService.getStatus();
+  getStatus(@Headers("authorization") authorizationHeader?: string): Promise<SyncStatusSummary> {
+    return this.syncService.getStatus({ authorizationHeader });
   }
 
   @Get("conflict-rules")
@@ -23,7 +23,10 @@ export class SyncController {
   }
 
   @Post("push")
-  pushPending(@Body() request: SyncPushRequest): SyncPushResponse {
-    return this.syncService.pushPending(request);
+  pushPending(
+    @Body() request: SyncPushRequest,
+    @Headers("authorization") authorizationHeader?: string,
+  ): Promise<SyncPushResponse> {
+    return this.syncService.pushPending(request, { authorizationHeader });
   }
 }

@@ -119,7 +119,8 @@ Status: First implementation complete. Live RLS validation is still pending.
 - Wire sync queue event persistence.
 - Keep offline queue durability deferred until a storage dependency is approved.
 
-Status: Study preparation/revision persistence is complete. Sync queue event persistence is still pending.
+Status: Study preparation/revision persistence and sync queue event persistence are complete. Offline
+queue durability remains deferred.
 
 ## Step 7 - Dashboard and Release Readiness
 
@@ -150,19 +151,19 @@ Status: Study preparation/revision persistence is complete. Sync queue event per
 - [x] Document repository adapter.
 - [x] PLKG repository adapter.
 - [x] Study repository adapter.
-- [ ] Sync repository adapter.
+- [x] Sync repository adapter.
 - [ ] Dashboard persisted aggregation.
 
 ## Validation
 
 - [x] Unit tests for fixture mode.
 - [x] Mocked Supabase adapter tests.
-- [ ] `corepack pnpm check`.
-- [ ] `corepack pnpm mvp:readiness`.
+- [x] `corepack pnpm check`.
+- [x] `corepack pnpm mvp:readiness`.
 - [!] `npx --yes supabase@latest migration list --workdir database`.
 - [ ] Live RLS read/write validation with authenticated student users.
 - [ ] Cross-student access denial validation.
-- [ ] Graphify refresh.
+- [x] Graphify refresh.
 
 ## Documentation
 

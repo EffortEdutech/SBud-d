@@ -112,10 +112,11 @@ Current wired API persistence:
 - Document metadata.
 - PLKG nodes and edges.
 - Study preparation and revision.
+- Sync queue events.
 
 Still fixture-backed:
 
-- Sync queue events.
+- Dashboard persisted aggregation remains partial while the dashboard endpoint is finalized.
 
 Before controlled live validation:
 

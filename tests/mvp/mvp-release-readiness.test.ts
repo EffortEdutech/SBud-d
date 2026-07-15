@@ -24,7 +24,7 @@ describe("MVP release readiness", () => {
     });
     const graph = await plkg.getSummary();
     const studySummary = await study.getSummary();
-    const syncStatus = sync.getStatus();
+    const syncStatus = await sync.getStatus();
 
     expect(dashboard.subjects.length).toBeGreaterThan(0);
     expect(library.documents.length).toBeGreaterThan(0);
@@ -35,9 +35,9 @@ describe("MVP release readiness", () => {
     expect(syncStatus.cloudIsSystemOfRecord).toBe(true);
   });
 
-  it("keeps synchronization append-safe for offline learning evidence", () => {
+  it("keeps synchronization append-safe for offline learning evidence", async () => {
     const sync = new SyncService();
-    const response = sync.pushPending({
+    const response = await sync.pushPending({
       items: [
         {
           id: "mvp-readiness-sync-item",

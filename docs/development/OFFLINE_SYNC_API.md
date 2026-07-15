@@ -2,7 +2,10 @@
 
 Sprint 9 adds the baseline offline and synchronization model.
 
-The MVP keeps cloud services as the system of record while allowing the mobile app to keep a local learning snapshot and pending sync queue. The local queue is in-memory for this baseline because no new mobile storage dependency has been approved yet.
+The MVP keeps cloud services as the system of record while allowing the mobile app to keep a local
+learning snapshot and pending sync queue. The local mobile queue is in-memory for this baseline
+because no new mobile storage dependency has been approved yet. In Supabase mode, accepted sync
+queue events are persisted server-side through the API boundary.
 
 ## Endpoints
 
@@ -11,6 +14,7 @@ Base path: `/api/v1`
 ### `GET /sync/status`
 
 Returns current sync status, offline-available sections, pending queue counts, and conflict rules.
+In Supabase mode, queue counts are read from `sync_queue_events` for the authenticated student.
 
 ### `GET /sync/conflict-rules`
 
@@ -23,7 +27,8 @@ Returns MVP conflict handling rules:
 
 ### `POST /sync/push`
 
-Accepts locally queued changes and returns the accepted items marked as `synced`.
+Accepts locally queued changes, persists accepted events in Supabase mode, and returns the accepted
+local items marked as `synced` so the mobile queue can clear them.
 
 Request:
 
@@ -72,4 +77,6 @@ The Sync tab shows:
 - No secrets or Supabase service-role keys are required.
 - SQL reference enables RLS on `sync_queue_events`.
 - The queue is student-owned and scoped by `auth.uid()` in Supabase policies.
+- Supabase mode requires an authenticated bearer token; mobile clients continue to call the API and
+  do not write directly to Supabase tables.
 - Cloud remains authoritative for MVP snapshots.

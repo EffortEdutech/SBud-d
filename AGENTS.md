@@ -242,6 +242,7 @@ MVP Stabilization Pass 1 planning notes:
 - Document metadata is now wired for Supabase mode; real file bytes and background document processing remain out of scope.
 - PLKG nodes, edges, summary, and learning activity writes are now wired for Supabase mode; BLIE and study services await PLKG context.
 - Study preparation/revision rows and revision reflection updates are now wired for Supabase mode.
+- Sync queue events are now wired for Supabase mode while mobile queue durability remains deferred.
 - Initial persistence targets: academic profile, subjects, document metadata, PLKG nodes/edges, study preparation/revision, sync queue events, and dashboard aggregation.
 - Mobile clients must continue using API endpoints; do not bypass the API boundary with direct database writes.
 - Do not introduce service-role keys into mobile or tracked files.

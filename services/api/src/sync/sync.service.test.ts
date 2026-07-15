@@ -3,9 +3,9 @@ import { describe, expect, it } from "vitest";
 import { SyncService } from "./sync.service.js";
 
 describe("SyncService", () => {
-  it("returns sync status with offline sections and conflict rules", () => {
+  it("returns sync status with offline sections and conflict rules", async () => {
     const service = new SyncService();
-    const status = service.getStatus();
+    const status = await service.getStatus();
 
     expect(status.connectionStatus).toBe("online");
     expect(status.cloudIsSystemOfRecord).toBe(true);
@@ -13,9 +13,9 @@ describe("SyncService", () => {
     expect(status.conflictRules.length).toBeGreaterThan(0);
   });
 
-  it("marks pushed pending queue items as synced", () => {
+  it("marks pushed pending queue items as synced", async () => {
     const service = new SyncService();
-    const response = service.pushPending({
+    const response = await service.pushPending({
       items: [
         {
           id: "sync-test-item",
