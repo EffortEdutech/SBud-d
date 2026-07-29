@@ -1,8 +1,8 @@
 # AI Study Buddy Roadmap
 
 Status: Living roadmap
-Current sprint: MVP Stabilization Pass 1 - Supabase Persistence Wiring
-Last updated: 2026-07-14
+Current sprint: Sprint 11 - Live Validation And Demo Visibility
+Last updated: 2026-07-29
 
 ---
 
@@ -16,6 +16,7 @@ Current focus:
 - Replace in-memory API repositories with Supabase-backed adapters behind the existing API boundary.
 - Keep fixture mode available for local/demo validation.
 - Validate student-owned RLS behavior against the linked Supabase project without committing secrets.
+- Make the current API data mode, Supabase configuration readiness, and authenticated live-session state visible in the mobile UI.
 
 ---
 
@@ -299,3 +300,21 @@ Planned scope:
 Detailed plan:
 
 - `docs/planning/MVP_STABILIZATION_PASS_1.md`
+
+---
+
+# 16. Product Completion Path
+
+The Sprint 0 through Sprint 10 roadmap delivered the local MVP baseline. The product is not complete at Sprint 10; the next operating roadmap is:
+
+- Phase 2 - MVP Stabilization and Live Data Readiness.
+- Phase 3 - True MVP Completion.
+- Phase 4 - Closed Beta Readiness.
+- Phase 5 - Public Version 1 Completion.
+- Phase 6 - Learning Intelligence Expansion.
+- Phase 7 - Collaboration and Knowledge Sharing.
+- Phase 8 - Intelligence Expansion and Platform Growth.
+
+Detailed master plan:
+
+- `docs/planning/PRODUCT_COMPLETION_MASTER_PLAN.md`

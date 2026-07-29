@@ -1,6 +1,6 @@
 import type { DashboardSummary } from "@sbud-d/types";
 
-import { getApiBaseUrl } from "../config/environment";
+import { apiFetch } from "../lib/api-client";
 
 export const fallbackDashboardSummary: DashboardSummary = {
   academicOverview: {
@@ -31,7 +31,7 @@ export const fallbackDashboardSummary: DashboardSummary = {
 };
 
 export async function fetchDashboardSummary(): Promise<DashboardSummary> {
-  const response = await fetch(`${getApiBaseUrl()}/dashboard`);
+  const response = await apiFetch("/dashboard");
 
   if (!response.ok) {
     throw new Error(`Dashboard request failed with status ${response.status}.`);

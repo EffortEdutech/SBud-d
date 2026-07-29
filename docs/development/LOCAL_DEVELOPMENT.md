@@ -1,7 +1,7 @@
 # AI Study Buddy Local Development
 
-Status: MVP Stabilization Pass 1 baseline
-Last updated: 2026-07-15
+Status: Sprint 11 live-validation baseline
+Last updated: 2026-07-29
 
 ---
 
@@ -45,6 +45,13 @@ The API listens on:
 ```text
 http://localhost:4801/api/v1/health
 ```
+
+Sprint 11 extends the health endpoint with a safe runtime block:
+
+- active API data mode,
+- whether server Supabase variables are configured,
+- whether authenticated live validation is required,
+- validation notes that do not expose keys, tokens, or secrets.
 
 Sprint 4 dashboard endpoint:
 
@@ -169,6 +176,21 @@ Sprint 10 release readiness docs live in:
 ```text
 docs/release
 ```
+
+Sprint 11 mobile live-validation flow:
+
+1. Start the API on port `4801`.
+2. Start Expo on port `4800`.
+3. Use the Dashboard tab to experience the student-facing learning journey: today's focus,
+   preparation, revision, subject progress, BLIE guidance, and PLKG growth.
+4. Use the Sync tab for technical validation panels: API runtime, live session, Supabase readiness,
+   offline queue, and sync status.
+5. In Supabase mode, sign in through the `Live session` panel with a test user only.
+6. Tap `Refresh API data` to reload Dashboard, Library, PLKG, Study, Sync, and BLIE API calls with
+   the authenticated API session.
+
+Do not paste test-user passwords, bearer tokens, Supabase keys, or `.env` contents into chat or tracked
+files.
 
 ---
 

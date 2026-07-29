@@ -1,6 +1,6 @@
 import type { BlieChatRequest, BlieChatResponse } from "@sbud-d/types";
 
-import { getApiBaseUrl } from "../config/environment";
+import { apiFetch } from "../lib/api-client";
 
 export const fallbackBlieResponse: BlieChatResponse = {
   id: "offline-blie",
@@ -27,7 +27,7 @@ export const fallbackBlieResponse: BlieChatResponse = {
 };
 
 export async function sendBlieChat(input: BlieChatRequest): Promise<BlieChatResponse> {
-  const response = await fetch(`${getApiBaseUrl()}/blie/chat`, {
+  const response = await apiFetch("/blie/chat", {
     body: JSON.stringify(input),
     headers: {
       "Content-Type": "application/json",

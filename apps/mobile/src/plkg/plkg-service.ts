@@ -1,6 +1,6 @@
 import type { CreatePlkgLearningActivityInput, PlkgNode, PlkgSummary } from "@sbud-d/types";
 
-import { getApiBaseUrl } from "../config/environment";
+import { apiFetch } from "../lib/api-client";
 
 export const fallbackPlkgSummary: PlkgSummary = {
   studentId: "offline-student",
@@ -15,7 +15,7 @@ export const fallbackPlkgSummary: PlkgSummary = {
 };
 
 export async function fetchPlkgSummary(): Promise<PlkgSummary> {
-  const response = await fetch(`${getApiBaseUrl()}/plkg/summary`);
+  const response = await apiFetch("/plkg/summary");
 
   if (!response.ok) {
     throw new Error(`PLKG summary request failed with status ${response.status}.`);
@@ -27,7 +27,7 @@ export async function fetchPlkgSummary(): Promise<PlkgSummary> {
 export async function createPlkgLearningActivity(
   input: CreatePlkgLearningActivityInput,
 ): Promise<PlkgNode> {
-  const response = await fetch(`${getApiBaseUrl()}/plkg/learning-activity`, {
+  const response = await apiFetch("/plkg/learning-activity", {
     body: JSON.stringify(input),
     headers: {
       "Content-Type": "application/json",

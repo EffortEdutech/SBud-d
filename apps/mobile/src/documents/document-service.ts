@@ -4,7 +4,7 @@ import type {
   LearningDocument,
 } from "@sbud-d/types";
 
-import { getApiBaseUrl } from "../config/environment";
+import { apiFetch } from "../lib/api-client";
 
 export const fallbackDocumentLibrarySummary: DocumentLibrarySummary = {
   documents: [],
@@ -21,7 +21,7 @@ export const fallbackDocumentLibrarySummary: DocumentLibrarySummary = {
 };
 
 export async function fetchDocumentLibrarySummary(): Promise<DocumentLibrarySummary> {
-  const response = await fetch(`${getApiBaseUrl()}/documents/library`);
+  const response = await apiFetch("/documents/library");
 
   if (!response.ok) {
     throw new Error(`Document library request failed with status ${response.status}.`);
@@ -33,7 +33,7 @@ export async function fetchDocumentLibrarySummary(): Promise<DocumentLibrarySumm
 export async function createLearningDocument(
   input: CreateLearningDocumentInput,
 ): Promise<LearningDocument> {
-  const response = await fetch(`${getApiBaseUrl()}/documents`, {
+  const response = await apiFetch("/documents", {
     body: JSON.stringify(input),
     headers: {
       "Content-Type": "application/json",

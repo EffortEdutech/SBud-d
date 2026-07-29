@@ -12,6 +12,7 @@ import type {
   BlieChatResponse,
   DashboardSummary,
   DocumentLibrarySummary,
+  HealthStatus,
   LearningDocument,
   PlkgNode,
   PlkgSummary,
@@ -21,6 +22,7 @@ import type {
   SyncStatusSummary,
 } from "@sbud-d/types";
 
+import { signInWithPassword, signOut } from "./src/auth/auth-service";
 import { fallbackBlieResponse, sendBlieChat } from "./src/blie/blie-service";
 import { getApiBaseUrl } from "./src/config/environment";
 import { fallbackDashboardSummary, fetchDashboardSummary } from "./src/dashboard/dashboard-service";
@@ -29,6 +31,8 @@ import {
   fallbackDocumentLibrarySummary,
   fetchDocumentLibrarySummary,
 } from "./src/documents/document-service";
+import { fallbackHealthStatus, fetchHealthStatus } from "./src/health/health-service";
+import { setApiAccessToken } from "./src/lib/api-client";
 import {
   createPlkgLearningActivity,
   fallbackPlkgSummary,
@@ -69,7 +73,14 @@ export default function App(): React.JSX.Element {
   const [plkgSummary, setPlkgSummary] = useState<PlkgSummary>(fallbackPlkgSummary);
   const [studySummary, setStudySummary] = useState<StudySummary>(fallbackStudySummary);
   const [syncStatus, setSyncStatus] = useState<SyncStatusSummary>(fallbackSyncStatus);
+  const [healthStatus, setHealthStatus] = useState<HealthStatus>(fallbackHealthStatus);
   const [apiStatus, setApiStatus] = useState("Loading dashboard...");
+  const [runtimeStatus, setRuntimeStatus] = useState("Checking API runtime...");
+  const [dataRefreshKey, setDataRefreshKey] = useState(0);
+  const [authEmail, setAuthEmail] = useState("");
+  const [authPassword, setAuthPassword] = useState("");
+  const [authStatus, setAuthStatus] = useState("Not signed in");
+  const [signedInUserLabel, setSignedInUserLabel] = useState<string | null>(null);
   const [libraryStatus, setLibraryStatus] = useState("Loading library...");
   const [plkgStatus, setPlkgStatus] = useState("Loading PLKG...");
   const [studyStatus, setStudyStatus] = useState("Loading study guidance...");
@@ -80,9 +91,29 @@ export default function App(): React.JSX.Element {
   const [blieResponse, setBlieResponse] = useState<BlieChatResponse | null>(null);
   const [selectedSubjectId, setSelectedSubjectId] = useState<string | null>(null);
   const apiBaseUrl = useMemo(() => getApiBaseUrl(), []);
+  const primarySubject = dashboard.subjects[0] ?? null;
+  const nextPreparation = studySummary.preparationPlans[0] ?? null;
+  const priorityRevision = studySummary.revisionItems[0] ?? null;
+  const priorityGap = plkgSummary.knowledgeGaps[0] ?? null;
+  const runtime = healthStatus.runtime ?? fallbackHealthStatus.runtime;
+  const studentContextLabel = `${dashboard.academicOverview.currentSemester.label} - ${dashboard.academicOverview.programmeName}`;
 
   useEffect(() => {
     let isMounted = true;
+
+    fetchHealthStatus()
+      .then((status) => {
+        if (isMounted) {
+          setHealthStatus(status);
+          setRuntimeStatus("API runtime connected");
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setHealthStatus(fallbackHealthStatus);
+          setRuntimeStatus("API runtime unavailable");
+        }
+      });
 
     fetchDashboardSummary()
       .then((summary) => {
@@ -176,7 +207,50 @@ export default function App(): React.JSX.Element {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [dataRefreshKey]);
+
+  const refreshLiveData = (): void => {
+    setDataRefreshKey((current) => current + 1);
+  };
+
+  const handleSignIn = async (): Promise<void> => {
+    setAuthStatus("Signing in...");
+
+    try {
+      const { data, error } = await signInWithPassword({
+        email: authEmail.trim(),
+        password: authPassword,
+      });
+
+      if (error || !data.session?.access_token) {
+        throw error ?? new Error("Supabase did not return a session.");
+      }
+
+      setApiAccessToken(data.session.access_token);
+      setSignedInUserLabel(data.user?.email ?? data.user?.id ?? "Authenticated test user");
+      setAuthStatus("Signed in for live API validation");
+      setAuthPassword("");
+      refreshLiveData();
+    } catch {
+      setApiAccessToken(null);
+      setSignedInUserLabel(null);
+      setAuthStatus("Sign-in failed; check local Supabase config and test credentials");
+      refreshLiveData();
+    }
+  };
+
+  const handleSignOut = async (): Promise<void> => {
+    setAuthStatus("Signing out...");
+
+    try {
+      await signOut();
+    } finally {
+      setApiAccessToken(null);
+      setSignedInUserLabel(null);
+      setAuthStatus("Signed out");
+      refreshLiveData();
+    }
+  };
 
   const handleCreateDocument = async (): Promise<void> => {
     setUploadState("Creating document metadata...");
@@ -293,41 +367,234 @@ export default function App(): React.JSX.Element {
     }
   };
 
-  const renderDashboard = (): React.JSX.Element => (
-    <>
-      <View style={styles.panel}>
-        <Text style={styles.panelTitle}>Academic Overview</Text>
-        <Text style={styles.metricText}>
-          {dashboard.academicOverview.fieldOfStudy ?? "Field of study pending"}
+  const getValidationLabel = (): string => {
+    const validationLabel =
+      runtime?.liveValidationStatus === "ready_for_authenticated_validation"
+        ? "Ready for authenticated RLS validation"
+        : runtime?.liveValidationStatus === "supabase_configuration_missing"
+          ? "Supabase configuration incomplete"
+          : "Fixture mode active";
+
+    return validationLabel;
+  };
+
+  const renderRuntimeStatus = (): React.JSX.Element => {
+    return (
+      <View style={styles.statusPanel}>
+        <Text style={styles.statusLabel}>API runtime</Text>
+        <Text style={styles.statusValue}>{runtime?.persistenceLabel ?? "Runtime pending"}</Text>
+        <Text style={styles.statusMeta}>{runtimeStatus}</Text>
+        <View style={styles.graphMetricRow}>
+          <Text style={styles.graphMetric}>{runtime?.dataMode ?? "unknown"} mode</Text>
+          <Text style={styles.graphMetric}>
+            Supabase {runtime?.supabaseConfigured ? "configured" : "not configured"}
+          </Text>
+          <Text style={styles.graphMetric}>{getValidationLabel()}</Text>
+        </View>
+      </View>
+    );
+  };
+
+  const renderLiveSession = (): React.JSX.Element => (
+    <View style={styles.statusPanel}>
+      <Text style={styles.statusLabel}>Live session</Text>
+      <Text style={styles.statusValue}>{signedInUserLabel ?? "No authenticated test user"}</Text>
+      <Text style={styles.statusMeta}>{authStatus}</Text>
+      <TextInput
+        accessibilityLabel="Test user email"
+        autoCapitalize="none"
+        keyboardType="email-address"
+        onChangeText={setAuthEmail}
+        placeholder="Test user email"
+        style={styles.singleLineInput}
+        value={authEmail}
+      />
+      <TextInput
+        accessibilityLabel="Test user password"
+        onChangeText={setAuthPassword}
+        placeholder="Test user password"
+        secureTextEntry
+        style={styles.singleLineInput}
+        value={authPassword}
+      />
+      <View style={styles.buttonRow}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => {
+            void handleSignIn();
+          }}
+          style={styles.primaryButton}
+        >
+          <Text style={styles.primaryButtonText}>Sign in</Text>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => {
+            void handleSignOut();
+          }}
+          style={styles.secondaryButton}
+        >
+          <Text style={styles.secondaryButtonText}>Sign out</Text>
+        </Pressable>
+      </View>
+      <Pressable
+        accessibilityRole="button"
+        onPress={refreshLiveData}
+        style={styles.secondaryButton}
+      >
+        <Text style={styles.secondaryButtonText}>Refresh API data</Text>
+      </Pressable>
+    </View>
+  );
+
+  const renderTodayHeader = (): React.JSX.Element => (
+    <View style={styles.heroPanel}>
+      <View style={styles.heroTopRow}>
+        <View style={styles.heroCopy}>
+          <Text style={styles.eyebrow}>SBud-d</Text>
+          <Text style={styles.heading}>Today, learn with direction.</Text>
+          <Text style={styles.body}>{studentContextLabel}</Text>
+        </View>
+        <View style={styles.modeBadge}>
+          <Text style={styles.modeBadgeLabel}>{runtime?.dataMode ?? "offline"}</Text>
+          <Text style={styles.modeBadgeText}>
+            {runtime?.supabaseConfigured ? "Live ready" : "Local mode"}
+          </Text>
+        </View>
+      </View>
+
+      <View style={styles.todayFocus}>
+        <Text style={styles.sectionKicker}>Focus now</Text>
+        <Text style={styles.heroFocusText}>
+          {nextPreparation?.topicLabel ??
+            priorityRevision?.topicLabel ??
+            dashboard.blieRecommendation.title}
         </Text>
-        <Text style={styles.mutedText}>
-          {dashboard.subjects.length} subjects - {dashboard.learningStatus.readinessLabel}
+        <Text style={styles.heroSupportText}>
+          {nextPreparation
+            ? `Prepare for ${nextPreparation.subjectName} before the next session.`
+            : priorityRevision
+              ? priorityRevision.recommendedAction
+              : priorityGap
+                ? `Strengthen ${priorityGap} to improve your next study session.`
+                : dashboard.blieRecommendation.body}
         </Text>
       </View>
 
+      <View style={styles.heroActions}>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => setActiveTab("study")}
+          style={styles.heroPrimaryAction}
+        >
+          <Text style={styles.heroPrimaryActionText}>Start study plan</Text>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => setActiveTab("buddy")}
+          style={styles.heroSecondaryAction}
+        >
+          <Text style={styles.heroSecondaryActionText}>Ask BLIE</Text>
+        </Pressable>
+      </View>
+    </View>
+  );
+
+  const renderLearningCycle = (): React.JSX.Element => (
+    <View style={styles.cycleRail}>
+      {[
+        {
+          label: "Prepare",
+          value: studySummary.preparationReadinessLabel,
+        },
+        {
+          label: "Learn",
+          value: primarySubject?.currentTopic ?? "Topic pending",
+        },
+        {
+          label: "Revise",
+          value: studySummary.revisionProgressLabel,
+        },
+        {
+          label: "Grow",
+          value: `${plkgSummary.nodeCount} nodes`,
+        },
+      ].map((item) => (
+        <View key={item.label} style={styles.cycleStep}>
+          <Text style={styles.cycleLabel}>{item.label}</Text>
+          <Text style={styles.cycleValue}>{item.value}</Text>
+        </View>
+      ))}
+    </View>
+  );
+
+  const renderDashboard = (): React.JSX.Element => (
+    <>
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>Learning command centre</Text>
+        <Text style={styles.sectionSubtitle}>{apiStatus}</Text>
+      </View>
+
+      <View style={styles.insightGrid}>
+        <View style={styles.insightCard}>
+          <Text style={styles.panelTitle}>Readiness</Text>
+          <Text style={styles.metricText}>{dashboard.learningStatus.readinessLabel}</Text>
+          <Text style={styles.mutedText}>{dashboard.learningStatus.knowledgeGrowthLabel}</Text>
+        </View>
+        <View style={styles.insightCard}>
+          <Text style={styles.panelTitle}>Knowledge</Text>
+          <Text style={styles.metricText}>{plkgSummary.statusLabel}</Text>
+          <Text style={styles.mutedText}>{plkgSummary.growthLabel}</Text>
+        </View>
+      </View>
+
       <View style={styles.panel}>
-        <Text style={styles.panelTitle}>Subject Progress</Text>
+        <View style={styles.documentHeader}>
+          <Text style={styles.panelTitle}>Subjects in motion</Text>
+          <Text style={styles.statusPill}>{dashboard.subjects.length} active</Text>
+        </View>
         {dashboard.subjects.length === 0 ? (
           <Text style={styles.mutedText}>Add your first subject to start building context.</Text>
         ) : (
           dashboard.subjects.map((subject) => (
-            <View key={subject.id} style={styles.subjectRow}>
+            <Pressable
+              accessibilityRole="button"
+              key={subject.id}
+              onPress={() => {
+                setSelectedSubjectId(subject.id);
+                setActiveTab("buddy");
+              }}
+              style={styles.subjectCard}
+            >
               <View style={styles.subjectText}>
                 <Text style={styles.subjectName}>{subject.name}</Text>
                 <Text style={styles.mutedText}>
-                  {subject.code} - {subject.learningStatus}
+                  {subject.code} - {subject.currentTopic ?? "Topic pending"}
                 </Text>
+                <View style={styles.progressTrack}>
+                  <View style={[styles.progressFill, { width: `${subject.progressPercent}%` }]} />
+                </View>
               </View>
-              <Text style={styles.progressText}>{subject.progressPercent}%</Text>
-            </View>
+              <View style={styles.subjectScore}>
+                <Text style={styles.progressText}>{subject.progressPercent}%</Text>
+                <Text style={styles.statusPill}>{subject.learningStatus}</Text>
+              </View>
+            </Pressable>
           ))
         )}
       </View>
 
-      <View style={styles.panel}>
-        <Text style={styles.panelTitle}>BLIE Guidance</Text>
-        <Text style={styles.metricText}>{dashboard.blieRecommendation.title}</Text>
+      <View style={styles.companionPanel}>
+        <Text style={styles.panelTitle}>BLIE guidance</Text>
+        <Text style={styles.companionText}>{dashboard.blieRecommendation.title}</Text>
         <Text style={styles.mutedText}>{dashboard.blieRecommendation.body}</Text>
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => setActiveTab("buddy")}
+          style={styles.secondaryButton}
+        >
+          <Text style={styles.secondaryButtonText}>{dashboard.blieRecommendation.actionLabel}</Text>
+        </Pressable>
       </View>
     </>
   );
@@ -393,8 +660,8 @@ export default function App(): React.JSX.Element {
   const renderStudy = (): React.JSX.Element => (
     <>
       <View style={styles.panel}>
-        <Text style={styles.panelTitle}>Study Readiness</Text>
-        <Text style={styles.metricText}>{studySummary.recommendedFocusLabel}</Text>
+        <Text style={styles.panelTitle}>Study coach</Text>
+        <Text style={styles.heroFocusText}>{studySummary.recommendedFocusLabel}</Text>
         <Text style={styles.mutedText}>{studyStatus}</Text>
         <View style={styles.graphMetricRow}>
           <Text style={styles.graphMetric}>{studySummary.preparationReadinessLabel}</Text>
@@ -403,7 +670,7 @@ export default function App(): React.JSX.Element {
       </View>
 
       <View style={styles.panel}>
-        <Text style={styles.panelTitle}>Preparation</Text>
+        <Text style={styles.panelTitle}>Before learning</Text>
         {studySummary.preparationPlans.length === 0 ? (
           <Text style={styles.mutedText}>No preparation plans loaded yet.</Text>
         ) : (
@@ -412,7 +679,7 @@ export default function App(): React.JSX.Element {
       </View>
 
       <View style={styles.panel}>
-        <Text style={styles.panelTitle}>Revision</Text>
+        <Text style={styles.panelTitle}>After learning</Text>
         {studySummary.revisionItems.length === 0 ? (
           <Text style={styles.mutedText}>No revision items loaded yet.</Text>
         ) : (
@@ -441,10 +708,9 @@ export default function App(): React.JSX.Element {
   const renderLibrary = (): React.JSX.Element => (
     <>
       <View style={styles.panel}>
-        <Text style={styles.panelTitle}>Document Upload</Text>
-        <Text style={styles.metricText}>{uploadState}</Text>
-        <Text style={styles.mutedText}>Private bucket: {documentLibrary.upload.storageBucket}</Text>
-        <Text style={styles.mutedText}>Path: {documentLibrary.upload.storagePathPattern}</Text>
+        <Text style={styles.panelTitle}>Learning material intake</Text>
+        <Text style={styles.heroFocusText}>Turn notes into knowledge.</Text>
+        <Text style={styles.mutedText}>{uploadState}</Text>
         <Pressable
           accessibilityRole="button"
           onPress={() => {
@@ -452,12 +718,12 @@ export default function App(): React.JSX.Element {
           }}
           style={styles.primaryButton}
         >
-          <Text style={styles.primaryButtonText}>Create sample metadata</Text>
+          <Text style={styles.primaryButtonText}>Capture sample note</Text>
         </Pressable>
       </View>
 
       <View style={styles.panel}>
-        <Text style={styles.panelTitle}>Document Library</Text>
+        <Text style={styles.panelTitle}>Learning hub</Text>
         <Text style={styles.mutedText}>{libraryStatus}</Text>
         {documentLibrary.documents.length === 0 ? (
           <>
@@ -491,8 +757,8 @@ export default function App(): React.JSX.Element {
   const renderBuddy = (): React.JSX.Element => (
     <>
       <View style={styles.panel}>
-        <Text style={styles.panelTitle}>BLIE Chat</Text>
-        <Text style={styles.metricText}>{blieStatus}</Text>
+        <Text style={styles.panelTitle}>BLIE companion</Text>
+        <Text style={styles.heroFocusText}>{blieStatus}</Text>
         <Text style={styles.mutedText}>
           Subject context:{" "}
           {dashboard.subjects.find((subject) => subject.id === selectedSubjectId)?.name ??
@@ -521,7 +787,7 @@ export default function App(): React.JSX.Element {
           accessibilityLabel="BLIE learning question"
           multiline
           onChangeText={setBlieQuestion}
-          placeholder="Ask BLIE a learning question"
+          placeholder="Ask about a concept, topic, or weak area"
           style={styles.chatInput}
           value={blieQuestion}
         />
@@ -532,7 +798,7 @@ export default function App(): React.JSX.Element {
           }}
           style={styles.primaryButton}
         >
-          <Text style={styles.primaryButtonText}>Ask BLIE</Text>
+          <Text style={styles.primaryButtonText}>Send to BLIE</Text>
         </Pressable>
       </View>
 
@@ -540,7 +806,7 @@ export default function App(): React.JSX.Element {
         renderBuddyResponse(blieResponse)
       ) : (
         <View style={styles.panel}>
-          <Text style={styles.panelTitle}>Retrieved Context</Text>
+          <Text style={styles.panelTitle}>Learning context</Text>
           <Text style={styles.mutedText}>
             BLIE will assemble academic profile, subject, document, and PLKG placeholder context
             before generating a response.
@@ -568,8 +834,8 @@ export default function App(): React.JSX.Element {
   const renderPlkg = (): React.JSX.Element => (
     <>
       <View style={styles.panel}>
-        <Text style={styles.panelTitle}>Knowledge Growth</Text>
-        <Text style={styles.metricText}>{plkgSummary.statusLabel}</Text>
+        <Text style={styles.panelTitle}>Personal knowledge graph</Text>
+        <Text style={styles.heroFocusText}>{plkgSummary.statusLabel}</Text>
         <Text style={styles.mutedText}>{plkgStatus}</Text>
         <Text style={styles.mutedText}>{plkgSummary.growthLabel}</Text>
         <View style={styles.graphMetricRow}>
@@ -589,7 +855,7 @@ export default function App(): React.JSX.Element {
       </View>
 
       <View style={styles.panel}>
-        <Text style={styles.panelTitle}>Knowledge Gaps</Text>
+        <Text style={styles.panelTitle}>Next foundations</Text>
         {plkgSummary.knowledgeGaps.length === 0 ? (
           <Text style={styles.mutedText}>No knowledge gaps loaded yet.</Text>
         ) : (
@@ -604,7 +870,7 @@ export default function App(): React.JSX.Element {
       </View>
 
       <View style={styles.panel}>
-        <Text style={styles.panelTitle}>Knowledge Nodes</Text>
+        <Text style={styles.panelTitle}>Concept memory</Text>
         {plkgSummary.nodes.slice(0, 6).map(renderPlkgNode)}
       </View>
     </>
@@ -613,9 +879,12 @@ export default function App(): React.JSX.Element {
   const renderSync = (): React.JSX.Element => (
     <>
       <View style={styles.panel}>
-        <Text style={styles.panelTitle}>Synchronization</Text>
+        <Text style={styles.panelTitle}>Cloud memory</Text>
         <Text style={styles.metricText}>{syncStatus.connectionStatus}</Text>
         <Text style={styles.mutedText}>{syncStatusLabel}</Text>
+        <Text style={styles.mutedText}>
+          Persistence: {healthStatus.runtime?.persistenceLabel ?? "Runtime pending"}
+        </Text>
         <View style={styles.graphMetricRow}>
           <Text style={styles.graphMetric}>{syncStatus.pendingCount} pending</Text>
           <Text style={styles.graphMetric}>{syncStatus.failedCount} failed</Text>
@@ -632,6 +901,37 @@ export default function App(): React.JSX.Element {
         >
           <Text style={styles.primaryButtonText}>Sync now</Text>
         </Pressable>
+      </View>
+
+      <View style={styles.panel}>
+        <Text style={styles.panelTitle}>Live Validation</Text>
+        <Text style={styles.metricText}>
+          {healthStatus.runtime?.liveValidationStatus === "ready_for_authenticated_validation"
+            ? "Ready for local token validation"
+            : healthStatus.runtime?.liveValidationStatus === "supabase_configuration_missing"
+              ? "Supabase config blocker"
+              : "Fixture validation mode"}
+        </Text>
+        {(
+          healthStatus.runtime?.validationNotes ??
+          fallbackHealthStatus.runtime?.validationNotes ??
+          []
+        )
+          .slice(0, 3)
+          .map((note) => (
+            <Text key={note} style={styles.mutedText}>
+              {note}
+            </Text>
+          ))}
+      </View>
+
+      {renderRuntimeStatus()}
+      {renderLiveSession()}
+
+      <View style={styles.statusPanel}>
+        <Text style={styles.statusLabel}>API base URL</Text>
+        <Text style={styles.statusValue}>{apiBaseUrl}</Text>
+        <Text style={styles.statusMeta}>{apiStatus}</Text>
       </View>
 
       <View style={styles.panel}>
@@ -681,18 +981,8 @@ export default function App(): React.JSX.Element {
   return (
     <SafeAreaView style={styles.screen}>
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.eyebrow}>AI Study Buddy</Text>
-        <Text style={styles.heading}>Learning Dashboard</Text>
-        <Text style={styles.body}>
-          {dashboard.academicOverview.currentSemester.label} -{" "}
-          {dashboard.academicOverview.programmeName}
-        </Text>
-
-        <View style={styles.statusPanel}>
-          <Text style={styles.statusLabel}>API base URL</Text>
-          <Text style={styles.statusValue}>{apiBaseUrl}</Text>
-          <Text style={styles.statusMeta}>{apiStatus}</Text>
-        </View>
+        {renderTodayHeader()}
+        {renderLearningCycle()}
 
         {activeTab === "dashboard" && renderDashboard()}
         {activeTab === "study" && renderStudy()}
@@ -726,83 +1016,248 @@ export default function App(): React.JSX.Element {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: "#f7f8fb",
+    backgroundColor: "#f5f7f4",
   },
   container: {
-    gap: 18,
-    padding: 24,
-    paddingBottom: 34,
+    gap: 16,
+    padding: 18,
+    paddingBottom: 96,
   },
   eyebrow: {
-    color: "#47636b",
+    color: "#3d6c5f",
     fontSize: 14,
     fontWeight: "700",
     letterSpacing: 0,
     textTransform: "uppercase",
   },
   heading: {
-    color: "#14272e",
-    fontSize: 34,
+    color: "#14231f",
+    fontSize: 32,
     fontWeight: "800",
     letterSpacing: 0,
+    lineHeight: 38,
   },
   body: {
-    color: "#40545b",
+    color: "#42534d",
     fontSize: 17,
     lineHeight: 25,
   },
-  statusPanel: {
-    backgroundColor: "#ffffff",
-    borderColor: "#dbe3e7",
+  heroPanel: {
+    backgroundColor: "#fcfbf6",
+    borderColor: "#dde4d8",
     borderRadius: 8,
     borderWidth: 1,
+    gap: 18,
+    padding: 18,
+  },
+  heroTopRow: {
+    alignItems: "flex-start",
+    flexDirection: "row",
+    gap: 14,
+    justifyContent: "space-between",
+  },
+  heroCopy: {
+    flex: 1,
+    gap: 6,
+  },
+  modeBadge: {
+    alignItems: "flex-end",
+    backgroundColor: "#e8f0ec",
+    borderColor: "#c9d8d0",
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 2,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+  },
+  modeBadgeLabel: {
+    color: "#17372e",
+    fontSize: 12,
+    fontWeight: "900",
+    textTransform: "uppercase",
+  },
+  modeBadgeText: {
+    color: "#456057",
+    fontSize: 12,
+    fontWeight: "700",
+  },
+  todayFocus: {
+    backgroundColor: "#eef4ee",
+    borderRadius: 8,
+    gap: 5,
+    padding: 14,
+  },
+  sectionKicker: {
+    color: "#587066",
+    fontSize: 12,
+    fontWeight: "900",
+    textTransform: "uppercase",
+  },
+  heroFocusText: {
+    color: "#172923",
+    fontSize: 20,
+    fontWeight: "900",
+    letterSpacing: 0,
+    lineHeight: 26,
+  },
+  heroSupportText: {
+    color: "#43574f",
+    fontSize: 15,
+    lineHeight: 22,
+  },
+  heroActions: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  heroPrimaryAction: {
+    alignItems: "center",
+    backgroundColor: "#17372e",
+    borderRadius: 8,
+    flex: 1,
+    justifyContent: "center",
+    minHeight: 46,
+    paddingHorizontal: 14,
+  },
+  heroPrimaryActionText: {
+    color: "#ffffff",
+    fontSize: 14,
+    fontWeight: "900",
+  },
+  heroSecondaryAction: {
+    alignItems: "center",
+    borderColor: "#17372e",
+    borderRadius: 8,
+    borderWidth: 1,
+    flex: 1,
+    justifyContent: "center",
+    minHeight: 46,
+    paddingHorizontal: 14,
+  },
+  heroSecondaryActionText: {
+    color: "#17372e",
+    fontSize: 14,
+    fontWeight: "900",
+  },
+  cycleRail: {
+    flexDirection: "row",
+    gap: 8,
+  },
+  cycleStep: {
+    backgroundColor: "#ffffff",
+    borderColor: "#dce4dc",
+    borderRadius: 8,
+    borderWidth: 1,
+    flex: 1,
+    gap: 5,
+    minHeight: 78,
+    padding: 10,
+  },
+  cycleLabel: {
+    color: "#668075",
+    fontSize: 11,
+    fontWeight: "900",
+    textTransform: "uppercase",
+  },
+  cycleValue: {
+    color: "#172923",
+    fontSize: 13,
+    fontWeight: "800",
+    lineHeight: 18,
+  },
+  sectionHeader: {
+    gap: 4,
+    marginTop: 4,
+  },
+  sectionTitle: {
+    color: "#172923",
+    fontSize: 21,
+    fontWeight: "900",
+  },
+  sectionSubtitle: {
+    color: "#61736d",
+    fontSize: 14,
+  },
+  insightGrid: {
+    flexDirection: "row",
+    gap: 10,
+  },
+  insightCard: {
+    backgroundColor: "#ffffff",
+    borderColor: "#dce4dc",
+    borderRadius: 8,
+    borderWidth: 1,
+    flex: 1,
+    gap: 8,
+    minHeight: 128,
+    padding: 14,
+  },
+  statusPanel: {
+    backgroundColor: "#ffffff",
+    borderColor: "#dce4dc",
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 8,
     padding: 16,
   },
   statusLabel: {
-    color: "#65777e",
+    color: "#657870",
     fontSize: 13,
     fontWeight: "700",
     letterSpacing: 0,
     textTransform: "uppercase",
   },
   statusValue: {
-    color: "#15282e",
+    color: "#172923",
     fontSize: 15,
-    marginTop: 6,
+    fontWeight: "800",
   },
   statusMeta: {
-    color: "#52707a",
+    color: "#60746b",
     fontSize: 13,
     marginTop: 8,
   },
   panel: {
     backgroundColor: "#ffffff",
-    borderColor: "#dbe3e7",
+    borderColor: "#dce4dc",
     borderRadius: 8,
     borderWidth: 1,
     gap: 8,
     padding: 16,
   },
+  companionPanel: {
+    backgroundColor: "#f8f1df",
+    borderColor: "#e5d8b9",
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 10,
+    padding: 16,
+  },
+  companionText: {
+    color: "#2b2518",
+    fontSize: 20,
+    fontWeight: "900",
+    lineHeight: 26,
+  },
   panelTitle: {
-    color: "#65777e",
+    color: "#657870",
     fontSize: 13,
     fontWeight: "800",
     letterSpacing: 0,
     textTransform: "uppercase",
   },
   metricText: {
-    color: "#162b32",
+    color: "#172923",
     fontSize: 18,
     fontWeight: "800",
     letterSpacing: 0,
   },
   mutedText: {
-    color: "#52666d",
+    color: "#52655d",
     fontSize: 14,
     lineHeight: 20,
   },
   responseLabel: {
-    color: "#24464f",
+    color: "#244b40",
     fontSize: 13,
     fontWeight: "800",
     letterSpacing: 0,
@@ -816,7 +1271,7 @@ const styles = StyleSheet.create({
   },
   subjectChip: {
     alignItems: "center",
-    borderColor: "#cad5da",
+    borderColor: "#cfd9d1",
     borderRadius: 8,
     borderWidth: 1,
     minHeight: 36,
@@ -824,11 +1279,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   activeSubjectChip: {
-    backgroundColor: "#14323b",
-    borderColor: "#14323b",
+    backgroundColor: "#17372e",
+    borderColor: "#17372e",
   },
   subjectChipText: {
-    color: "#30474f",
+    color: "#304a40",
     fontSize: 13,
     fontWeight: "800",
   },
@@ -837,15 +1292,29 @@ const styles = StyleSheet.create({
   },
   chatInput: {
     backgroundColor: "#ffffff",
-    borderColor: "#cad5da",
+    borderColor: "#cfd9d1",
     borderRadius: 8,
     borderWidth: 1,
-    color: "#162b32",
+    color: "#172923",
     fontSize: 15,
     lineHeight: 21,
     minHeight: 96,
     padding: 12,
     textAlignVertical: "top",
+  },
+  singleLineInput: {
+    backgroundColor: "#ffffff",
+    borderColor: "#cfd9d1",
+    borderRadius: 8,
+    borderWidth: 1,
+    color: "#172923",
+    fontSize: 15,
+    minHeight: 44,
+    paddingHorizontal: 12,
+  },
+  buttonRow: {
+    flexDirection: "row",
+    gap: 8,
   },
   subjectRow: {
     alignItems: "center",
@@ -856,17 +1325,30 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingTop: 12,
   },
+  subjectCard: {
+    alignItems: "center",
+    borderTopColor: "#edf1ed",
+    borderTopWidth: 1,
+    flexDirection: "row",
+    gap: 12,
+    justifyContent: "space-between",
+    paddingTop: 12,
+  },
   subjectText: {
     flex: 1,
     gap: 3,
   },
+  subjectScore: {
+    alignItems: "flex-end",
+    gap: 7,
+  },
   subjectName: {
-    color: "#162b32",
+    color: "#172923",
     fontSize: 15,
     fontWeight: "800",
   },
   progressText: {
-    color: "#14323b",
+    color: "#17372e",
     fontSize: 15,
     fontWeight: "800",
   },
@@ -876,9 +1358,9 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   graphMetric: {
-    backgroundColor: "#e8f0ee",
+    backgroundColor: "#e8f0ec",
     borderRadius: 8,
-    color: "#24463f",
+    color: "#244b40",
     fontSize: 13,
     fontWeight: "800",
     overflow: "hidden",
@@ -886,7 +1368,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   documentRow: {
-    borderTopColor: "#edf1f3",
+    borderTopColor: "#edf1ed",
     borderTopWidth: 1,
     gap: 7,
     paddingTop: 12,
@@ -898,9 +1380,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   statusPill: {
-    backgroundColor: "#e8f0ee",
+    backgroundColor: "#e8f0ec",
     borderRadius: 8,
-    color: "#24463f",
+    color: "#244b40",
     fontSize: 12,
     fontWeight: "800",
     overflow: "hidden",
@@ -909,18 +1391,18 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
   },
   progressTrack: {
-    backgroundColor: "#e6ecef",
+    backgroundColor: "#e5ece7",
     borderRadius: 8,
     height: 8,
     overflow: "hidden",
   },
   progressFill: {
-    backgroundColor: "#24756b",
+    backgroundColor: "#2d7661",
     height: 8,
   },
   primaryButton: {
     alignItems: "center",
-    backgroundColor: "#14323b",
+    backgroundColor: "#17372e",
     borderRadius: 8,
     minHeight: 44,
     justifyContent: "center",
@@ -934,7 +1416,7 @@ const styles = StyleSheet.create({
   },
   secondaryButton: {
     alignItems: "center",
-    borderColor: "#14323b",
+    borderColor: "#17372e",
     borderRadius: 8,
     borderWidth: 1,
     minHeight: 40,
@@ -943,7 +1425,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   secondaryButtonText: {
-    color: "#14323b",
+    color: "#17372e",
     fontSize: 13,
     fontWeight: "800",
   },
@@ -952,24 +1434,27 @@ const styles = StyleSheet.create({
   },
   tabs: {
     flexDirection: "row",
+    flexWrap: "wrap",
     gap: 8,
   },
   tab: {
     alignItems: "center",
-    borderColor: "#cad5da",
+    backgroundColor: "#ffffff",
+    borderColor: "#cfd9d1",
     borderRadius: 8,
     borderWidth: 1,
-    flex: 1,
+    flexGrow: 1,
+    flexBasis: "30%",
     minHeight: 44,
     justifyContent: "center",
     paddingHorizontal: 10,
   },
   activeTab: {
-    backgroundColor: "#14323b",
-    borderColor: "#14323b",
+    backgroundColor: "#17372e",
+    borderColor: "#17372e",
   },
   tabText: {
-    color: "#30474f",
+    color: "#304a40",
     fontSize: 13,
     fontWeight: "700",
     letterSpacing: 0,

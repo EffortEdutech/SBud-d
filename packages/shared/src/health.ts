@@ -1,8 +1,19 @@
+interface RuntimeHealthStatus {
+  authRequiredForSupabase: boolean;
+  dataMode: "fixture" | "supabase";
+  liveValidationStatus:
+    "fixture_mode" | "supabase_configuration_missing" | "ready_for_authenticated_validation";
+  persistenceLabel: string;
+  supabaseConfigured: boolean;
+  validationNotes: string[];
+}
+
 interface CreateHealthStatusInput {
   service: string;
   version: string;
   environment?: string;
   now?: Date;
+  runtime?: RuntimeHealthStatus;
 }
 
 export function createHealthStatus(input: CreateHealthStatusInput) {
@@ -12,5 +23,6 @@ export function createHealthStatus(input: CreateHealthStatusInput) {
     version: input.version,
     timestamp: (input.now ?? new Date()).toISOString(),
     environment: input.environment ?? "development",
+    ...(input.runtime ? { runtime: input.runtime } : {}),
   };
 }

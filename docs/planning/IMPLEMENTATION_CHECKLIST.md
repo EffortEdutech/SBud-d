@@ -1,8 +1,8 @@
 # AI Study Buddy Implementation Checklist
 
-Version: 0.1
+Version: 0.2
 Status: Living checklist
-Last updated: 2026-07-15
+Last updated: 2026-07-29
 
 ---
 
@@ -20,11 +20,15 @@ When work progresses, update this checklist in the same commit or handoff as the
 
 # Current Sprint
 
-Current sprint: MVP Stabilization Pass 1 - Supabase Persistence Wiring
+Current sprint: Sprint 11 - Live Validation And Demo Visibility
 
 Current goal:
 
-Wire Supabase-backed persistence behind existing API repository boundaries while preserving fixture mode and the completed local MVP baseline.
+Make live Supabase validation visible through the API and mobile UI while preserving the API boundary and avoiding committed secrets.
+
+Active implementation target remains:
+
+MVP Stabilization Pass 1 - Supabase Persistence Wiring.
 
 ---
 
@@ -407,3 +411,106 @@ Wire Supabase-backed persistence behind existing API repository boundaries while
 - [x] Update API docs if response behavior changes.
 - [x] Update release known issues after persistence wiring status changes.
 - [x] Add live Supabase validation runbook.
+
+---
+
+# Product Completion Master Plan And Checklist
+
+## Planning
+
+- [x] Confirm Sprint 0 through Sprint 10 represent local MVP baseline, not product completion.
+- [x] Read architecture-freeze product, PRD, engineering, monorepo, and MVP roadmap docs.
+- [x] Query Graphify for post-MVP/product-completion planning context.
+- [x] Read current roadmap, sprint plan, implementation checklist, and MVP stabilization plan.
+- [x] Add `docs/planning/PRODUCT_COMPLETION_MASTER_PLAN.md`.
+- [x] Link root roadmap to the product completion master plan.
+- [x] Extend sprint plan beyond Sprint 10.
+- [x] Extend this checklist beyond Sprint 10.
+
+## Phase 2 - MVP Stabilization And Live Data Readiness
+
+- [/] Complete MVP Stabilization Pass 1.
+- [!] Unblock Supabase CLI migration-history validation.
+- [ ] Complete live same-student RLS validation.
+- [ ] Complete live cross-student denial validation.
+- [ ] Add visible live-mode API/mobile validation flow.
+- [ ] Confirm Supabase-mode dashboard data visibly changes in the app.
+- [ ] Preserve fixture mode for safe local demos.
+- [ ] Record controlled MVP readiness decision.
+
+## Sprint 11 - Live Validation And Demo Visibility
+
+- [/] Confirm live validation test-user approach without exposing tokens.
+- [!] Run `docs/development/SUPABASE_LIVE_VALIDATION.md`.
+- [ ] Record live validation results without secrets.
+- [x] Add API/mobile live-mode smoke indicators.
+- [/] Show persisted academic/dashboard changes in UI.
+- [x] Show sync/persistence status clearly in UI.
+- [x] Redesign mobile shell around the real student learning journey.
+- [x] Run `corepack pnpm check`.
+- [x] Run `corepack pnpm mvp:readiness`.
+- [x] Refresh Graphify.
+
+Current blocker:
+
+- 2026-07-29: Supabase CLI migration list still returns `LegacyDbConfigLoginRoleStatusError` / HTTP 403. Full live RLS validation still requires project access plus two local-only authenticated test-user sessions.
+
+## Phase 3 - True MVP Completion
+
+- [ ] Sprint 12 - Real Document Upload And Storage.
+- [ ] Sprint 13 - Document Text Extraction Baseline.
+- [ ] Sprint 14 - Knowledge Processing And PLKG Enrichment.
+- [ ] Sprint 15 - Real BLIE Provider Integration.
+- [ ] Sprint 16 - Retrieval-Backed BLIE Responses.
+- [ ] Sprint 17 - Durable Offline Storage And Sync Hardening.
+- [ ] Sprint 18 - MVP UX Polish And Empty/Error State Completion.
+- [ ] Sprint 19 - MVP Performance, Security, And Observability Baseline.
+- [ ] Sprint 20 - Controlled MVP Release Candidate.
+
+## Phase 4 - Closed Beta Readiness
+
+- [ ] Sprint 21 - Beta Onboarding And Support Flow.
+- [ ] Sprint 22 - Beta Analytics And Feedback Capture.
+- [ ] Sprint 23 - Staging Deployment And Release Operations.
+- [ ] Sprint 24 - Mobile Build Pipeline.
+- [ ] Sprint 25 - Closed Beta Security And Privacy Review.
+- [ ] Sprint 26 - Closed Beta Release.
+
+## Phase 5 - Public Version 1 Completion
+
+- [ ] Sprint 27 - Account, Profile, And Settings Completion.
+- [ ] Sprint 28 - Subscription System.
+- [ ] Sprint 29 - Notes And Personal Learning Hub Completion.
+- [ ] Sprint 30 - Revision Centre Completion.
+- [ ] Sprint 31 - Progress Dashboard And Learning Analytics Completion.
+- [ ] Sprint 32 - Study Groups MVP.
+- [ ] Sprint 33 - Web Application Baseline.
+- [ ] Sprint 34 - Public Release Security And Compliance Review.
+- [ ] Sprint 35 - App Store And Web Launch Readiness.
+- [ ] Sprint 36 - Public Version 1 Launch.
+
+## Phase 6 - Learning Intelligence Expansion
+
+- [ ] Curriculum intelligence roadmap broken into sprint plans.
+- [ ] Knowledge extraction roadmap broken into sprint plans.
+- [ ] Learning analytics roadmap broken into sprint plans.
+- [ ] Assessment tracking roadmap broken into sprint plans.
+- [ ] Revision engine roadmap broken into sprint plans.
+
+## Phase 7 - Collaboration And Knowledge Sharing
+
+- [ ] Study groups roadmap broken into sprint plans.
+- [ ] Shared resources roadmap broken into sprint plans.
+- [ ] Group subscriptions roadmap broken into sprint plans.
+- [ ] Collaborative AI roadmap broken into sprint plans.
+- [ ] Shared revision tools roadmap broken into sprint plans.
+
+## Phase 8 - Intelligence Expansion And Platform Growth
+
+- [ ] Advanced BLIE reasoning plan approved.
+- [ ] Predictive learning plan approved.
+- [ ] Voice capability plan approved.
+- [ ] Marketplace plan approved.
+- [ ] Creator programme plan approved.
+- [ ] Career guidance plan approved.
+- [ ] Global scale and operational hardening plan approved.

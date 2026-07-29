@@ -1,6 +1,6 @@
 import type { CreateStudyReflectionInput, StudyRevisionItem, StudySummary } from "@sbud-d/types";
 
-import { getApiBaseUrl } from "../config/environment";
+import { apiFetch } from "../lib/api-client";
 
 export const fallbackStudySummary: StudySummary = {
   studentId: "offline-student",
@@ -12,7 +12,7 @@ export const fallbackStudySummary: StudySummary = {
 };
 
 export async function fetchStudySummary(): Promise<StudySummary> {
-  const response = await fetch(`${getApiBaseUrl()}/study/summary`);
+  const response = await apiFetch("/study/summary");
 
   if (!response.ok) {
     throw new Error(`Study summary request failed with status ${response.status}.`);
@@ -24,7 +24,7 @@ export async function fetchStudySummary(): Promise<StudySummary> {
 export async function createStudyReflection(
   input: CreateStudyReflectionInput,
 ): Promise<StudyRevisionItem> {
-  const response = await fetch(`${getApiBaseUrl()}/study/revision/reflection`, {
+  const response = await apiFetch("/study/revision/reflection", {
     body: JSON.stringify(input),
     headers: {
       "Content-Type": "application/json",

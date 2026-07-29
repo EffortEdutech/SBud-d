@@ -1,8 +1,8 @@
 # AI Study Buddy Sprint Plan
 
-Version: 0.1
+Version: 0.2
 Status: Living implementation plan
-Last updated: 2026-07-14
+Last updated: 2026-07-29
 
 ---
 
@@ -38,7 +38,9 @@ Existing repository state:
 Current implementation status:
 
 - Current phase: Post-MVP stabilization.
-- Next target: MVP Stabilization Pass 1 - Supabase Persistence Wiring.
+- Current sprint: Sprint 11 - Live Validation And Demo Visibility.
+- Active implementation target: Complete MVP Stabilization Pass 1 live validation visibility.
+- Master plan: `docs/planning/PRODUCT_COMPLETION_MASTER_PLAN.md`.
 
 ---
 
@@ -462,7 +464,142 @@ Exit criteria:
 
 ---
 
-# 6. MVP Release Gate
+# 6. Product Completion Roadmap
+
+Sprint 0 through Sprint 10 completed the local MVP baseline. Product completion continues through the master plan in `docs/planning/PRODUCT_COMPLETION_MASTER_PLAN.md`.
+
+## Phase 2 - MVP Stabilization And Live Data Readiness
+
+Goal:
+
+Make the local MVP safe and credible with live Supabase-backed data.
+
+Recommended sprint sequence:
+
+- Sprint 11 - Live Validation And Demo Visibility.
+
+Exit criteria:
+
+- Supabase mode is live-validated.
+- Cross-student RLS denial is confirmed.
+- Mobile UI visibly demonstrates persisted live data.
+
+## Phase 3 - True MVP Completion
+
+Goal:
+
+Replace placeholder MVP pieces with real learning workflows.
+
+Recommended sprint sequence:
+
+- Sprint 12 - Real Document Upload And Storage.
+- Sprint 13 - Document Text Extraction Baseline.
+- Sprint 14 - Knowledge Processing And PLKG Enrichment.
+- Sprint 15 - Real BLIE Provider Integration.
+- Sprint 16 - Retrieval-Backed BLIE Responses.
+- Sprint 17 - Durable Offline Storage And Sync Hardening.
+- Sprint 18 - MVP UX Polish And Empty/Error State Completion.
+- Sprint 19 - MVP Performance, Security, And Observability Baseline.
+- Sprint 20 - Controlled MVP Release Candidate.
+
+Exit criteria:
+
+- Students can complete the real MVP learning loop with live data.
+- BLIE uses trusted retrieved student context.
+- Document intelligence enriches PLKG.
+- Offline and sync behavior is reliable enough for controlled student testing.
+
+## Phase 4 - Closed Beta Readiness
+
+Goal:
+
+Prepare the product for a small real-user beta.
+
+Recommended sprint sequence:
+
+- Sprint 21 - Beta Onboarding And Support Flow.
+- Sprint 22 - Beta Analytics And Feedback Capture.
+- Sprint 23 - Staging Deployment And Release Operations.
+- Sprint 24 - Mobile Build Pipeline.
+- Sprint 25 - Closed Beta Security And Privacy Review.
+- Sprint 26 - Closed Beta Release.
+
+Exit criteria:
+
+- Beta users can onboard without developer help.
+- Monitoring, support, feedback, and build workflows are active.
+
+## Phase 5 - Public Version 1 Completion
+
+Goal:
+
+Complete the Version 1 PRD scope for public individual-student use.
+
+Recommended sprint sequence:
+
+- Sprint 27 - Account, Profile, And Settings Completion.
+- Sprint 28 - Subscription System.
+- Sprint 29 - Notes And Personal Learning Hub Completion.
+- Sprint 30 - Revision Centre Completion.
+- Sprint 31 - Progress Dashboard And Learning Analytics Completion.
+- Sprint 32 - Study Groups MVP.
+- Sprint 33 - Web Application Baseline.
+- Sprint 34 - Public Release Security And Compliance Review.
+- Sprint 35 - App Store And Web Launch Readiness.
+- Sprint 36 - Public Version 1 Launch.
+
+Exit criteria:
+
+- PRD Version 1 scope is implemented or explicitly deferred by decision.
+- Public release gate passes.
+
+## Phase 6 - Learning Intelligence Expansion
+
+Goal:
+
+Expand from useful MVP companion to proactive learning intelligence.
+
+Capability groups:
+
+- Curriculum intelligence.
+- Deeper knowledge extraction.
+- Learning analytics.
+- Assessment tracking.
+- Stronger revision engine.
+
+## Phase 7 - Collaboration And Knowledge Sharing
+
+Goal:
+
+Add collaborative learning while preserving independent PLKG ownership.
+
+Capability groups:
+
+- Study groups.
+- Shared resources.
+- Group subscriptions.
+- Collaborative AI.
+- Shared revision tools.
+
+## Phase 8 - Intelligence Expansion And Platform Growth
+
+Goal:
+
+Grow toward the long-term AI Study Buddy platform.
+
+Capability groups:
+
+- Advanced BLIE reasoning.
+- Predictive learning.
+- Voice capabilities.
+- Marketplace.
+- Creator programme.
+- Career guidance.
+- Global scale and operational hardening.
+
+---
+
+# 7. MVP Release Gate
 
 The MVP is release-ready only when:
 
@@ -479,7 +616,7 @@ The MVP is release-ready only when:
 
 ---
 
-# 7. Ongoing Maintenance
+# 8. Ongoing Maintenance
 
 At the end of every sprint:
 

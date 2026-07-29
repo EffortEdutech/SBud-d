@@ -1,7 +1,7 @@
 # Supabase Live Validation Checklist
 
-Status: Ready for project-owner execution
-Last updated: 2026-07-15
+Status: Ready for project-owner execution with Sprint 11 demo visibility
+Last updated: 2026-07-29
 
 ---
 
@@ -81,6 +81,22 @@ Health check:
 ```powershell
 Invoke-RestMethod -Method Get -Uri "http://localhost:4801/api/v1/health"
 ```
+
+Expected Sprint 11 health fields:
+
+- `runtime.dataMode` is `supabase`,
+- `runtime.supabaseConfigured` is `true`,
+- `runtime.liveValidationStatus` is `ready_for_authenticated_validation`.
+
+The response must not include Supabase URLs, keys, bearer tokens, passwords, or `.env` contents.
+
+Mobile demo visibility:
+
+1. Start Expo on port `4800`.
+2. Confirm the app's `API runtime` panel shows `Supabase mode`.
+3. Sign in through the `Live session` panel using a test user only.
+4. Tap `Refresh API data`.
+5. Confirm the dashboard and Sync tab reflect authenticated live API data.
 
 ---
 

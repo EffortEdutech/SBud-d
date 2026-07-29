@@ -9,7 +9,7 @@ import type {
   SyncStatusSummary,
 } from "@sbud-d/types";
 
-import { getApiBaseUrl } from "../config/environment";
+import { apiFetch } from "../lib/api-client";
 
 interface LearningSnapshot {
   cachedAt: string;
@@ -103,7 +103,7 @@ export function getLocalSyncStatus(): SyncStatusSummary {
 }
 
 export async function fetchSyncStatus(): Promise<SyncStatusSummary> {
-  const response = await fetch(`${getApiBaseUrl()}/sync/status`);
+  const response = await apiFetch("/sync/status");
 
   if (!response.ok) {
     throw new Error(`Sync status request failed with status ${response.status}.`);
@@ -127,7 +127,7 @@ export async function pushPendingQueue(): Promise<SyncPushResponse> {
     };
   }
 
-  const response = await fetch(`${getApiBaseUrl()}/sync/push`, {
+  const response = await apiFetch("/sync/push", {
     body: JSON.stringify({ items: pendingQueue }),
     headers: {
       "Content-Type": "application/json",

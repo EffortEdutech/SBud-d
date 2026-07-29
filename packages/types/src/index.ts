@@ -26,7 +26,13 @@ export type {
   LearningDocumentProcessing,
   LearningDocumentStatus,
 } from "./document-library.js";
-export type { HealthStatus, HealthStatusValue } from "./health.js";
+export type {
+  ApiRuntimeDataMode,
+  ApiRuntimeStatus,
+  HealthStatus,
+  HealthStatusValue,
+  LiveValidationStatus,
+} from "./health.js";
 export type {
   CreatePlkgLearningActivityInput,
   PlkgEdge,
