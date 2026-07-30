@@ -20,6 +20,10 @@ interface DocumentRequestContext {
   studentId?: string | undefined;
 }
 
+export interface UploadLearningDocumentInput extends CreateLearningDocumentInput {
+  fileBytes: Uint8Array;
+}
+
 type LearningDocumentRow = Database["public"]["Tables"]["learning_documents"]["Row"];
 type AcademicSubjectRow = Database["public"]["Tables"]["academic_subjects"]["Row"];
 
@@ -155,6 +159,33 @@ export class DocumentRepository {
     return structuredClone(document);
   }
 
+  async uploadDocument(
+    input: UploadLearningDocumentInput,
+    context: DocumentRequestContext = {},
+  ): Promise<LearningDocument> {
+    if (this.environment.dataMode === "supabase") {
+      return this.uploadSupabaseDocument(input, context);
+    }
+
+    const document = await this.createDocument(input, context);
+    const uploadedDocument: LearningDocument = {
+      ...document,
+      processing: {
+        errorMessage: null,
+        label: "PDF uploaded. Waiting for text extraction.",
+        progressPercent: 20,
+        status: "processing",
+        updatedAt: new Date().toISOString(),
+      },
+    };
+
+    this.documents = this.documents.map((item) =>
+      item.id === uploadedDocument.id ? uploadedDocument : item,
+    );
+
+    return structuredClone(uploadedDocument);
+  }
+
   private getSupabaseContext(context: DocumentRequestContext): {
     client: SupabaseClient;
     studentId: string;
@@ -276,6 +307,57 @@ export class DocumentRepository {
       .single();
 
     if (error) {
+      throw error;
+    }
+
+    const row = data as LearningDocumentRow;
+    const subjectNamesById = await this.getSubjectNamesById(client, studentId, [row.subject_id]);
+
+    return mapDocument(row, subjectNamesById);
+  }
+
+  private async uploadSupabaseDocument(
+    input: UploadLearningDocumentInput,
+    context: DocumentRequestContext,
+  ): Promise<LearningDocument> {
+    const { client, studentId } = this.getSupabaseContext(context);
+    const documentId = randomUUID();
+    const safeFileName = sanitizeFileName(input.fileName);
+    const title = input.title?.trim() || safeFileName;
+    const storagePath = `${studentId}/${input.subjectId}/${documentId}/${safeFileName}`;
+    const storage = client.storage.from(DOCUMENT_STORAGE_BUCKET);
+
+    const { error: storageError } = await storage.upload(storagePath, input.fileBytes, {
+      contentType: input.mimeType,
+      upsert: false,
+    });
+
+    if (storageError) {
+      throw storageError;
+    }
+
+    const { data, error } = await client
+      .from("learning_documents")
+      .insert({
+        file_name: safeFileName,
+        file_size_bytes: input.fileSizeBytes,
+        id: documentId,
+        kind: inferDocumentKind(input.mimeType, safeFileName),
+        mime_type: input.mimeType,
+        processing_label: "PDF uploaded. Waiting for text extraction.",
+        processing_progress_percent: 20,
+        processing_status: "processing",
+        storage_path: storagePath,
+        student_id: studentId,
+        subject_id: input.subjectId,
+        title,
+        topic_label: input.topicLabel?.trim() || null,
+      })
+      .select("*")
+      .single();
+
+    if (error) {
+      await storage.remove([storagePath]);
       throw error;
     }
 

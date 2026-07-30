@@ -169,12 +169,13 @@ Sprint 5 document library endpoints:
 - `GET /api/v1/documents`
 - `GET /api/v1/documents/:id`
 - `POST /api/v1/documents`
+- `POST /api/v1/documents/upload`
 
 Sprint 5 storage notes:
 
 - Private Supabase Storage bucket: `student-documents`.
 - Student-owned object path pattern: `{studentId}/{subjectId}/{documentId}/{fileName}`.
-- Current implementation stores document metadata in memory for local API/mobile flow; Supabase persistence and real file upload are prepared by migration/reference SQL but still require repository wiring and live validation.
+- Current implementation supports metadata creation and Sprint 12 PDF upload through the API boundary. Text extraction, concept extraction, PLKG enrichment, and BLIE retrieval remain later True Learning MVP work.
 
 Sprint 6 BLIE endpoint:
 
@@ -240,7 +241,7 @@ MVP Stabilization Pass 1 planning notes:
 - The server-only Supabase API client boundary lives under `services/api/src/supabase`.
 - Academic profile and subjects are wired for Supabase mode.
 - Dashboard aggregation now combines persisted academic, document, PLKG, and study summaries.
-- Document metadata is now wired for Supabase mode; real file bytes and background document processing remain out of scope.
+- Document metadata is wired for Supabase mode and Sprint 12 adds PDF file-byte upload to private Supabase Storage through the API boundary. Background document processing remains out of scope.
 - PLKG nodes, edges, summary, and learning activity writes are now wired for Supabase mode; BLIE and study services await PLKG context.
 - Study preparation/revision rows and revision reflection updates are now wired for Supabase mode.
 - Sync queue events are now wired for Supabase mode while mobile queue durability remains deferred.

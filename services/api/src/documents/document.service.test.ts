@@ -29,6 +29,59 @@ describe("DocumentService", () => {
     await expect(service.getDocument(document.id)).resolves.toEqual(document);
   });
 
+  it("uploads a PDF and marks it ready for extraction", async () => {
+    const service = new DocumentService();
+    const document = await service.uploadDocument(
+      {
+        subjectId: "subject-programming",
+        topicLabel: "Recursion",
+      },
+      {
+        buffer: Buffer.from("%PDF-1.4\n%%EOF"),
+        mimetype: "application/pdf",
+        originalname: "lecture 4 recursion.pdf",
+        size: 2048,
+      },
+    );
+
+    expect(document.processing.status).toBe("processing");
+    expect(document.processing.label).toBe("PDF uploaded. Waiting for text extraction.");
+    expect(document.storagePath).toBe(
+      "demo-student/subject-programming/document-3/lecture-4-recursion.pdf",
+    );
+  });
+
+  it("rejects upload without a PDF file", async () => {
+    const service = new DocumentService();
+
+    await expect(
+      service.uploadDocument(
+        {
+          subjectId: "subject-programming",
+        },
+        undefined,
+      ),
+    ).rejects.toThrow(BadRequestException);
+  });
+
+  it("rejects non-PDF upload files for Sprint 12", async () => {
+    const service = new DocumentService();
+
+    await expect(
+      service.uploadDocument(
+        {
+          subjectId: "subject-programming",
+        },
+        {
+          buffer: Buffer.from("plain text"),
+          mimetype: "text/plain",
+          originalname: "notes.txt",
+          size: 128,
+        },
+      ),
+    ).rejects.toThrow(BadRequestException);
+  });
+
   it("rejects unsupported document types", async () => {
     const service = new DocumentService();
 

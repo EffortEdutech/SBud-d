@@ -30,6 +30,7 @@ import {
   createLearningDocument,
   fallbackDocumentLibrarySummary,
   fetchDocumentLibrarySummary,
+  uploadSamplePdfDocument,
 } from "./src/documents/document-service";
 import { fallbackHealthStatus, fetchHealthStatus } from "./src/health/health-service";
 import { setApiAccessToken } from "./src/lib/api-client";
@@ -253,14 +254,12 @@ export default function App(): React.JSX.Element {
   };
 
   const handleCreateDocument = async (): Promise<void> => {
-    setUploadState("Creating document metadata...");
+    setUploadState("Uploading sample PDF through API...");
 
     try {
-      const document = await createLearningDocument({
-        subjectId: dashboard.subjects[0]?.id ?? "subject-programming",
-        fileName: "sample-study-note.pdf",
-        mimeType: "application/pdf",
-        fileSizeBytes: 2048,
+      const subjectId = dashboard.subjects[0]?.id ?? "subject-programming";
+      const document = await uploadSamplePdfDocument({
+        subjectId,
         topicLabel: dashboard.subjects[0]?.currentTopic ?? "Topic pending",
       });
 
@@ -268,15 +267,31 @@ export default function App(): React.JSX.Element {
         ...current,
         documents: [document, ...current.documents],
       }));
-      setUploadState("Upload metadata ready for processing");
+      setUploadState("PDF uploaded and queued for extraction");
     } catch {
-      const item = enqueueOfflineChange("document_metadata", "sample-study-note.pdf", {
-        fileName: "sample-study-note.pdf",
-        subjectId: dashboard.subjects[0]?.id ?? "subject-programming",
-      });
+      try {
+        const document = await createLearningDocument({
+          subjectId: dashboard.subjects[0]?.id ?? "subject-programming",
+          fileName: "sample-study-note.pdf",
+          mimeType: "application/pdf",
+          fileSizeBytes: 2048,
+          topicLabel: dashboard.subjects[0]?.currentTopic ?? "Topic pending",
+        });
 
-      setSyncStatus(getLocalSyncStatus());
-      setUploadState(`Queued offline metadata: ${item.id}`);
+        setDocumentLibrary((current) => ({
+          ...current,
+          documents: [document, ...current.documents],
+        }));
+        setUploadState("API upload unavailable; metadata fallback created");
+      } catch {
+        const item = enqueueOfflineChange("document_metadata", "sample-study-note.pdf", {
+          fileName: "sample-study-note.pdf",
+          subjectId: dashboard.subjects[0]?.id ?? "subject-programming",
+        });
+
+        setSyncStatus(getLocalSyncStatus());
+        setUploadState(`Queued offline metadata: ${item.id}`);
+      }
     }
   };
 
@@ -709,7 +724,7 @@ export default function App(): React.JSX.Element {
     <>
       <View style={styles.panel}>
         <Text style={styles.panelTitle}>Learning material intake</Text>
-        <Text style={styles.heroFocusText}>Turn notes into knowledge.</Text>
+        <Text style={styles.heroFocusText}>Upload a PDF, prepare it for extraction.</Text>
         <Text style={styles.mutedText}>{uploadState}</Text>
         <Pressable
           accessibilityRole="button"
@@ -718,7 +733,7 @@ export default function App(): React.JSX.Element {
           }}
           style={styles.primaryButton}
         >
-          <Text style={styles.primaryButtonText}>Capture sample note</Text>
+          <Text style={styles.primaryButtonText}>Upload sample PDF</Text>
         </Pressable>
       </View>
 

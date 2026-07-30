@@ -2,8 +2,9 @@ import type { LearningDocument } from "@sbud-d/types";
 
 export const DOCUMENT_STORAGE_BUCKET = "student-documents";
 export const MAX_DOCUMENT_FILE_SIZE_BYTES = 50 * 1024 * 1024;
+export const PDF_DOCUMENT_MIME_TYPE = "application/pdf";
 export const ACCEPTED_DOCUMENT_MIME_TYPES = [
-  "application/pdf",
+  PDF_DOCUMENT_MIME_TYPE,
   "image/jpeg",
   "image/png",
   "image/webp",

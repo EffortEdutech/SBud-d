@@ -1,7 +1,7 @@
 # AI Study Buddy Local Development
 
-Status: Sprint 11 live-validation baseline
-Last updated: 2026-07-29
+Status: Sprint 12 real PDF upload baseline
+Last updated: 2026-07-30
 
 ---
 
@@ -64,6 +64,7 @@ Sprint 5 document library endpoints:
 ```text
 http://localhost:4801/api/v1/documents/library
 http://localhost:4801/api/v1/documents
+http://localhost:4801/api/v1/documents/upload
 ```
 
 Sprint 6 BLIE chat endpoint:
@@ -146,8 +147,10 @@ Sprint 3 Supabase variables are documented in:
 docs/development/SUPABASE_SETUP.md
 ```
 
-Sprint 5 prepares the private `student-documents` storage bucket and student-owned
-path convention in SQL. Real file upload still requires repository wiring and live validation.
+Sprint 12 adds `POST /api/v1/documents/upload` for PDF-only upload through the API boundary. In
+Supabase mode, the API writes file bytes to the private `student-documents` bucket using the
+student-owned path convention. Text extraction, concept extraction, PLKG enrichment, and BLIE
+retrieval remain later True Learning MVP work.
 
 MVP Stabilization Pass 1 begins Supabase repository wiring with the academic profile,
 subjects, dashboard, document metadata, PLKG node/edge, study preparation/revision, and sync queue
@@ -191,6 +194,16 @@ Sprint 11 mobile live-validation flow:
 
 Do not paste test-user passwords, bearer tokens, Supabase keys, or `.env` contents into chat or tracked
 files.
+
+Sprint 12 mobile document upload flow:
+
+1. Start the API on port `4801`.
+2. Start Expo on port `4800`.
+3. Open the Library tab.
+4. Tap `Upload sample PDF`.
+5. Confirm the new document appears with `processing` status and the label `PDF uploaded. Waiting
+   for text extraction.`
+6. In Supabase mode, sign in first from the Sync tab so the API can write to student-owned storage.
 
 ---
 

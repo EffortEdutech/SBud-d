@@ -151,6 +151,7 @@ Sprint 5 document library endpoints:
 - `GET /api/v1/documents`
 - `GET /api/v1/documents/:id`
 - `POST /api/v1/documents`
+- `POST /api/v1/documents/upload`
 
 Document storage is prepared for a private Supabase Storage bucket named `student-documents`
 with student-owned object paths:
@@ -158,6 +159,9 @@ with student-owned object paths:
 ```text
 {studentId}/{subjectId}/{documentId}/{fileName}
 ```
+
+Sprint 12 adds PDF-only upload through the API boundary. Text extraction and PLKG enrichment remain
+later True Learning MVP work.
 
 Sprint 6 BLIE endpoint:
 

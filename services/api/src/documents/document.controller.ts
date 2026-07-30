@@ -1,11 +1,25 @@
-import { Body, Controller, Get, Headers, Param, Post } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Headers,
+  Param,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
 import type {
   CreateLearningDocumentInput,
   DocumentLibrarySummary,
   LearningDocument,
 } from "@sbud-d/types";
 
-import { DocumentService } from "./document.service.js";
+import {
+  DocumentService,
+  type UploadedDocumentFile,
+  type UploadDocumentRequestBody,
+} from "./document.service.js";
 
 @Controller()
 export class DocumentController {
@@ -39,5 +53,15 @@ export class DocumentController {
     @Headers("authorization") authorizationHeader?: string,
   ): Promise<LearningDocument> {
     return this.documentService.createDocument(input, { authorizationHeader });
+  }
+
+  @Post("documents/upload")
+  @UseInterceptors(FileInterceptor("file"))
+  uploadDocument(
+    @Body() input: UploadDocumentRequestBody,
+    @UploadedFile() file: UploadedDocumentFile | undefined,
+    @Headers("authorization") authorizationHeader?: string,
+  ): Promise<LearningDocument> {
+    return this.documentService.uploadDocument(input, file, { authorizationHeader });
   }
 }

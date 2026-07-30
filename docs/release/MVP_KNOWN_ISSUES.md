@@ -1,6 +1,6 @@
 # MVP Known Issues
 
-Status: Sprint 12 planning baseline
+Status: Sprint 12 real PDF upload baseline
 Last updated: 2026-07-30
 
 ---
@@ -34,16 +34,19 @@ Sprint 9 uses an in-memory mobile queue and cache because no durable encrypted m
 
 Impact: offline actions do not survive app restart.
 
-## Document Upload Is Metadata-Only
+## Document Processing Is Upload-Only
 
-The document library supports metadata creation and storage path conventions, including a
-Supabase-backed metadata repository mode. Real file upload and processing are not
-production-complete.
+The document library now supports metadata creation and Sprint 12 PDF upload through the API
+boundary. In Supabase mode, uploaded PDF bytes are written to the private `student-documents`
+bucket before metadata is created.
 
-Impact: document intelligence remains a prepared foundation.
+Impact: document intake is now real for PDFs, but document intelligence remains incomplete.
 
-Sprint 12 is planned to address real PDF file upload and private storage only. Text extraction,
-concept extraction, PLKG enrichment, and BLIE retrieval remain later True Learning MVP work.
+Text extraction, concept extraction, PLKG enrichment, and BLIE retrieval remain later True Learning
+MVP work.
+
+Live Supabase storage upload validation is still pending local Supabase-mode execution with an
+authenticated test user.
 
 ## AI Provider Is Local Deterministic
 

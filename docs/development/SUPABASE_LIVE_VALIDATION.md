@@ -1,7 +1,7 @@
 # Supabase Live Validation Checklist
 
-Status: Ready for project-owner execution with Sprint 11 demo visibility
-Last updated: 2026-07-29
+Status: Ready for project-owner execution with Sprint 12 upload visibility
+Last updated: 2026-07-30
 
 ---
 
@@ -153,7 +153,51 @@ Expected:
 
 - creates metadata only,
 - storage path starts with `STUDENT_A_ID/`,
-- no real file bytes are uploaded in this pass.
+- no real file bytes are uploaded for this metadata-only endpoint.
+
+## 5.3A Document PDF Upload
+
+Replace `SUBJECT_ID` with a subject id owned by Student A and `$samplePath` with a small local PDF
+path. This uses PowerShell's .NET multipart support because `curl.exe` may not be available on every
+Windows machine:
+
+```powershell
+Add-Type -AssemblyName System.Net.Http
+
+$samplePath = "C:\path\to\small.pdf"
+$client = [System.Net.Http.HttpClient]::new()
+$client.DefaultRequestHeaders.Authorization =
+  [System.Net.Http.Headers.AuthenticationHeaderValue]::new("Bearer", $env:STUDENT_A_TOKEN)
+
+$form = [System.Net.Http.MultipartFormDataContent]::new()
+$form.Add([System.Net.Http.StringContent]::new("SUBJECT_ID"), "subjectId")
+$form.Add([System.Net.Http.StringContent]::new("Live Validation PDF"), "title")
+$form.Add([System.Net.Http.StringContent]::new("Validation"), "topicLabel")
+
+$fileBytes = [System.IO.File]::ReadAllBytes($samplePath)
+$fileContent = [System.Net.Http.ByteArrayContent]::new($fileBytes)
+$fileContent.Headers.ContentType =
+  [System.Net.Http.Headers.MediaTypeHeaderValue]::Parse("application/pdf")
+$form.Add($fileContent, "file", [System.IO.Path]::GetFileName($samplePath))
+
+$response = $client.PostAsync("http://localhost:4801/api/v1/documents/upload", $form).
+  GetAwaiter().
+  GetResult()
+
+$response.Content.ReadAsStringAsync().GetAwaiter().GetResult()
+
+$response.Dispose()
+$form.Dispose()
+$client.Dispose()
+```
+
+Expected:
+
+- uploads file bytes to the private `student-documents` bucket,
+- creates a `learning_documents` row owned by `STUDENT_A_ID`,
+- storage path starts with `STUDENT_A_ID/SUBJECT_ID/`,
+- processing status is `processing`,
+- processing label says the PDF is waiting for text extraction.
 
 ## 5.4 PLKG Learning Activity
 

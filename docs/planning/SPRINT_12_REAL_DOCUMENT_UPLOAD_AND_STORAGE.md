@@ -1,6 +1,6 @@
 # Sprint 12 - Real Document Upload And Storage
 
-Status: Planned
+Status: Implementation complete; live Supabase storage validation pending
 Last updated: 2026-07-30
 
 ---
@@ -247,3 +247,24 @@ From Sprint 12 to Sprint 13:
 - PLKG enrichment remains pending.
 - BLIE retrieval and quiz generation remain pending.
 
+---
+
+# 12. Implementation Notes
+
+Current implementation status:
+
+- `POST /api/v1/documents/upload` is implemented for PDF-only multipart upload.
+- Fixture mode accepts PDF bytes and returns a document with `processing` status.
+- Supabase mode uploads PDF bytes to `student-documents` before creating metadata.
+- Mobile Library tab includes an `Upload sample PDF` action that calls the API upload endpoint first
+  and falls back to metadata/offline behavior when upload is unavailable.
+
+Validation completed:
+
+- `corepack pnpm check`.
+- `corepack pnpm mvp:readiness`.
+- Local fixture-mode multipart upload smoke test against `http://localhost:4801/api/v1/documents/upload`.
+
+Validation pending:
+
+- Supabase-mode upload with authenticated test user and private `student-documents` storage object.

@@ -479,16 +479,17 @@ Current blocker:
 - [x] Confirm storage path convention is `{studentId}/{subjectId}/{documentId}/{fileName}`.
 - [x] Confirm text extraction, concept extraction, PLKG enrichment, and BLIE retrieval remain out of
   scope for Sprint 12.
-- [ ] Inspect document upload source files directly before editing.
-- [ ] Implement API upload endpoint.
-- [ ] Implement server-side private storage write path.
-- [ ] Persist document metadata after successful upload.
-- [ ] Show processing status in mobile UI.
-- [ ] Add validation and failure tests.
-- [ ] Update development and release docs after implementation.
-- [ ] Run `corepack pnpm check`.
-- [ ] Run `corepack pnpm mvp:readiness`.
-- [ ] Refresh Graphify.
+- [x] Inspect document upload source files directly before editing.
+- [x] Implement API upload endpoint.
+- [x] Implement server-side private storage write path.
+- [x] Persist document metadata after successful upload.
+- [x] Show processing status in mobile UI.
+- [x] Add validation and failure tests.
+- [x] Update development and release docs after implementation.
+- [x] Run `corepack pnpm check`.
+- [x] Run `corepack pnpm mvp:readiness`.
+- [x] Run local fixture-mode multipart upload smoke test.
+- [x] Refresh Graphify.
 
 ## Phase 3 - True MVP Completion
 

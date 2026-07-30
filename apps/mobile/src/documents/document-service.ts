@@ -47,3 +47,33 @@ export async function createLearningDocument(
 
   return (await response.json()) as LearningDocument;
 }
+
+export async function uploadSamplePdfDocument(input: {
+  subjectId: string;
+  topicLabel?: string | null;
+}): Promise<LearningDocument> {
+  const formData = new FormData();
+  const samplePdf = new Blob(["%PDF-1.4\n% SBud-d sample lecture PDF\n%%EOF"], {
+    type: "application/pdf",
+  });
+
+  formData.append("subjectId", input.subjectId);
+  formData.append("title", "Sample lecture PDF");
+
+  if (input.topicLabel) {
+    formData.append("topicLabel", input.topicLabel);
+  }
+
+  formData.append("file", samplePdf, "sample-lecture.pdf");
+
+  const response = await apiFetch("/documents/upload", {
+    body: formData,
+    method: "POST",
+  });
+
+  if (!response.ok) {
+    throw new Error(`Document upload failed with status ${response.status}.`);
+  }
+
+  return (await response.json()) as LearningDocument;
+}

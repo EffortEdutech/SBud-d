@@ -9,13 +9,27 @@ import {
   ACCEPTED_DOCUMENT_MIME_TYPES,
   DOCUMENT_STORAGE_BUCKET,
   MAX_DOCUMENT_FILE_SIZE_BYTES,
+  PDF_DOCUMENT_MIME_TYPE,
 } from "./document.fixtures.js";
-import { DocumentRepository } from "./document.repository.js";
+import { DocumentRepository, type UploadLearningDocumentInput } from "./document.repository.js";
 import { getAuthenticatedUserAndTokenFromHeader } from "../auth/supabase-auth-client.js";
 import { getApiEnvironment, type ApiEnvironment } from "../config/environment.js";
 
 interface DocumentRequestContext {
   authorizationHeader?: string | undefined;
+}
+
+export interface UploadedDocumentFile {
+  buffer?: Buffer | undefined;
+  mimetype?: string | undefined;
+  originalname?: string | undefined;
+  size?: number | undefined;
+}
+
+export interface UploadDocumentRequestBody {
+  subjectId?: string | undefined;
+  title?: string | undefined;
+  topicLabel?: string | undefined;
 }
 
 export class DocumentService {
@@ -63,6 +77,46 @@ export class DocumentService {
     input: CreateLearningDocumentInput,
     context: DocumentRequestContext = {},
   ): Promise<LearningDocument> {
+    this.validateDocumentInput(input);
+
+    return this.repository.createDocument(input, await this.getRepositoryContext(context));
+  }
+
+  async uploadDocument(
+    body: UploadDocumentRequestBody,
+    file: UploadedDocumentFile | undefined,
+    context: DocumentRequestContext = {},
+  ): Promise<LearningDocument> {
+    if (!file?.buffer || file.buffer.length === 0) {
+      throw new BadRequestException("PDF file is required.");
+    }
+
+    const input: UploadLearningDocumentInput = {
+      fileBytes: file.buffer,
+      fileName: file.originalname ?? "learning-material.pdf",
+      fileSizeBytes: file.size ?? file.buffer.length,
+      mimeType: file.mimetype ?? "",
+      subjectId: body.subjectId ?? "",
+    };
+
+    if (body.title) {
+      input.title = body.title;
+    }
+
+    if (body.topicLabel) {
+      input.topicLabel = body.topicLabel;
+    }
+
+    this.validateDocumentInput(input);
+
+    if (input.mimeType !== PDF_DOCUMENT_MIME_TYPE) {
+      throw new BadRequestException("Only PDF upload is supported for Sprint 12.");
+    }
+
+    return this.repository.uploadDocument(input, await this.getRepositoryContext(context));
+  }
+
+  private validateDocumentInput(input: CreateLearningDocumentInput): void {
     if (!input.subjectId?.trim()) {
       throw new BadRequestException("subjectId is required.");
     }
@@ -86,8 +140,6 @@ export class DocumentService {
     if (input.fileSizeBytes > MAX_DOCUMENT_FILE_SIZE_BYTES) {
       throw new BadRequestException("Document exceeds the maximum supported size.");
     }
-
-    return this.repository.createDocument(input, await this.getRepositoryContext(context));
   }
 
   private async getRepositoryContext(context: DocumentRequestContext) {

@@ -25,7 +25,10 @@ const documentRow = {
   updated_at: "2026-07-14T00:00:00.000Z",
 };
 
-function createDocumentClient(results: Record<string, unknown>): SupabaseClient {
+function createDocumentClient(
+  results: Record<string, unknown>,
+  storageFailure: Error | null = null,
+): SupabaseClient {
   return {
     from(tableName: string) {
       const result = results[tableName];
@@ -40,6 +43,15 @@ function createDocumentClient(results: Record<string, unknown>): SupabaseClient 
       };
 
       return chain;
+    },
+    storage: {
+      from: () => ({
+        remove: async () => ({ data: [], error: null }),
+        upload: async () => ({
+          data: { path: "student-1/subject-1/document-1/lecture-1.pdf" },
+          error: storageFailure,
+        }),
+      }),
     },
   } as unknown as SupabaseClient;
 }
@@ -125,5 +137,85 @@ describe("DocumentRepository", () => {
 
     expect(document.studentId).toBe("student-1");
     expect(document.storagePath).toBe("student-1/subject-1/document-1/lecture-1.pdf");
+  });
+
+  it("uploads Supabase file bytes before creating extraction-pending metadata", async () => {
+    const repository = new DocumentRepository(
+      {
+        dataMode: "supabase",
+        nodeEnv: "test",
+        supabasePublishableKey: "test-key",
+        supabaseUrl: "https://example.supabase.co",
+      },
+      () =>
+        createDocumentClient({
+          academic_subjects: [{ id: "subject-1", name: "Programming Fundamentals" }],
+          learning_documents: {
+            ...documentRow,
+            processing_label: "PDF uploaded. Waiting for text extraction.",
+            processing_progress_percent: 20,
+            processing_status: "processing",
+          },
+        }),
+    );
+
+    const document = await repository.uploadDocument(
+      {
+        fileBytes: Buffer.from("%PDF-1.4\n%%EOF"),
+        fileName: "lecture 1.pdf",
+        fileSizeBytes: 1024,
+        mimeType: "application/pdf",
+        subjectId: "subject-1",
+        title: "Lecture 1",
+        topicLabel: "Intro",
+      },
+      {
+        accessToken: "token",
+        studentId: "student-1",
+      },
+    );
+
+    expect(document.processing).toMatchObject({
+      label: "PDF uploaded. Waiting for text extraction.",
+      progressPercent: 20,
+      status: "processing",
+    });
+  });
+
+  it("does not create Supabase metadata when storage upload fails", async () => {
+    const repository = new DocumentRepository(
+      {
+        dataMode: "supabase",
+        nodeEnv: "test",
+        supabasePublishableKey: "test-key",
+        supabaseUrl: "https://example.supabase.co",
+      },
+      () =>
+        createDocumentClient(
+          {
+            academic_subjects: [{ id: "subject-1", name: "Programming Fundamentals" }],
+            learning_documents: documentRow,
+          },
+          new Error("Storage upload failed"),
+        ),
+    );
+
+    await expect(
+      repository.uploadDocument(
+        {
+          fileBytes: Buffer.from("%PDF-1.4\n%%EOF"),
+          fileName: "lecture 1.pdf",
+          fileSizeBytes: 1024,
+          mimeType: "application/pdf",
+          subjectId: "subject-1",
+          title: "Lecture 1",
+          topicLabel: "Intro",
+        },
+        {
+          accessToken: "token",
+          studentId: "student-1",
+        },
+      ),
+    ).rejects.toThrow("Storage upload failed");
   });
 });
