@@ -2,7 +2,7 @@
 
 Version: 0.2
 Status: Living checklist
-Last updated: 2026-07-29
+Last updated: 2026-07-30
 
 ---
 
@@ -29,6 +29,15 @@ Make live Supabase validation visible through the API and mobile UI while preser
 Active implementation target remains:
 
 MVP Stabilization Pass 1 - Supabase Persistence Wiring.
+
+Product scope revision:
+
+Controlled Demo MVP -> True Learning MVP -> Public Version 1.
+
+Product-defining wow moment:
+
+Lecture PDF upload -> concept extraction -> PLKG enrichment -> BLIE preparation priorities -> quick
+quiz.
 
 ---
 
@@ -426,6 +435,9 @@ MVP Stabilization Pass 1 - Supabase Persistence Wiring.
 - [x] Link root roadmap to the product completion master plan.
 - [x] Extend sprint plan beyond Sprint 10.
 - [x] Extend this checklist beyond Sprint 10.
+- [x] Add `docs/planning/RELEASE_TARGET_SCOPE.md`.
+- [x] Revise near-term scope into Controlled Demo MVP, True Learning MVP, and Public Version 1.
+- [x] Record the real user wow moment as the organising product outcome.
 
 ## Phase 2 - MVP Stabilization And Live Data Readiness
 
@@ -459,13 +471,26 @@ Current blocker:
 
 - [ ] Sprint 12 - Real Document Upload And Storage.
 - [ ] Sprint 13 - Document Text Extraction Baseline.
-- [ ] Sprint 14 - Knowledge Processing And PLKG Enrichment.
+- [ ] Sprint 14 - Concept Extraction And PLKG Enrichment.
 - [ ] Sprint 15 - Real BLIE Provider Integration.
-- [ ] Sprint 16 - Retrieval-Backed BLIE Responses.
+- [ ] Sprint 16 - Retrieval-Backed BLIE Preparation And Quiz.
 - [ ] Sprint 17 - Durable Offline Storage And Sync Hardening.
 - [ ] Sprint 18 - MVP UX Polish And Empty/Error State Completion.
 - [ ] Sprint 19 - MVP Performance, Security, And Observability Baseline.
 - [ ] Sprint 20 - Controlled MVP Release Candidate.
+
+## True Learning MVP Wow Moment Checklist
+
+- [ ] Student uploads a lecture PDF into a subject workspace.
+- [ ] File bytes are stored in private student-owned storage.
+- [ ] Document processing status is visible.
+- [ ] Text extraction produces usable learning text.
+- [ ] Concept extraction identifies priority learning concepts.
+- [ ] PLKG is enriched from extracted concepts.
+- [ ] BLIE retrieves student-owned context before generating guidance.
+- [ ] BLIE shows three things to understand before the next class.
+- [ ] BLIE generates a quick quiz or flashcards from processed knowledge.
+- [ ] Student can revise from the generated guidance.
 
 ## Phase 4 - Closed Beta Readiness
 

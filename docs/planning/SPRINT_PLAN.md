@@ -2,7 +2,7 @@
 
 Version: 0.2
 Status: Living implementation plan
-Last updated: 2026-07-29
+Last updated: 2026-07-30
 
 ---
 
@@ -41,6 +41,9 @@ Current implementation status:
 - Current sprint: Sprint 11 - Live Validation And Demo Visibility.
 - Active implementation target: Complete MVP Stabilization Pass 1 live validation visibility.
 - Master plan: `docs/planning/PRODUCT_COMPLETION_MASTER_PLAN.md`.
+- Release target scope: `docs/planning/RELEASE_TARGET_SCOPE.md`.
+- Product-defining wow moment: lecture PDF upload -> concept extraction -> PLKG enrichment -> BLIE
+  preparation priorities -> quick quiz.
 
 ---
 
@@ -468,11 +471,18 @@ Exit criteria:
 
 Sprint 0 through Sprint 10 completed the local MVP baseline. Product completion continues through the master plan in `docs/planning/PRODUCT_COMPLETION_MASTER_PLAN.md`.
 
+The roadmap is now organised around three release targets:
+
+1. Controlled Demo MVP - live data and real student journey visibility.
+2. True Learning MVP - upload -> extraction -> PLKG enrichment -> BLIE retrieval -> revision loop.
+3. Public Version 1 - onboarding, subscriptions, study groups, web app, production operations, and
+   public launch readiness.
+
 ## Phase 2 - MVP Stabilization And Live Data Readiness
 
 Goal:
 
-Make the local MVP safe and credible with live Supabase-backed data.
+Deliver the Controlled Demo MVP.
 
 Recommended sprint sequence:
 
@@ -488,15 +498,15 @@ Exit criteria:
 
 Goal:
 
-Replace placeholder MVP pieces with real learning workflows.
+Deliver the True Learning MVP around the real user wow moment.
 
 Recommended sprint sequence:
 
 - Sprint 12 - Real Document Upload And Storage.
 - Sprint 13 - Document Text Extraction Baseline.
-- Sprint 14 - Knowledge Processing And PLKG Enrichment.
+- Sprint 14 - Concept Extraction And PLKG Enrichment.
 - Sprint 15 - Real BLIE Provider Integration.
-- Sprint 16 - Retrieval-Backed BLIE Responses.
+- Sprint 16 - Retrieval-Backed BLIE Preparation And Quiz.
 - Sprint 17 - Durable Offline Storage And Sync Hardening.
 - Sprint 18 - MVP UX Polish And Empty/Error State Completion.
 - Sprint 19 - MVP Performance, Security, And Observability Baseline.
@@ -507,6 +517,7 @@ Exit criteria:
 - Students can complete the real MVP learning loop with live data.
 - BLIE uses trusted retrieved student context.
 - Document intelligence enriches PLKG.
+- BLIE produces three preparation priorities and a quick quiz from uploaded lecture knowledge.
 - Offline and sync behavior is reliable enough for controlled student testing.
 
 ## Phase 4 - Closed Beta Readiness

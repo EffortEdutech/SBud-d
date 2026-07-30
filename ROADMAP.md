@@ -318,3 +318,16 @@ The Sprint 0 through Sprint 10 roadmap delivered the local MVP baseline. The pro
 Detailed master plan:
 
 - `docs/planning/PRODUCT_COMPLETION_MASTER_PLAN.md`
+- `docs/planning/RELEASE_TARGET_SCOPE.md`
+
+Near-term release targets:
+
+1. Controlled Demo MVP - show SBud-d working convincingly with live data and a real student journey.
+2. True Learning MVP - deliver upload -> extraction -> PLKG enrichment -> BLIE retrieval -> revision.
+3. Public Version 1 - complete onboarding, subscriptions, study groups, web app, production
+   operations, and public launch readiness.
+
+Product-defining wow moment:
+
+A student uploads a lecture PDF, SBud-d extracts concepts, updates the student's PLKG, then BLIE
+shows the three things to understand before the next class and generates a quick quiz.

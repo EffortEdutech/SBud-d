@@ -2,7 +2,7 @@
 
 Version: 0.1
 Status: Living product-completion plan
-Last updated: 2026-07-29
+Last updated: 2026-07-30
 
 ---
 
@@ -34,6 +34,7 @@ Primary references:
 - `docs/planning/SPRINT_PLAN.md`
 - `docs/planning/IMPLEMENTATION_CHECKLIST.md`
 - `docs/planning/MVP_STABILIZATION_PASS_1.md`
+- `docs/planning/RELEASE_TARGET_SCOPE.md`
 
 Supporting context:
 
@@ -113,6 +114,10 @@ Current state:
 - Supabase-backed repositories are wired behind API boundaries for the first MVP entities.
 - Fixture mode remains the default safe local mode.
 - Sprint 11 has started to make live validation and API data mode visible through the mobile UI.
+- The near-term product scope has been revised around three release targets: Controlled Demo MVP,
+  True Learning MVP, and Public Version 1.
+- The product-defining wow moment is now: upload a lecture PDF, extract concepts, enrich PLKG, and
+  have BLIE provide three preparation priorities plus a quick quiz.
 
 Current blockers:
 
@@ -182,7 +187,8 @@ Status: In progress.
 
 Goal:
 
-Turn the local MVP into a controlled live-data MVP.
+Turn the local MVP into the Controlled Demo MVP described in
+`docs/planning/RELEASE_TARGET_SCOPE.md`.
 
 Planned targets:
 
@@ -201,6 +207,8 @@ Exit criteria:
 - API contracts remain compatible with mobile.
 - No secrets or service-role keys are exposed.
 - The UI clearly demonstrates live persisted data for the controlled MVP.
+- A controlled tester can experience the student journey without the app feeling like a technical
+  validation panel.
 
 ## Phase 3 - True MVP Completion
 
@@ -208,16 +216,17 @@ Status: Not started.
 
 Goal:
 
-Complete the MVP capabilities promised by the frozen roadmap, not only placeholders.
+Complete the True Learning MVP: real upload -> extraction -> PLKG enrichment -> BLIE retrieval ->
+revision loop.
 
 Planned sprint sequence:
 
 - Sprint 11 - Live Validation And Demo Visibility.
 - Sprint 12 - Real Document Upload And Storage.
 - Sprint 13 - Document Text Extraction Baseline.
-- Sprint 14 - Knowledge Processing And PLKG Enrichment.
+- Sprint 14 - Concept Extraction And PLKG Enrichment.
 - Sprint 15 - Real BLIE Provider Integration.
-- Sprint 16 - Retrieval-Backed BLIE Responses.
+- Sprint 16 - Retrieval-Backed BLIE Preparation And Quiz.
 - Sprint 17 - Durable Offline Storage And Sync Hardening.
 - Sprint 18 - MVP UX Polish And Empty/Error State Completion.
 - Sprint 19 - MVP Performance, Security, And Observability Baseline.
@@ -226,9 +235,9 @@ Planned sprint sequence:
 Exit criteria:
 
 - Students can complete the real learning loop using live data.
-- Uploaded documents are stored and processed.
+- Uploaded lecture PDFs are stored, processed, and transformed into visible learning knowledge.
 - Extracted knowledge enriches PLKG.
-- BLIE uses retrieval-backed student context.
+- BLIE uses retrieval-backed student context to produce preparation and revision guidance.
 - Offline learning remains useful and sync is reliable.
 - MVP is safe for controlled student testing.
 
@@ -363,16 +372,18 @@ Exit criteria:
 
 Recommended next targets:
 
-1. Finish MVP Stabilization Pass 1 live validation.
-2. Add visible live-mode validation in the app/API so progress appears in the UI.
+1. Finish Controlled Demo MVP live validation.
+2. Confirm the Sprint 12 document-upload scope and MVP file type decision.
 3. Implement real document upload and private storage.
 4. Implement text extraction baseline.
-5. Enrich PLKG from processed document text.
-6. Wire real BLIE provider integration behind the existing abstraction.
-7. Replace placeholder BLIE context with retrieval-backed responses.
-8. Harden offline storage and sync durability.
-9. Polish the MVP user experience for controlled student testing.
-10. Prepare a controlled MVP release candidate.
+5. Extract learning concepts from uploaded material.
+6. Enrich PLKG from processed document text.
+7. Wire real BLIE provider integration behind the existing abstraction.
+8. Replace placeholder BLIE context with retrieval-backed responses.
+9. Generate three preparation priorities and a quick quiz from processed knowledge.
+10. Harden offline storage and sync durability.
+11. Polish the MVP user experience for controlled student testing.
+12. Prepare a controlled MVP release candidate.
 
 ---
 
@@ -388,14 +399,18 @@ Recommended next targets:
 - [ ] Live cross-student denial validation complete.
 - [ ] Controlled live-data demo flow visible in mobile UI.
 - [ ] Controlled MVP release decision recorded.
+- [ ] Controlled Demo MVP release target accepted.
 
 ## True MVP
 
 - [ ] Real document upload writes file bytes to private storage.
 - [ ] Document text extraction works for MVP file types.
+- [ ] Extracted concepts are visible to the student.
 - [ ] Processed document knowledge enriches PLKG.
 - [ ] BLIE uses a real provider through the provider abstraction.
 - [ ] Retrieval-before-generation is implemented with trusted student context.
+- [ ] BLIE produces three preparation priorities from processed knowledge.
+- [ ] BLIE produces a quick quiz or flashcards from processed knowledge.
 - [ ] Study preparation and revision use processed knowledge.
 - [ ] Durable offline storage dependency is approved and implemented.
 - [ ] Sync queue survives app restarts.
@@ -461,14 +476,17 @@ At the end of each sprint:
 
 Recommended next sprint:
 
-Sprint 11 - Live Validation And Demo Visibility.
+Sprint 12 - Real Document Upload And Storage, after Sprint 11 live-validation handoff is accepted.
 
 Goal:
 
-Complete the remaining live Supabase validation blockers and make live-data progress visible in the mobile UI without exposing secrets or bypassing the API.
+Begin the True Learning MVP wow moment by allowing a student to upload a lecture PDF into a
+subject-owned private storage path while preserving metadata persistence and visible processing
+status.
 
 Why this is next:
 
-- It finishes the current stabilization pass.
-- It answers the user's concern that UI progress is not visible.
-- It creates confidence before larger feature work such as real document processing and real BLIE provider integration.
+- It is the first concrete step in the upload -> extraction -> PLKG enrichment -> BLIE retrieval ->
+  revision loop.
+- It turns the document library from metadata-only foundation into a real learning-material intake.
+- It prepares Sprint 13 text extraction without mixing upload/storage risk with extraction logic.
