@@ -37,13 +37,16 @@ Existing repository state:
 
 Current implementation status:
 
-- Current phase: Post-MVP stabilization.
-- Current sprint: Sprint 11 - Live Validation And Demo Visibility.
-- Active implementation target: Complete MVP Stabilization Pass 1 live validation visibility.
+- Current phase: True Learning MVP planning, with Controlled Demo MVP live-validation carry-over.
+- Current sprint: Sprint 12 - Real Document Upload And Storage.
+- Active implementation target: Prepare and implement Sprint 12 as the first step toward the
+  upload -> extraction -> PLKG enrichment -> BLIE retrieval -> revision loop.
 - Master plan: `docs/planning/PRODUCT_COMPLETION_MASTER_PLAN.md`.
 - Release target scope: `docs/planning/RELEASE_TARGET_SCOPE.md`.
+- Sprint 12 plan: `docs/planning/SPRINT_12_REAL_DOCUMENT_UPLOAD_AND_STORAGE.md`.
 - Product-defining wow moment: lecture PDF upload -> concept extraction -> PLKG enrichment -> BLIE
   preparation priorities -> quick quiz.
+- Sprint 11 status: Accepted with known live-validation blocker.
 
 ---
 
@@ -486,13 +489,20 @@ Deliver the Controlled Demo MVP.
 
 Recommended sprint sequence:
 
-- Sprint 11 - Live Validation And Demo Visibility.
+- Sprint 11 - Live Validation And Demo Visibility. Accepted with known live-validation blocker.
 
 Exit criteria:
 
 - Supabase mode is live-validated.
 - Cross-student RLS denial is confirmed.
 - Mobile UI visibly demonstrates persisted live data.
+
+Carry-over:
+
+- Supabase CLI migration-history validation remains blocked by `LegacyDbConfigLoginRoleStatusError`
+  / HTTP 403.
+- Full live RLS validation remains open and must be completed when project access and local-only
+  test-user sessions are available.
 
 ## Phase 3 - True MVP Completion
 

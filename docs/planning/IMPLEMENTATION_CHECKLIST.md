@@ -20,15 +20,17 @@ When work progresses, update this checklist in the same commit or handoff as the
 
 # Current Sprint
 
-Current sprint: Sprint 11 - Live Validation And Demo Visibility
+Current sprint: Sprint 12 - Real Document Upload And Storage
 
 Current goal:
 
-Make live Supabase validation visible through the API and mobile UI while preserving the API boundary and avoiding committed secrets.
+Implement the first step of the True Learning MVP wow moment: API-first PDF upload into private
+student-owned storage with persisted metadata and visible processing status.
 
-Active implementation target remains:
+Accepted carry-over:
 
-MVP Stabilization Pass 1 - Supabase Persistence Wiring.
+Sprint 11 is accepted with a known live-validation blocker. Supabase CLI migration-history
+validation and full live RLS validation remain open.
 
 Product scope revision:
 
@@ -445,10 +447,10 @@ quiz.
 - [!] Unblock Supabase CLI migration-history validation.
 - [ ] Complete live same-student RLS validation.
 - [ ] Complete live cross-student denial validation.
-- [ ] Add visible live-mode API/mobile validation flow.
-- [ ] Confirm Supabase-mode dashboard data visibly changes in the app.
+- [x] Add visible live-mode API/mobile validation flow.
+- [/] Confirm Supabase-mode dashboard data visibly changes in the app.
 - [ ] Preserve fixture mode for safe local demos.
-- [ ] Record controlled MVP readiness decision.
+- [x] Record controlled MVP readiness decision.
 
 ## Sprint 11 - Live Validation And Demo Visibility
 
@@ -462,10 +464,31 @@ quiz.
 - [x] Run `corepack pnpm check`.
 - [x] Run `corepack pnpm mvp:readiness`.
 - [x] Refresh Graphify.
+- [x] Accept Sprint 11 with known live-validation blocker.
 
 Current blocker:
 
-- 2026-07-29: Supabase CLI migration list still returns `LegacyDbConfigLoginRoleStatusError` / HTTP 403. Full live RLS validation still requires project access plus two local-only authenticated test-user sessions.
+- 2026-07-30: Supabase CLI migration list still returns `LegacyDbConfigLoginRoleStatusError` / HTTP 403. Full live RLS validation still requires project access plus two local-only authenticated test-user sessions.
+
+## Sprint 12 - Real Document Upload And Storage
+
+- [x] Prepare Sprint 12 implementation plan.
+- [x] Confirm MVP file type is PDF only.
+- [x] Confirm mobile uploads through the API boundary.
+- [x] Confirm private bucket target is `student-documents`.
+- [x] Confirm storage path convention is `{studentId}/{subjectId}/{documentId}/{fileName}`.
+- [x] Confirm text extraction, concept extraction, PLKG enrichment, and BLIE retrieval remain out of
+  scope for Sprint 12.
+- [ ] Inspect document upload source files directly before editing.
+- [ ] Implement API upload endpoint.
+- [ ] Implement server-side private storage write path.
+- [ ] Persist document metadata after successful upload.
+- [ ] Show processing status in mobile UI.
+- [ ] Add validation and failure tests.
+- [ ] Update development and release docs after implementation.
+- [ ] Run `corepack pnpm check`.
+- [ ] Run `corepack pnpm mvp:readiness`.
+- [ ] Refresh Graphify.
 
 ## Phase 3 - True MVP Completion
 

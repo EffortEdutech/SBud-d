@@ -114,6 +114,8 @@ Current state:
 - Supabase-backed repositories are wired behind API boundaries for the first MVP entities.
 - Fixture mode remains the default safe local mode.
 - Sprint 11 has started to make live validation and API data mode visible through the mobile UI.
+- Sprint 11 is accepted with a known live-validation blocker.
+- Sprint 12 planning has started for Real Document Upload And Storage.
 - The near-term product scope has been revised around three release targets: Controlled Demo MVP,
   True Learning MVP, and Public Version 1.
 - The product-defining wow moment is now: upload a lecture PDF, extract concepts, enrich PLKG, and
@@ -123,7 +125,8 @@ Current blockers:
 
 - Live Supabase CLI migration-history validation is blocked by a Supabase access-control response.
 - Live RLS validation still requires two authenticated test users and local-only bearer tokens.
-- Real document binary upload and processing remain deferred.
+- Real document binary upload is the next implementation target.
+- Text extraction and document processing remain deferred to later True Learning MVP sprints.
 - Real AI provider integration remains deferred.
 - Durable encrypted mobile offline storage remains deferred pending dependency approval.
 - Production deployment, observability, app-store release, and subscription flows remain future work.
@@ -221,7 +224,7 @@ revision loop.
 
 Planned sprint sequence:
 
-- Sprint 11 - Live Validation And Demo Visibility.
+- Sprint 11 - Live Validation And Demo Visibility. Accepted with known live-validation blocker.
 - Sprint 12 - Real Document Upload And Storage.
 - Sprint 13 - Document Text Extraction Baseline.
 - Sprint 14 - Concept Extraction And PLKG Enrichment.
@@ -372,18 +375,17 @@ Exit criteria:
 
 Recommended next targets:
 
-1. Finish Controlled Demo MVP live validation.
-2. Confirm the Sprint 12 document-upload scope and MVP file type decision.
-3. Implement real document upload and private storage.
-4. Implement text extraction baseline.
-5. Extract learning concepts from uploaded material.
-6. Enrich PLKG from processed document text.
-7. Wire real BLIE provider integration behind the existing abstraction.
-8. Replace placeholder BLIE context with retrieval-backed responses.
-9. Generate three preparation priorities and a quick quiz from processed knowledge.
-10. Harden offline storage and sync durability.
-11. Polish the MVP user experience for controlled student testing.
-12. Prepare a controlled MVP release candidate.
+1. Implement Sprint 12 real document upload and private storage.
+2. Keep Sprint 11 live-validation blocker visible and resolve it when Supabase access allows.
+3. Implement text extraction baseline.
+4. Extract learning concepts from uploaded material.
+5. Enrich PLKG from processed document text.
+6. Wire real BLIE provider integration behind the existing abstraction.
+7. Replace placeholder BLIE context with retrieval-backed responses.
+8. Generate three preparation priorities and a quick quiz from processed knowledge.
+9. Harden offline storage and sync durability.
+10. Polish the MVP user experience for controlled student testing.
+11. Prepare a controlled MVP release candidate.
 
 ---
 
@@ -476,7 +478,7 @@ At the end of each sprint:
 
 Recommended next sprint:
 
-Sprint 12 - Real Document Upload And Storage, after Sprint 11 live-validation handoff is accepted.
+Sprint 12 - Real Document Upload And Storage.
 
 Goal:
 

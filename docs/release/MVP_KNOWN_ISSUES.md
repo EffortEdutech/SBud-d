@@ -1,7 +1,7 @@
 # MVP Known Issues
 
-Status: MVP Stabilization Pass 1 baseline
-Last updated: 2026-07-15
+Status: Sprint 12 planning baseline
+Last updated: 2026-07-30
 
 ---
 
@@ -26,6 +26,8 @@ migration-history confirmation is currently blocked by Supabase project access r
 Impact: controlled live validation cannot be marked complete until project access is resolved and
 two authenticated test users pass same-student and cross-student RLS checks.
 
+Sprint 11 is accepted with this known blocker carried forward.
+
 ## Offline Queue Is Not Durable
 
 Sprint 9 uses an in-memory mobile queue and cache because no durable encrypted mobile storage dependency has been approved.
@@ -39,6 +41,9 @@ Supabase-backed metadata repository mode. Real file upload and processing are no
 production-complete.
 
 Impact: document intelligence remains a prepared foundation.
+
+Sprint 12 is planned to address real PDF file upload and private storage only. Text extraction,
+concept extraction, PLKG enrichment, and BLIE retrieval remain later True Learning MVP work.
 
 ## AI Provider Is Local Deterministic
 
