@@ -1,6 +1,6 @@
 # MVP Known Issues
 
-Status: Sprint 17 durable offline storage and sync hardening
+Status: Sprint 18 MVP UX polish and empty/error state completion
 Last updated: 2026-07-31
 
 ---
@@ -76,6 +76,14 @@ vector search or advanced graph traversal.
 
 Impact: the controlled MVP can demonstrate the learning loop, but production-quality retrieval still
 requires stronger ranking, source confidence, and evaluation.
+
+## Mobile UX Still Needs Device-Level Review
+
+Sprint 18 improves the controlled mobile shell with learning-loop progress, action-oriented empty
+states, and clearer feedback for offline/error/success states.
+
+Impact: the MVP is easier to experience during controlled testing, but final mobile polish still
+needs device-level review across Expo Go/native layouts, accessibility, and real student feedback.
 
 ## Production Observability Not Wired
 

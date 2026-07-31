@@ -38,10 +38,10 @@ Existing repository state:
 Current implementation status:
 
 - Current phase: True Learning MVP planning, with Controlled Demo MVP live-validation carry-over.
-- Current sprint: Sprint 17 - Durable Offline Storage And Sync Hardening.
-- Active implementation target: persist and hydrate mobile learning snapshots plus pending sync
-  actions where durable local storage is available, while documenting native encrypted storage
-  carry-over.
+- Current sprint: Sprint 18 - MVP UX Polish And Empty/Error State Completion.
+- Active implementation target: make the controlled True MVP mobile shell feel like a coherent
+  student product with visible learning-loop progress, action-oriented empty states, and clear
+  offline/error/status feedback.
 - Master plan: `docs/planning/PRODUCT_COMPLETION_MASTER_PLAN.md`.
 - Release target scope: `docs/planning/RELEASE_TARGET_SCOPE.md`.
 - Sprint 12 plan: `docs/planning/SPRINT_12_REAL_DOCUMENT_UPLOAD_AND_STORAGE.md`.
@@ -50,6 +50,7 @@ Current implementation status:
 - Sprint 15 plan: `docs/planning/SPRINT_15_REAL_BLIE_PROVIDER_INTEGRATION.md`.
 - Sprint 16 plan: `docs/planning/SPRINT_16_RETRIEVAL_BACKED_BLIE_PREPARATION_AND_QUIZ.md`.
 - Sprint 17 plan: `docs/planning/SPRINT_17_DURABLE_OFFLINE_STORAGE_AND_SYNC_HARDENING.md`.
+- Sprint 18 plan: `docs/planning/SPRINT_18_MVP_UX_POLISH_AND_EMPTY_ERROR_STATE_COMPLETION.md`.
 - Product-defining wow moment: lecture PDF upload -> concept extraction -> PLKG enrichment -> BLIE
   preparation priorities -> quick quiz.
 - Sprint 11 status: Accepted with known live-validation blocker.
@@ -524,7 +525,7 @@ Recommended sprint sequence:
 - Sprint 15 - Real BLIE Provider Integration. Implemented and verified.
 - Sprint 16 - Retrieval-Backed BLIE Preparation And Quiz. Implemented and verified.
 - Sprint 17 - Durable Offline Storage And Sync Hardening. Implemented and verified with native-storage carry-over.
-- Sprint 18 - MVP UX Polish And Empty/Error State Completion.
+- Sprint 18 - MVP UX Polish And Empty/Error State Completion. Implemented and verified with device-review carry-over.
 - Sprint 19 - MVP Performance, Security, And Observability Baseline.
 - Sprint 20 - Controlled MVP Release Candidate.
 

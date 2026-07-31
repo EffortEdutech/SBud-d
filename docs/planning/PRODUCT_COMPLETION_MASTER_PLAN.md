@@ -122,6 +122,8 @@ Current state:
 - Sprint 16 completed Retrieval-Backed BLIE Preparation And Quiz.
 - Sprint 17 completed a dependency-free durable offline storage/sync hardening baseline for Expo Web
   and documented native encrypted storage as a carry-over.
+- Sprint 18 completed MVP UX polish for the controlled mobile shell, including visible learning-loop
+  progress, action-oriented empty states, and clearer status feedback.
 - The near-term product scope has been revised around three release targets: Controlled Demo MVP,
   True Learning MVP, and Public Version 1.
 - The product-defining wow moment is now: upload a lecture PDF, extract concepts, enrich PLKG, and
@@ -137,6 +139,7 @@ Current blockers:
 - BLIE now produces three preparation priorities and a quick quiz from retrieved context in the
   controlled local flow.
 - Durable encrypted native mobile offline storage remains deferred pending dependency approval.
+- Device-level Expo Go/native visual review remains pending after Sprint 18.
 - Production deployment, observability, app-store release, and subscription flows remain future work.
 
 ---
@@ -385,8 +388,8 @@ Recommended next targets:
 
 1. Keep Sprint 11 live-validation blocker visible and resolve it when Supabase access allows.
 2. Keep Sprint 17 native encrypted storage carry-over visible until dependency approval.
-3. Polish the MVP user experience for controlled student testing.
-4. Prepare MVP performance, security, and observability baselines.
+3. Prepare MVP performance, security, and observability baselines.
+4. Run device-level UX review when the local mobile app is available.
 5. Prepare a controlled MVP release candidate.
 
 ---
@@ -419,6 +422,7 @@ Recommended next targets:
 - [ ] Durable encrypted native offline storage dependency is approved and implemented.
 - [/] Sync queue survives app restarts where browser `localStorage` is available; native restart
   durability remains pending dependency approval.
+- [x] MVP mobile UX shows learning-loop progress and action-oriented empty/error states.
 - [ ] MVP observability baseline is active.
 - [ ] Controlled MVP release candidate passes.
 
@@ -481,13 +485,12 @@ At the end of each sprint:
 
 Recommended next sprint:
 
-Sprint 18 - MVP UX Polish And Empty/Error State Completion.
+Sprint 19 - MVP Performance, Security, And Observability Baseline.
 
 Goal:
 
-Make the controlled True MVP feel like a polished student product, with coherent empty states,
-failure states, progress visibility, and clear next actions across Dashboard, Library, PLKG, BLIE,
-Study, and Sync.
+Add the controlled MVP baseline for performance awareness, security validation, and operational
+observability before release-candidate preparation.
 
 Why this is next:
 
@@ -497,3 +500,5 @@ Why this is next:
 - Sprint 15 lets BLIE use a real model while preserving retrieval-before-generation.
 - Sprint 16 made BLIE return retrieved-context-backed preparation priorities and a quick quiz.
 - Sprint 17 made offline snapshot and queue hydration visible and restart-safe for Expo Web.
+- Sprint 18 made the controlled mobile MVP easier to experience with clear progress and next-action
+  states.

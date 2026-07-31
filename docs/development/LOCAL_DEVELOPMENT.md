@@ -1,6 +1,6 @@
 # AI Study Buddy Local Development
 
-Status: Sprint 17 durable offline storage and sync hardening
+Status: Sprint 18 MVP UX polish and empty/error state completion
 Last updated: 2026-07-31
 
 ---
@@ -282,6 +282,18 @@ Sprint 17 offline restart validation flow:
 6. Reload the app and confirm the Sync tab shows the active local storage mode plus restored pending
    queue status.
 7. Reconnect the API and push the pending queue.
+
+Sprint 18 mobile UX validation flow:
+
+1. Start the API on port `4801`.
+2. Start Expo on port `4800`.
+3. Confirm the top of the app shows the True MVP learning loop: Upload, Extract, Connect, Practice.
+4. Open each tab and confirm empty states explain the next learning action instead of showing a
+   technical dead end.
+5. Disconnect the API and confirm status feedback strips clearly distinguish cached/offline,
+   unavailable, and queued states.
+6. Complete upload -> extract -> map concepts -> ask BLIE and confirm the learning-loop progress
+   updates as each step becomes available.
 
 ---
 

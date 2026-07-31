@@ -20,12 +20,13 @@ When work progresses, update this checklist in the same commit or handoff as the
 
 # Current Sprint
 
-Current sprint: Sprint 17 - Durable Offline Storage And Sync Hardening
+Current sprint: Sprint 18 - MVP UX Polish And Empty/Error State Completion
 
 Current goal:
 
-Persist and hydrate mobile learning snapshots plus pending sync actions where durable local storage
-is available, harden sync queue transitions, and document the native encrypted storage carry-over.
+Make the controlled True MVP feel like a coherent student product with visible learning-loop
+progress, clear status feedback, action-oriented empty states, and understandable offline/error
+states.
 
 Accepted carry-over:
 
@@ -600,6 +601,29 @@ Current blocker:
 - [x] Run `git diff --check`.
 - [!] Native encrypted restart durability remains pending dependency approval.
 
+## Sprint 18 - MVP UX Polish And Empty/Error State Completion
+
+- [x] Prepare Sprint 18 implementation plan.
+- [x] Read UX, design system, dashboard, BLIE, document, study, and mobile implementation references.
+- [x] Query Graphify before source inspection.
+- [x] Inspect mobile shell and related service files directly before editing.
+- [x] Confirm no new production UI dependency is needed.
+- [x] Add visible True MVP learning-loop progress.
+- [x] Add reusable status feedback strips for success, warning, error, and neutral states.
+- [x] Replace technical empty states with student-facing next actions.
+- [x] Improve Dashboard empty/fallback guidance.
+- [x] Improve Library upload/extract/concept-map guidance.
+- [x] Improve BLIE no-response and no-subject guidance.
+- [x] Improve Study preparation/revision empty states.
+- [x] Improve PLKG concept/gap empty states.
+- [x] Improve Sync offline/cache/queue empty states.
+- [x] Update development, release, planning, README, and agent docs.
+- [x] Run `corepack pnpm check`.
+- [x] Run `corepack pnpm mvp:readiness`.
+- [x] Refresh Graphify.
+- [x] Run `git diff --check`.
+- [!] Device-level Expo Go/native visual review remains a carry-over.
+
 ## Phase 3 - True MVP Completion
 
 - [x] Sprint 12 - Real Document Upload And Storage.
@@ -608,7 +632,7 @@ Current blocker:
 - [x] Sprint 15 - Real BLIE Provider Integration.
 - [x] Sprint 16 - Retrieval-Backed BLIE Preparation And Quiz.
 - [x] Sprint 17 - Durable Offline Storage And Sync Hardening.
-- [ ] Sprint 18 - MVP UX Polish And Empty/Error State Completion.
+- [x] Sprint 18 - MVP UX Polish And Empty/Error State Completion.
 - [ ] Sprint 19 - MVP Performance, Security, And Observability Baseline.
 - [ ] Sprint 20 - Controlled MVP Release Candidate.
 
@@ -626,6 +650,8 @@ Current blocker:
 - [x] Student can revise from the generated guidance.
 - [/] Offline snapshot and queue survive restart where browser `localStorage` is available; native
   encrypted durability remains pending dependency approval.
+- [x] Controlled MVP mobile UI exposes clear next actions, feedback states, and learning-loop
+  progress.
 
 ## Phase 4 - Closed Beta Readiness
 

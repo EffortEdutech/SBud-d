@@ -42,7 +42,7 @@ Before making changes:
 
 ## Current Project State
 
-This project has completed Sprint 10: MVP Quality, Security, and Release Readiness, plus the Cross-Cutting Checklist audit. MVP Stabilization Pass 1, Sprint 12 real document upload, Sprint 13 document text extraction baseline, Sprint 14 concept extraction/PLKG enrichment baseline, Sprint 15 real BLIE provider integration, Sprint 16 retrieval-backed BLIE preparation/quiz output, and Sprint 17 durable offline storage/sync hardening baseline are now part of the active True Learning MVP track.
+This project has completed Sprint 10: MVP Quality, Security, and Release Readiness, plus the Cross-Cutting Checklist audit. MVP Stabilization Pass 1, Sprint 12 real document upload, Sprint 13 document text extraction baseline, Sprint 14 concept extraction/PLKG enrichment baseline, Sprint 15 real BLIE provider integration, Sprint 16 retrieval-backed BLIE preparation/quiz output, Sprint 17 durable offline storage/sync hardening baseline, and Sprint 18 MVP UX polish/empty-state completion are now part of the active True Learning MVP track.
 
 The approved monorepo skeleton from Volume G2 now exists:
 
@@ -247,6 +247,7 @@ MVP Stabilization Pass 1 planning notes:
 - Sprint 15 adds `SBUD_BLIE_PROVIDER=local|openai-compatible`, keeps local deterministic mode as the default, and supports server-only `SBUD_BLIE_OPENAI_API_KEY`, `SBUD_BLIE_OPENAI_BASE_URL`, and `SBUD_BLIE_MODEL` configuration for controlled real-provider validation.
 - Sprint 16 extends BLIE chat responses with `preparationPriorities` and `quickQuiz`, passes authenticated request context into retrieval for Supabase mode, and shares fixture PLKG memory across document enrichment, study guidance, and BLIE retrieval.
 - Sprint 17 adds a dependency-free mobile offline storage facade, hydrates cached learning snapshots and queued sync actions on app launch, persists snapshot/queue updates where browser storage is available, restores cached dashboard/library/PLKG/study/BLIE state, and shows the active offline storage mode in the Sync tab. Native encrypted storage remains a carry-over until dependency approval.
+- Sprint 18 adds student-facing UX polish across the mobile shell: learning-loop progress visibility, reusable feedback strips, action-oriented empty states, clearer offline/error messaging, and better next-step guidance across Dashboard, Library, BLIE, Study, PLKG, and Sync.
 - PLKG nodes, edges, summary, and learning activity writes are now wired for Supabase mode; BLIE and study services await PLKG context.
 - Study preparation/revision rows and revision reflection updates are now wired for Supabase mode.
 - Sync queue events are now wired for Supabase mode while mobile queue durability remains deferred.

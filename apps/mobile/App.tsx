@@ -59,6 +59,7 @@ import {
 } from "./src/sync/sync-service";
 
 type TabKey = "dashboard" | "study" | "buddy" | "library" | "plkg" | "sync";
+type FeedbackTone = "neutral" | "success" | "warning" | "error";
 
 const tabs: Array<{ key: TabKey; label: string }> = [
   { key: "dashboard", label: "Dashboard" },
@@ -103,6 +104,39 @@ export default function App(): React.JSX.Element {
   const priorityGap = plkgSummary.knowledgeGaps[0] ?? null;
   const runtime = healthStatus.runtime ?? fallbackHealthStatus.runtime;
   const studentContextLabel = `${dashboard.academicOverview.currentSemester.label} - ${dashboard.academicOverview.programmeName}`;
+  const hasSubjects = dashboard.subjects.length > 0;
+  const hasDocuments = documentLibrary.documents.length > 0;
+  const hasExtractedText = documentLibrary.documents.some((document) =>
+    Boolean(document.extractedText),
+  );
+  const hasMappedConcepts = documentLibrary.documents.some(
+    (document) => document.extractedConcepts.length > 0,
+  );
+  const hasBlieLearningOutput =
+    Boolean(blieResponse?.response.preparationPriorities.length) ||
+    Boolean(blieResponse?.response.quickQuiz.questions.length);
+  const journeyProgress = [
+    {
+      done: hasDocuments,
+      label: "Upload",
+      value: hasDocuments ? "Material captured" : "Add lecture PDF",
+    },
+    {
+      done: hasExtractedText,
+      label: "Extract",
+      value: hasExtractedText ? "Readable text ready" : "Extract text",
+    },
+    {
+      done: hasMappedConcepts,
+      label: "Connect",
+      value: hasMappedConcepts ? "PLKG enriched" : "Map concepts",
+    },
+    {
+      done: hasBlieLearningOutput,
+      label: "Practice",
+      value: hasBlieLearningOutput ? "Quiz ready" : "Ask BLIE",
+    },
+  ];
 
   useEffect(() => {
     let isMounted = true;
@@ -476,6 +510,92 @@ export default function App(): React.JSX.Element {
     return validationLabel;
   };
 
+  const getFeedbackTone = (label: string): FeedbackTone => {
+    const normalized = label.toLowerCase();
+
+    if (
+      normalized.includes("failed") ||
+      normalized.includes("unavailable") ||
+      normalized.includes("blocker")
+    ) {
+      return "error";
+    }
+
+    if (
+      normalized.includes("offline") ||
+      normalized.includes("fallback") ||
+      normalized.includes("queued") ||
+      normalized.includes("cached")
+    ) {
+      return "warning";
+    }
+
+    if (
+      normalized.includes("connected") ||
+      normalized.includes("ready") ||
+      normalized.includes("complete") ||
+      normalized.includes("recorded") ||
+      normalized.includes("mapped") ||
+      normalized.includes("extracted")
+    ) {
+      return "success";
+    }
+
+    return "neutral";
+  };
+
+  const renderFeedback = (label: string): React.JSX.Element => {
+    const tone = getFeedbackTone(label);
+
+    return (
+      <View style={[styles.feedbackStrip, styles[`${tone}Feedback`]]}>
+        <Text style={[styles.feedbackText, styles[`${tone}FeedbackText`]]}>{label}</Text>
+      </View>
+    );
+  };
+
+  const renderActionState = (input: {
+    actionLabel?: string;
+    body: string;
+    onPress?: () => void;
+    title: string;
+  }): React.JSX.Element => (
+    <View style={styles.emptyState}>
+      <Text style={styles.emptyTitle}>{input.title}</Text>
+      <Text style={styles.mutedText}>{input.body}</Text>
+      {input.onPress && input.actionLabel ? (
+        <Pressable
+          accessibilityRole="button"
+          onPress={input.onPress}
+          style={styles.secondaryButton}
+        >
+          <Text style={styles.secondaryButtonText}>{input.actionLabel}</Text>
+        </Pressable>
+      ) : null}
+    </View>
+  );
+
+  const renderJourneyProgress = (): React.JSX.Element => (
+    <View style={styles.panel}>
+      <Text style={styles.panelTitle}>True MVP learning loop</Text>
+      <Text style={styles.mutedText}>
+        Follow the path from lecture material to PLKG memory, BLIE preparation, and quiz practice.
+      </Text>
+      <View style={styles.journeyGrid}>
+        {journeyProgress.map((step) => (
+          <View key={step.label} style={[styles.journeyStep, step.done && styles.doneJourneyStep]}>
+            <Text style={[styles.journeyLabel, step.done && styles.doneJourneyLabel]}>
+              {step.label}
+            </Text>
+            <Text style={[styles.journeyValue, step.done && styles.doneJourneyValue]}>
+              {step.value}
+            </Text>
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+
   const renderRuntimeStatus = (): React.JSX.Element => {
     return (
       <View style={styles.statusPanel}>
@@ -578,6 +698,7 @@ export default function App(): React.JSX.Element {
                 : dashboard.blieRecommendation.body}
         </Text>
       </View>
+      {renderFeedback(apiStatus)}
 
       <View style={styles.heroActions}>
         <Pressable
@@ -630,7 +751,11 @@ export default function App(): React.JSX.Element {
     <>
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Learning command centre</Text>
-        <Text style={styles.sectionSubtitle}>{apiStatus}</Text>
+        <Text style={styles.sectionSubtitle}>
+          {hasSubjects
+            ? "Your next best learning action is ready."
+            : "Set up subjects or use fixture mode to preview the full journey."}
+        </Text>
       </View>
 
       <View style={styles.insightGrid}>
@@ -651,35 +776,38 @@ export default function App(): React.JSX.Element {
           <Text style={styles.panelTitle}>Subjects in motion</Text>
           <Text style={styles.statusPill}>{dashboard.subjects.length} active</Text>
         </View>
-        {dashboard.subjects.length === 0 ? (
-          <Text style={styles.mutedText}>Add your first subject to start building context.</Text>
-        ) : (
-          dashboard.subjects.map((subject) => (
-            <Pressable
-              accessibilityRole="button"
-              key={subject.id}
-              onPress={() => {
-                setSelectedSubjectId(subject.id);
-                setActiveTab("buddy");
-              }}
-              style={styles.subjectCard}
-            >
-              <View style={styles.subjectText}>
-                <Text style={styles.subjectName}>{subject.name}</Text>
-                <Text style={styles.mutedText}>
-                  {subject.code} - {subject.currentTopic ?? "Topic pending"}
-                </Text>
-                <View style={styles.progressTrack}>
-                  <View style={[styles.progressFill, { width: `${subject.progressPercent}%` }]} />
+        {dashboard.subjects.length === 0
+          ? renderActionState({
+              actionLabel: "Open Sync setup",
+              body: "Subjects are the anchor for documents, BLIE retrieval, study preparation, and PLKG growth.",
+              onPress: () => setActiveTab("sync"),
+              title: "No subjects loaded yet",
+            })
+          : dashboard.subjects.map((subject) => (
+              <Pressable
+                accessibilityRole="button"
+                key={subject.id}
+                onPress={() => {
+                  setSelectedSubjectId(subject.id);
+                  setActiveTab("buddy");
+                }}
+                style={styles.subjectCard}
+              >
+                <View style={styles.subjectText}>
+                  <Text style={styles.subjectName}>{subject.name}</Text>
+                  <Text style={styles.mutedText}>
+                    {subject.code} - {subject.currentTopic ?? "Topic pending"}
+                  </Text>
+                  <View style={styles.progressTrack}>
+                    <View style={[styles.progressFill, { width: `${subject.progressPercent}%` }]} />
+                  </View>
                 </View>
-              </View>
-              <View style={styles.subjectScore}>
-                <Text style={styles.progressText}>{subject.progressPercent}%</Text>
-                <Text style={styles.statusPill}>{subject.learningStatus}</Text>
-              </View>
-            </Pressable>
-          ))
-        )}
+                <View style={styles.subjectScore}>
+                  <Text style={styles.progressText}>{subject.progressPercent}%</Text>
+                  <Text style={styles.statusPill}>{subject.learningStatus}</Text>
+                </View>
+              </Pressable>
+            ))}
       </View>
 
       <View style={styles.companionPanel}>
@@ -760,7 +888,7 @@ export default function App(): React.JSX.Element {
       <View style={styles.panel}>
         <Text style={styles.panelTitle}>Study coach</Text>
         <Text style={styles.heroFocusText}>{studySummary.recommendedFocusLabel}</Text>
-        <Text style={styles.mutedText}>{studyStatus}</Text>
+        {renderFeedback(studyStatus)}
         <View style={styles.graphMetricRow}>
           <Text style={styles.graphMetric}>{studySummary.preparationReadinessLabel}</Text>
           <Text style={styles.graphMetric}>{studySummary.revisionProgressLabel}</Text>
@@ -769,20 +897,26 @@ export default function App(): React.JSX.Element {
 
       <View style={styles.panel}>
         <Text style={styles.panelTitle}>Before learning</Text>
-        {studySummary.preparationPlans.length === 0 ? (
-          <Text style={styles.mutedText}>No preparation plans loaded yet.</Text>
-        ) : (
-          studySummary.preparationPlans.map(renderPreparationPlan)
-        )}
+        {studySummary.preparationPlans.length === 0
+          ? renderActionState({
+              actionLabel: "Upload material",
+              body: "Preparation plans appear after SBud-d has subject context and learning material to reason from.",
+              onPress: () => setActiveTab("library"),
+              title: "No preparation plan yet",
+            })
+          : studySummary.preparationPlans.map(renderPreparationPlan)}
       </View>
 
       <View style={styles.panel}>
         <Text style={styles.panelTitle}>After learning</Text>
-        {studySummary.revisionItems.length === 0 ? (
-          <Text style={styles.mutedText}>No revision items loaded yet.</Text>
-        ) : (
-          studySummary.revisionItems.map(renderRevisionItem)
-        )}
+        {studySummary.revisionItems.length === 0
+          ? renderActionState({
+              actionLabel: "Ask BLIE for a quiz",
+              body: "Revision cards and reflections become more useful after concepts are extracted into your PLKG.",
+              onPress: () => setActiveTab("buddy"),
+              title: "No revision queue yet",
+            })
+          : studySummary.revisionItems.map(renderRevisionItem)}
       </View>
     </>
   );
@@ -843,7 +977,7 @@ export default function App(): React.JSX.Element {
       <View style={styles.panel}>
         <Text style={styles.panelTitle}>Learning material intake</Text>
         <Text style={styles.heroFocusText}>Upload a PDF, prepare it for extraction.</Text>
-        <Text style={styles.mutedText}>{uploadState}</Text>
+        {renderFeedback(uploadState)}
         <Pressable
           accessibilityRole="button"
           onPress={() => {
@@ -857,15 +991,19 @@ export default function App(): React.JSX.Element {
 
       <View style={styles.panel}>
         <Text style={styles.panelTitle}>Learning hub</Text>
-        <Text style={styles.mutedText}>{libraryStatus}</Text>
-        {documentLibrary.documents.length === 0 ? (
-          <>
-            <Text style={styles.metricText}>{documentLibrary.emptyState.title}</Text>
-            <Text style={styles.mutedText}>{documentLibrary.emptyState.body}</Text>
-          </>
-        ) : (
-          documentLibrary.documents.map(renderLibraryDocument)
-        )}
+        {renderFeedback(libraryStatus)}
+        {documentLibrary.documents.length === 0
+          ? renderActionState({
+              actionLabel: "Upload sample PDF",
+              body:
+                documentLibrary.emptyState.body +
+                " The controlled demo starts with one lecture PDF.",
+              onPress: () => {
+                void handleCreateDocument();
+              },
+              title: documentLibrary.emptyState.title,
+            })
+          : documentLibrary.documents.map(renderLibraryDocument)}
       </View>
     </>
   );
@@ -916,29 +1054,39 @@ export default function App(): React.JSX.Element {
       <View style={styles.panel}>
         <Text style={styles.panelTitle}>BLIE companion</Text>
         <Text style={styles.heroFocusText}>{blieStatus}</Text>
+        {renderFeedback(blieStatus)}
         <Text style={styles.mutedText}>
           Subject context:{" "}
           {dashboard.subjects.find((subject) => subject.id === selectedSubjectId)?.name ??
             "First available subject"}
         </Text>
         <View style={styles.subjectSelector}>
-          {dashboard.subjects.map((subject) => {
-            const isSelected = subject.id === selectedSubjectId;
+          {dashboard.subjects.length === 0
+            ? renderActionState({
+                actionLabel: "Check Dashboard",
+                body: "BLIE can still answer in fallback mode, but subject context makes the guidance more personal.",
+                onPress: () => setActiveTab("dashboard"),
+                title: "No subject context selected",
+              })
+            : dashboard.subjects.map((subject) => {
+                const isSelected = subject.id === selectedSubjectId;
 
-            return (
-              <Pressable
-                accessibilityRole="button"
-                accessibilityState={{ selected: isSelected }}
-                key={subject.id}
-                onPress={() => setSelectedSubjectId(subject.id)}
-                style={[styles.subjectChip, isSelected && styles.activeSubjectChip]}
-              >
-                <Text style={[styles.subjectChipText, isSelected && styles.activeSubjectChipText]}>
-                  {subject.code}
-                </Text>
-              </Pressable>
-            );
-          })}
+                return (
+                  <Pressable
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: isSelected }}
+                    key={subject.id}
+                    onPress={() => setSelectedSubjectId(subject.id)}
+                    style={[styles.subjectChip, isSelected && styles.activeSubjectChip]}
+                  >
+                    <Text
+                      style={[styles.subjectChipText, isSelected && styles.activeSubjectChipText]}
+                    >
+                      {subject.code}
+                    </Text>
+                  </Pressable>
+                );
+              })}
         </View>
         <TextInput
           accessibilityLabel="BLIE learning question"
@@ -959,17 +1107,16 @@ export default function App(): React.JSX.Element {
         </Pressable>
       </View>
 
-      {blieResponse ? (
-        renderBuddyResponse(blieResponse)
-      ) : (
-        <View style={styles.panel}>
-          <Text style={styles.panelTitle}>Learning context</Text>
-          <Text style={styles.mutedText}>
-            BLIE will assemble academic profile, subject, document, and PLKG context before
-            generating preparation priorities and a quick quiz.
-          </Text>
-        </View>
-      )}
+      {blieResponse
+        ? renderBuddyResponse(blieResponse)
+        : renderActionState({
+            actionLabel: "Send prepared prompt",
+            body: "BLIE will assemble academic profile, subject, document, and PLKG context before generating preparation priorities and a quick quiz.",
+            onPress: () => {
+              void handleSendBlieQuestion();
+            },
+            title: "Ready for retrieval-backed guidance",
+          })}
     </>
   );
 
@@ -993,7 +1140,7 @@ export default function App(): React.JSX.Element {
       <View style={styles.panel}>
         <Text style={styles.panelTitle}>Personal knowledge graph</Text>
         <Text style={styles.heroFocusText}>{plkgSummary.statusLabel}</Text>
-        <Text style={styles.mutedText}>{plkgStatus}</Text>
+        {renderFeedback(plkgStatus)}
         <Text style={styles.mutedText}>{plkgSummary.growthLabel}</Text>
         <View style={styles.graphMetricRow}>
           <Text style={styles.graphMetric}>{plkgSummary.nodeCount} nodes</Text>
@@ -1013,22 +1160,32 @@ export default function App(): React.JSX.Element {
 
       <View style={styles.panel}>
         <Text style={styles.panelTitle}>Next foundations</Text>
-        {plkgSummary.knowledgeGaps.length === 0 ? (
-          <Text style={styles.mutedText}>No knowledge gaps loaded yet.</Text>
-        ) : (
-          plkgSummary.knowledgeGaps.map((gap) => (
-            <View key={gap.nodeId} style={styles.documentRow}>
-              <Text style={styles.subjectName}>{gap.label}</Text>
-              <Text style={styles.mutedText}>{gap.reason}</Text>
-              <Text style={styles.mutedText}>{gap.recommendedAction}</Text>
-            </View>
-          ))
-        )}
+        {plkgSummary.knowledgeGaps.length === 0
+          ? renderActionState({
+              actionLabel: "Map document concepts",
+              body: "Knowledge gaps appear after SBud-d has enough subject, document, and learning activity context.",
+              onPress: () => setActiveTab("library"),
+              title: "No weak foundations detected yet",
+            })
+          : plkgSummary.knowledgeGaps.map((gap) => (
+              <View key={gap.nodeId} style={styles.documentRow}>
+                <Text style={styles.subjectName}>{gap.label}</Text>
+                <Text style={styles.mutedText}>{gap.reason}</Text>
+                <Text style={styles.mutedText}>{gap.recommendedAction}</Text>
+              </View>
+            ))}
       </View>
 
       <View style={styles.panel}>
         <Text style={styles.panelTitle}>Concept memory</Text>
-        {plkgSummary.nodes.slice(0, 6).map(renderPlkgNode)}
+        {plkgSummary.nodes.length === 0
+          ? renderActionState({
+              actionLabel: "Upload lecture PDF",
+              body: "Concept memory grows when uploaded material is extracted and mapped into your PLKG.",
+              onPress: () => setActiveTab("library"),
+              title: "No concept nodes yet",
+            })
+          : plkgSummary.nodes.slice(0, 6).map(renderPlkgNode)}
       </View>
     </>
   );
@@ -1038,8 +1195,8 @@ export default function App(): React.JSX.Element {
       <View style={styles.panel}>
         <Text style={styles.panelTitle}>Cloud memory</Text>
         <Text style={styles.metricText}>{syncStatus.connectionStatus}</Text>
-        <Text style={styles.mutedText}>{syncStatusLabel}</Text>
-        <Text style={styles.mutedText}>{offlineStorageLabel}</Text>
+        {renderFeedback(syncStatusLabel)}
+        {renderFeedback(offlineStorageLabel)}
         <Text style={styles.mutedText}>
           Persistence: {healthStatus.runtime?.persistenceLabel ?? "Runtime pending"}
         </Text>
@@ -1094,32 +1251,38 @@ export default function App(): React.JSX.Element {
 
       <View style={styles.panel}>
         <Text style={styles.panelTitle}>Offline Access</Text>
-        {syncStatus.offlineAvailableSections.map((section) => (
-          <View key={section} style={styles.subjectRow}>
-            <Text style={styles.subjectName}>{section}</Text>
-            <Text style={styles.statusPill}>cached</Text>
-          </View>
-        ))}
+        {syncStatus.offlineAvailableSections.length === 0
+          ? renderActionState({
+              body: "Refresh API data once to cache learning sections for offline access.",
+              title: "No offline sections cached yet",
+            })
+          : syncStatus.offlineAvailableSections.map((section) => (
+              <View key={section} style={styles.subjectRow}>
+                <Text style={styles.subjectName}>{section}</Text>
+                <Text style={styles.statusPill}>cached</Text>
+              </View>
+            ))}
       </View>
 
       <View style={styles.panel}>
         <Text style={styles.panelTitle}>Pending Queue</Text>
-        {syncStatus.queue.length === 0 ? (
-          <Text style={styles.mutedText}>No pending offline changes.</Text>
-        ) : (
-          syncStatus.queue.slice(0, 5).map((item) => (
-            <View key={item.id} style={styles.documentRow}>
-              <View style={styles.documentHeader}>
-                <Text style={styles.subjectName}>{item.entityType}</Text>
-                <Text style={styles.statusPill}>{item.status}</Text>
+        {syncStatus.queue.length === 0
+          ? renderActionState({
+              body: "Offline actions from Library, PLKG, and Study will appear here until cloud sync accepts them.",
+              title: "Everything is synchronized",
+            })
+          : syncStatus.queue.slice(0, 5).map((item) => (
+              <View key={item.id} style={styles.documentRow}>
+                <View style={styles.documentHeader}>
+                  <Text style={styles.subjectName}>{item.entityType}</Text>
+                  <Text style={styles.statusPill}>{item.status}</Text>
+                </View>
+                <Text style={styles.mutedText}>
+                  {item.operation} - {item.entityId}
+                </Text>
+                <Text style={styles.statusMeta}>Retries: {item.retryCount}</Text>
               </View>
-              <Text style={styles.mutedText}>
-                {item.operation} - {item.entityId}
-              </Text>
-              <Text style={styles.statusMeta}>Retries: {item.retryCount}</Text>
-            </View>
-          ))
-        )}
+            ))}
       </View>
 
       <View style={styles.panel}>
@@ -1141,6 +1304,7 @@ export default function App(): React.JSX.Element {
       <ScrollView contentContainerStyle={styles.container}>
         {renderTodayHeader()}
         {renderLearningCycle()}
+        {renderJourneyProgress()}
 
         {activeTab === "dashboard" && renderDashboard()}
         {activeTab === "study" && renderStudy()}
@@ -1322,6 +1486,44 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     lineHeight: 18,
   },
+  journeyGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+  },
+  journeyStep: {
+    backgroundColor: "#f7faf8",
+    borderColor: "#dce7df",
+    borderRadius: 8,
+    borderWidth: 1,
+    flexBasis: "48%",
+    flexGrow: 1,
+    gap: 5,
+    minHeight: 74,
+    padding: 10,
+  },
+  doneJourneyStep: {
+    backgroundColor: "#e7f3eb",
+    borderColor: "#bddcc8",
+  },
+  journeyLabel: {
+    color: "#668075",
+    fontSize: 11,
+    fontWeight: "900",
+    textTransform: "uppercase",
+  },
+  doneJourneyLabel: {
+    color: "#1f5e3a",
+  },
+  journeyValue: {
+    color: "#172923",
+    fontSize: 14,
+    fontWeight: "800",
+    lineHeight: 19,
+  },
+  doneJourneyValue: {
+    color: "#1f5e3a",
+  },
   sectionHeader: {
     gap: 4,
     marginTop: 4,
@@ -1374,6 +1576,45 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginTop: 8,
   },
+  feedbackStrip: {
+    borderRadius: 8,
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+  },
+  feedbackText: {
+    fontSize: 13,
+    fontWeight: "800",
+    lineHeight: 18,
+  },
+  neutralFeedback: {
+    backgroundColor: "#eef2f3",
+    borderColor: "#d8e0e1",
+  },
+  neutralFeedbackText: {
+    color: "#405057",
+  },
+  successFeedback: {
+    backgroundColor: "#e7f3eb",
+    borderColor: "#c8dfcf",
+  },
+  successFeedbackText: {
+    color: "#1f5e3a",
+  },
+  warningFeedback: {
+    backgroundColor: "#f8f1df",
+    borderColor: "#e5d8b9",
+  },
+  warningFeedbackText: {
+    color: "#6a4d16",
+  },
+  errorFeedback: {
+    backgroundColor: "#fae8e5",
+    borderColor: "#efc9c3",
+  },
+  errorFeedbackText: {
+    color: "#8a2f22",
+  },
   panel: {
     backgroundColor: "#ffffff",
     borderColor: "#dce4dc",
@@ -1413,6 +1654,20 @@ const styles = StyleSheet.create({
     color: "#52655d",
     fontSize: 14,
     lineHeight: 20,
+  },
+  emptyState: {
+    backgroundColor: "#f7faf8",
+    borderColor: "#dce7df",
+    borderRadius: 8,
+    borderWidth: 1,
+    gap: 8,
+    padding: 14,
+  },
+  emptyTitle: {
+    color: "#172923",
+    fontSize: 17,
+    fontWeight: "900",
+    lineHeight: 22,
   },
   responseLabel: {
     color: "#244b40",
