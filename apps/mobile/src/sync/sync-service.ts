@@ -1,6 +1,7 @@
 import type {
   DashboardSummary,
   DocumentLibrarySummary,
+  BlieChatResponse,
   PlkgSummary,
   StudySummary,
   SyncEntityType,
@@ -10,8 +11,17 @@ import type {
 } from "@sbud-d/types";
 
 import { apiFetch } from "../lib/api-client";
+import {
+  getOfflineStorageStatus,
+  readOfflineValue,
+  writeOfflineValue,
+  type OfflineStorageStatus,
+} from "./offline-storage";
+
+export { getOfflineStorageStatus } from "./offline-storage";
 
 interface LearningSnapshot {
+  blieResponse: BlieChatResponse | null;
   cachedAt: string;
   dashboard: DashboardSummary | null;
   documentLibrary: DocumentLibrarySummary | null;
@@ -20,6 +30,7 @@ interface LearningSnapshot {
 }
 
 let snapshot: LearningSnapshot = {
+  blieResponse: null,
   cachedAt: new Date(0).toISOString(),
   dashboard: null,
   documentLibrary: null,
@@ -28,6 +39,10 @@ let snapshot: LearningSnapshot = {
 };
 
 let pendingQueue: SyncQueueItem[] = [];
+let hasHydratedOfflineState = false;
+
+const SNAPSHOT_STORAGE_KEY = "sbud-d.offline.learningSnapshot.v1";
+const QUEUE_STORAGE_KEY = "sbud-d.offline.pendingQueue.v1";
 
 export const fallbackSyncStatus: SyncStatusSummary = {
   studentId: "offline-student",
@@ -53,12 +68,40 @@ export const fallbackSyncStatus: SyncStatusSummary = {
   ],
 };
 
+function persistOfflineState(): void {
+  void Promise.all([
+    writeOfflineValue(SNAPSHOT_STORAGE_KEY, snapshot),
+    writeOfflineValue(QUEUE_STORAGE_KEY, pendingQueue),
+  ]);
+}
+
+export async function hydrateOfflineState(): Promise<OfflineStorageStatus> {
+  if (hasHydratedOfflineState) {
+    return getOfflineStorageStatus();
+  }
+
+  const [storedSnapshot, storedQueue] = await Promise.all([
+    readOfflineValue<LearningSnapshot>(SNAPSHOT_STORAGE_KEY, snapshot),
+    readOfflineValue<SyncQueueItem[]>(QUEUE_STORAGE_KEY, pendingQueue),
+  ]);
+
+  snapshot = {
+    ...snapshot,
+    ...storedSnapshot,
+  };
+  pendingQueue = Array.isArray(storedQueue) ? storedQueue : [];
+  hasHydratedOfflineState = true;
+
+  return getOfflineStorageStatus();
+}
+
 export function cacheLearningSnapshot(input: Partial<Omit<LearningSnapshot, "cachedAt">>): void {
   snapshot = {
     ...snapshot,
     ...input,
     cachedAt: new Date().toISOString(),
   };
+  persistOfflineState();
 }
 
 export function getLearningSnapshot(): LearningSnapshot {
@@ -86,6 +129,7 @@ export function enqueueOfflineChange(
   };
 
   pendingQueue = [item, ...pendingQueue];
+  persistOfflineState();
 
   return item;
 }
@@ -103,6 +147,8 @@ export function getLocalSyncStatus(): SyncStatusSummary {
 }
 
 export async function fetchSyncStatus(): Promise<SyncStatusSummary> {
+  await hydrateOfflineState();
+
   const response = await apiFetch("/sync/status");
 
   if (!response.ok) {
@@ -119,6 +165,8 @@ export async function fetchSyncStatus(): Promise<SyncStatusSummary> {
 }
 
 export async function pushPendingQueue(): Promise<SyncPushResponse> {
+  await hydrateOfflineState();
+
   if (pendingQueue.length === 0) {
     return {
       acceptedCount: 0,
@@ -127,8 +175,32 @@ export async function pushPendingQueue(): Promise<SyncPushResponse> {
     };
   }
 
+  const now = new Date().toISOString();
+  const pushableItems = pendingQueue.filter(
+    (item) => item.status === "pending" || item.status === "failed",
+  );
+  const pushableIds = new Set(pushableItems.map((item) => item.id));
+
+  if (pushableItems.length === 0) {
+    return { acceptedCount: 0, rejectedCount: 0, syncedItems: [] };
+  }
+
+  pendingQueue = pendingQueue.map((item) =>
+    pushableIds.has(item.id)
+      ? {
+          ...item,
+          lastError: null,
+          status: "syncing",
+          updatedAt: now,
+        }
+      : item,
+  );
+  persistOfflineState();
+
   const response = await apiFetch("/sync/push", {
-    body: JSON.stringify({ items: pendingQueue }),
+    body: JSON.stringify({
+      items: pendingQueue.filter((item) => pushableIds.has(item.id)),
+    }),
     headers: {
       "Content-Type": "application/json",
     },
@@ -138,17 +210,35 @@ export async function pushPendingQueue(): Promise<SyncPushResponse> {
   if (!response.ok) {
     pendingQueue = pendingQueue.map((item) => ({
       ...item,
-      status: "failed",
-      retryCount: item.retryCount + 1,
-      lastError: `Sync push failed with status ${response.status}.`,
-      updatedAt: new Date().toISOString(),
+      ...(pushableIds.has(item.id)
+        ? {
+            lastError: `Sync push failed with status ${response.status}.`,
+            retryCount: item.retryCount + 1,
+            status: "failed" as const,
+            updatedAt: new Date().toISOString(),
+          }
+        : {}),
     }));
+    persistOfflineState();
     throw new Error(`Sync push failed with status ${response.status}.`);
   }
 
   const result = (await response.json()) as SyncPushResponse;
   const syncedIds = new Set(result.syncedItems.map((item) => item.id));
-  pendingQueue = pendingQueue.filter((item) => !syncedIds.has(item.id));
+  pendingQueue = pendingQueue
+    .map((item) =>
+      pushableIds.has(item.id) && !syncedIds.has(item.id)
+        ? {
+            ...item,
+            lastError: "Sync push did not accept this item.",
+            retryCount: item.retryCount + 1,
+            status: "failed" as const,
+            updatedAt: new Date().toISOString(),
+          }
+        : item,
+    )
+    .filter((item) => !syncedIds.has(item.id));
+  persistOfflineState();
 
   return result;
 }

@@ -9,7 +9,7 @@ The product is built around:
 - A cloud-first, offline-capable learning experience.
 - A TypeScript monorepo architecture.
 
-This repository has completed the local MVP baseline through Sprint 10, the Cross-Cutting Checklist, MVP Stabilization Pass 1 persistence wiring, Sprint 12 real PDF upload, Sprint 13 document text extraction baseline, Sprint 14 concept extraction/PLKG enrichment baseline work, Sprint 15 real BLIE provider integration, and Sprint 16 retrieval-backed BLIE preparation/quiz output.
+This repository has completed the local MVP baseline through Sprint 10, the Cross-Cutting Checklist, MVP Stabilization Pass 1 persistence wiring, Sprint 12 real PDF upload, Sprint 13 document text extraction baseline, Sprint 14 concept extraction/PLKG enrichment baseline work, Sprint 15 real BLIE provider integration, Sprint 16 retrieval-backed BLIE preparation/quiz output, and the Sprint 17 durable offline storage/sync hardening baseline.
 
 ---
 
@@ -167,6 +167,9 @@ text extraction endpoint that reads embedded text from uploaded PDFs and stores 
 Sprint 14 adds baseline concept extraction and maps document-derived concepts into the PLKG.
 Sprint 15 adds an opt-in OpenAI-compatible BLIE provider behind the existing provider abstraction.
 Sprint 16 makes BLIE return retrieved-context-backed preparation priorities and a quick quiz.
+Sprint 17 persists the mobile learning snapshot and pending sync queue through a dependency-free
+offline storage facade. Expo Web uses browser `localStorage` when available; native/mobile fallback
+remains volatile memory until an encrypted storage dependency is approved.
 Full PDF parsing, OCR, real AI educational concept analysis, and production-grade retrieval ranking
 remain later True Learning MVP work.
 
@@ -225,8 +228,8 @@ Current stabilization/product-completion track:
 
 - Plan: `docs/planning/MVP_STABILIZATION_PASS_1.md`
 - Active product plan: `docs/planning/PRODUCT_COMPLETION_MASTER_PLAN.md`
-- Current True Learning MVP sequence: Sprint 16 added retrieval-backed preparation priorities and a
-  quick quiz; Sprint 17 should harden durable offline storage and sync.
+- Current True Learning MVP sequence: Sprint 17 added dependency-free offline snapshot/queue
+  hydration and sync hardening; Sprint 18 should polish MVP UX and empty/error states.
 - API data mode: `SBUD_API_DATA_MODE=fixture|supabase`
 - Guardrail: mobile clients continue using API endpoints; no service-role key or secret is committed.
 

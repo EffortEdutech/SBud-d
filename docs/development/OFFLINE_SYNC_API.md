@@ -1,11 +1,13 @@
 # Offline and Synchronization API
 
-Sprint 9 adds the baseline offline and synchronization model.
+Sprint 9 adds the baseline offline and synchronization model. Sprint 17 hardens the local mobile
+snapshot and pending queue lifecycle.
 
 The MVP keeps cloud services as the system of record while allowing the mobile app to keep a local
-learning snapshot and pending sync queue. The local mobile queue is in-memory for this baseline
-because no new mobile storage dependency has been approved yet. In Supabase mode, accepted sync
-queue events are persisted server-side through the API boundary.
+learning snapshot and pending sync queue. The mobile app now persists those local values through a
+dependency-free offline storage facade. Expo Web uses browser `localStorage` when available; native
+mobile currently falls back to volatile memory until an encrypted storage dependency is approved. In
+Supabase mode, accepted sync queue events are persisted server-side through the API boundary.
 
 ## Endpoints
 
@@ -62,19 +64,27 @@ The mobile app now keeps:
 - cached document library metadata,
 - cached PLKG summary,
 - cached study summary,
+- cached latest BLIE response,
 - pending offline queue for document metadata, PLKG learning activity, and study reflections.
 
 The Sync tab shows:
 
 - connection status,
+- active local storage mode,
 - pending/failed counts,
 - offline-available sections,
 - queued events,
 - MVP conflict rules.
 
+On app launch, the mobile shell hydrates the learning snapshot and pending queue before showing the
+local sync status. If the API is unavailable, the app can restore cached dashboard, library, PLKG,
+study, and BLIE response data from the last successful learning snapshot.
+
 ## Security Notes
 
 - No secrets or Supabase service-role keys are required.
+- The offline storage facade stores learning snapshot and queued event data only, not bearer tokens,
+  passwords, API keys, or service-role credentials.
 - SQL reference enables RLS on `sync_queue_events`.
 - The queue is student-owned and scoped by `auth.uid()` in Supabase policies.
 - Supabase mode requires an authenticated bearer token; mobile clients continue to call the API and

@@ -42,7 +42,7 @@ Before making changes:
 
 ## Current Project State
 
-This project has completed Sprint 10: MVP Quality, Security, and Release Readiness, plus the Cross-Cutting Checklist audit. MVP Stabilization Pass 1, Sprint 12 real document upload, Sprint 13 document text extraction baseline, Sprint 14 concept extraction/PLKG enrichment baseline, Sprint 15 real BLIE provider integration, and Sprint 16 retrieval-backed BLIE preparation/quiz output are now part of the active True Learning MVP track.
+This project has completed Sprint 10: MVP Quality, Security, and Release Readiness, plus the Cross-Cutting Checklist audit. MVP Stabilization Pass 1, Sprint 12 real document upload, Sprint 13 document text extraction baseline, Sprint 14 concept extraction/PLKG enrichment baseline, Sprint 15 real BLIE provider integration, Sprint 16 retrieval-backed BLIE preparation/quiz output, and Sprint 17 durable offline storage/sync hardening baseline are now part of the active True Learning MVP track.
 
 The approved monorepo skeleton from Volume G2 now exists:
 
@@ -224,7 +224,7 @@ Sprint 9 sync notes:
 
 - Mobile caches dashboard, document library, PLKG, and study snapshots for offline access.
 - Offline document metadata, PLKG learning activity, and study reflection actions are queued locally until sync.
-- Local queue storage is in-memory for the baseline; durable encrypted device storage requires an approved mobile storage dependency.
+- Local queue storage is dependency-free. Expo Web uses browser `localStorage` when available; native/mobile fallback remains volatile memory until an encrypted mobile storage dependency is approved.
 
 Sprint 10 release readiness notes:
 
@@ -246,6 +246,7 @@ MVP Stabilization Pass 1 planning notes:
 - Sprint 14 adds `POST /api/v1/documents/:id/concepts`, stores `learning_documents.extracted_concepts`, exposes extracted concepts in the mobile Library tab, and enriches PLKG nodes/edges from document-derived concepts. The extractor is a dependency-free baseline, not real AI educational concept analysis.
 - Sprint 15 adds `SBUD_BLIE_PROVIDER=local|openai-compatible`, keeps local deterministic mode as the default, and supports server-only `SBUD_BLIE_OPENAI_API_KEY`, `SBUD_BLIE_OPENAI_BASE_URL`, and `SBUD_BLIE_MODEL` configuration for controlled real-provider validation.
 - Sprint 16 extends BLIE chat responses with `preparationPriorities` and `quickQuiz`, passes authenticated request context into retrieval for Supabase mode, and shares fixture PLKG memory across document enrichment, study guidance, and BLIE retrieval.
+- Sprint 17 adds a dependency-free mobile offline storage facade, hydrates cached learning snapshots and queued sync actions on app launch, persists snapshot/queue updates where browser storage is available, restores cached dashboard/library/PLKG/study/BLIE state, and shows the active offline storage mode in the Sync tab. Native encrypted storage remains a carry-over until dependency approval.
 - PLKG nodes, edges, summary, and learning activity writes are now wired for Supabase mode; BLIE and study services await PLKG context.
 - Study preparation/revision rows and revision reflection updates are now wired for Supabase mode.
 - Sync queue events are now wired for Supabase mode while mobile queue durability remains deferred.

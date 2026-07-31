@@ -1,6 +1,6 @@
 # AI Study Buddy Local Development
 
-Status: Sprint 16 retrieval-backed BLIE preparation and quiz
+Status: Sprint 17 durable offline storage and sync hardening
 Last updated: 2026-07-31
 
 ---
@@ -203,9 +203,13 @@ Sprint 8 uses in-memory study preparation and revision guidance in fixture mode.
 persists preparation plans, revision items, and revision reflection status updates behind the API
 repository boundary.
 
-Sprint 9 uses an in-memory mobile cache and pending queue for the local offline baseline. Supabase
-mode persists accepted sync queue events behind the API repository boundary. Durable encrypted local
-storage is deferred until a mobile storage dependency is approved.
+Sprint 17 uses a dependency-free mobile offline storage facade for the local learning snapshot and
+pending queue. Expo Web uses browser `localStorage` when available; native mobile falls back to
+volatile memory until an encrypted storage dependency is approved. Supabase mode persists accepted
+sync queue events behind the API repository boundary.
+
+The offline storage facade is for learning snapshot and queued event data only. Do not store bearer
+tokens, passwords, Supabase keys, service-role credentials, or AI provider keys in this layer.
 
 Sprint 10 release readiness docs live in:
 
@@ -266,6 +270,18 @@ Sprint 16 mobile BLIE preparation and quiz flow:
 4. Confirm the response includes `Before next class` priorities.
 5. Confirm the response includes a quick quiz.
 6. Confirm the reasoning trace remains `grounded`.
+
+Sprint 17 offline restart validation flow:
+
+1. Start the API on port `4801`.
+2. Start Expo on port `4800`.
+3. Open the app in web mode or a browser-backed Expo target.
+4. Refresh API data and send a BLIE prompt so dashboard, library, PLKG, study, and BLIE data are
+   cached.
+5. Queue an offline action from Library, PLKG, or Study when the API is unavailable.
+6. Reload the app and confirm the Sync tab shows the active local storage mode plus restored pending
+   queue status.
+7. Reconnect the API and push the pending queue.
 
 ---
 

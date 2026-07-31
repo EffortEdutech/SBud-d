@@ -120,6 +120,8 @@ Current state:
 - Sprint 14 completed Concept Extraction And PLKG Enrichment.
 - Sprint 15 completed Real BLIE Provider Integration behind the BLIE provider abstraction.
 - Sprint 16 completed Retrieval-Backed BLIE Preparation And Quiz.
+- Sprint 17 completed a dependency-free durable offline storage/sync hardening baseline for Expo Web
+  and documented native encrypted storage as a carry-over.
 - The near-term product scope has been revised around three release targets: Controlled Demo MVP,
   True Learning MVP, and Public Version 1.
 - The product-defining wow moment is now: upload a lecture PDF, extract concepts, enrich PLKG, and
@@ -134,7 +136,7 @@ Current blockers:
 - Real BLIE provider mode is implemented but live provider validation requires a local-only API key.
 - BLIE now produces three preparation priorities and a quick quiz from retrieved context in the
   controlled local flow.
-- Durable encrypted mobile offline storage remains deferred pending dependency approval.
+- Durable encrypted native mobile offline storage remains deferred pending dependency approval.
 - Production deployment, observability, app-store release, and subscription flows remain future work.
 
 ---
@@ -382,9 +384,9 @@ Exit criteria:
 Recommended next targets:
 
 1. Keep Sprint 11 live-validation blocker visible and resolve it when Supabase access allows.
-2. Complete Sprint 16 final readiness/Graphify verification.
-3. Harden offline storage and sync durability.
-4. Polish the MVP user experience for controlled student testing.
+2. Keep Sprint 17 native encrypted storage carry-over visible until dependency approval.
+3. Polish the MVP user experience for controlled student testing.
+4. Prepare MVP performance, security, and observability baselines.
 5. Prepare a controlled MVP release candidate.
 
 ---
@@ -414,8 +416,9 @@ Recommended next targets:
 - [x] BLIE produces three preparation priorities from processed knowledge.
 - [x] BLIE produces a quick quiz or flashcards from processed knowledge.
 - [x] Study preparation and revision use processed knowledge.
-- [ ] Durable offline storage dependency is approved and implemented.
-- [ ] Sync queue survives app restarts.
+- [ ] Durable encrypted native offline storage dependency is approved and implemented.
+- [/] Sync queue survives app restarts where browser `localStorage` is available; native restart
+  durability remains pending dependency approval.
 - [ ] MVP observability baseline is active.
 - [ ] Controlled MVP release candidate passes.
 
@@ -478,12 +481,13 @@ At the end of each sprint:
 
 Recommended next sprint:
 
-Sprint 17 - Durable Offline Storage And Sync Hardening.
+Sprint 18 - MVP UX Polish And Empty/Error State Completion.
 
 Goal:
 
-Make offline study data and pending sync actions survive app restarts while preserving the API
-boundary and student-owned data protections.
+Make the controlled True MVP feel like a polished student product, with coherent empty states,
+failure states, progress visibility, and clear next actions across Dashboard, Library, PLKG, BLIE,
+Study, and Sync.
 
 Why this is next:
 
@@ -492,3 +496,4 @@ Why this is next:
 - Sprint 14 transformed uploaded lecture text into PLKG learning memory.
 - Sprint 15 lets BLIE use a real model while preserving retrieval-before-generation.
 - Sprint 16 made BLIE return retrieved-context-backed preparation priorities and a quick quiz.
+- Sprint 17 made offline snapshot and queue hydration visible and restart-safe for Expo Web.

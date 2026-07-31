@@ -20,12 +20,12 @@ When work progresses, update this checklist in the same commit or handoff as the
 
 # Current Sprint
 
-Current sprint: Sprint 16 - Retrieval-Backed BLIE Preparation And Quiz
+Current sprint: Sprint 17 - Durable Offline Storage And Sync Hardening
 
 Current goal:
 
-Use processed document concepts and PLKG context to generate three preparation priorities and a
-quick quiz through the BLIE response flow.
+Persist and hydrate mobile learning snapshots plus pending sync actions where durable local storage
+is available, harden sync queue transitions, and document the native encrypted storage carry-over.
 
 Accepted carry-over:
 
@@ -576,6 +576,30 @@ Current blocker:
 - [x] Refresh Graphify.
 - [x] Run `git diff --check`.
 
+## Sprint 17 - Durable Offline Storage And Sync Hardening
+
+- [x] Prepare Sprint 17 implementation plan.
+- [x] Read offline/sync and mobile architecture references before implementation.
+- [x] Query Graphify before source inspection.
+- [x] Inspect mobile sync, API sync, shared sync type, and mobile shell source files directly.
+- [x] Confirm no new production mobile storage dependency is approved.
+- [x] Add dependency-free mobile offline storage facade.
+- [x] Use browser `localStorage` when available for Expo Web controlled validation.
+- [x] Preserve volatile memory fallback for native until encrypted storage dependency approval.
+- [x] Hydrate cached learning snapshot and pending queue on app launch.
+- [x] Persist dashboard, document library, PLKG, study, and BLIE response snapshots.
+- [x] Persist queued offline actions.
+- [x] Harden sync queue transitions for syncing, failed, retry, and accepted items.
+- [x] Restore cached dashboard/library/PLKG/study/BLIE UI state when available.
+- [x] Show active offline storage mode in the Sync tab.
+- [x] Add tests for durable web storage and memory fallback behavior.
+- [x] Update development, offline sync, release, planning, README, and agent docs.
+- [x] Run `corepack pnpm check`.
+- [x] Run `corepack pnpm mvp:readiness`.
+- [x] Refresh Graphify.
+- [x] Run `git diff --check`.
+- [!] Native encrypted restart durability remains pending dependency approval.
+
 ## Phase 3 - True MVP Completion
 
 - [x] Sprint 12 - Real Document Upload And Storage.
@@ -583,7 +607,7 @@ Current blocker:
 - [x] Sprint 14 - Concept Extraction And PLKG Enrichment.
 - [x] Sprint 15 - Real BLIE Provider Integration.
 - [x] Sprint 16 - Retrieval-Backed BLIE Preparation And Quiz.
-- [ ] Sprint 17 - Durable Offline Storage And Sync Hardening.
+- [x] Sprint 17 - Durable Offline Storage And Sync Hardening.
 - [ ] Sprint 18 - MVP UX Polish And Empty/Error State Completion.
 - [ ] Sprint 19 - MVP Performance, Security, And Observability Baseline.
 - [ ] Sprint 20 - Controlled MVP Release Candidate.
@@ -600,6 +624,8 @@ Current blocker:
 - [x] BLIE shows three things to understand before the next class.
 - [x] BLIE generates a quick quiz or flashcards from processed knowledge.
 - [x] Student can revise from the generated guidance.
+- [/] Offline snapshot and queue survive restart where browser `localStorage` is available; native
+  encrypted durability remains pending dependency approval.
 
 ## Phase 4 - Closed Beta Readiness
 

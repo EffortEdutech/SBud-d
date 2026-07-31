@@ -1,6 +1,6 @@
 # MVP Known Issues
 
-Status: Sprint 16 retrieval-backed preparation and quiz
+Status: Sprint 17 durable offline storage and sync hardening
 Last updated: 2026-07-31
 
 ---
@@ -28,11 +28,17 @@ two authenticated test users pass same-student and cross-student RLS checks.
 
 Sprint 11 is accepted with this known blocker carried forward.
 
-## Offline Queue Is Not Durable
+## Native Offline Queue Durability Needs Dependency Approval
 
-Sprint 9 uses an in-memory mobile queue and cache because no durable encrypted mobile storage dependency has been approved.
+Sprint 17 adds a dependency-free offline storage facade for the mobile learning snapshot and pending
+sync queue. Expo Web persists those values with browser `localStorage` when available, and the app
+hydrates cached dashboard, library, PLKG, study, BLIE response, and pending queue state on launch.
 
-Impact: offline actions do not survive app restart.
+Native mobile currently falls back to volatile memory because no encrypted durable mobile storage
+dependency has been approved.
+
+Impact: Expo Web can demonstrate restart survival for controlled validation, but native app restart
+durability remains a carry-over before closed beta.
 
 ## Document Processing Uses Baseline Extraction And Concept Mapping
 

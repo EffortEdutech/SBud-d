@@ -49,10 +49,12 @@ import {
 import {
   cacheLearningSnapshot,
   enqueueOfflineChange,
+  getOfflineStorageStatus,
   fallbackSyncStatus,
   fetchSyncStatus,
   getLearningSnapshot,
   getLocalSyncStatus,
+  hydrateOfflineState,
   pushPendingQueue,
 } from "./src/sync/sync-service";
 
@@ -88,6 +90,7 @@ export default function App(): React.JSX.Element {
   const [plkgStatus, setPlkgStatus] = useState("Loading PLKG...");
   const [studyStatus, setStudyStatus] = useState("Loading study guidance...");
   const [syncStatusLabel, setSyncStatusLabel] = useState("Checking sync status...");
+  const [offlineStorageLabel, setOfflineStorageLabel] = useState(getOfflineStorageStatus().label);
   const [uploadState, setUploadState] = useState("Ready for metadata upload");
   const [blieQuestion, setBlieQuestion] = useState("Explain recursion with a simple example");
   const [blieStatus, setBlieStatus] = useState("Ready for context-aware chat");
@@ -103,6 +106,46 @@ export default function App(): React.JSX.Element {
 
   useEffect(() => {
     let isMounted = true;
+
+    hydrateOfflineState()
+      .then((storageStatus) => {
+        if (isMounted) {
+          const cachedSnapshot = getLearningSnapshot();
+
+          setOfflineStorageLabel(storageStatus.label);
+          setSyncStatus(getLocalSyncStatus());
+
+          if (cachedSnapshot.dashboard) {
+            setDashboard(cachedSnapshot.dashboard);
+            setApiStatus("Restored cached dashboard");
+          }
+
+          if (cachedSnapshot.documentLibrary) {
+            setDocumentLibrary(cachedSnapshot.documentLibrary);
+            setLibraryStatus("Restored cached library");
+          }
+
+          if (cachedSnapshot.plkgSummary) {
+            setPlkgSummary(cachedSnapshot.plkgSummary);
+            setPlkgStatus("Restored cached PLKG");
+          }
+
+          if (cachedSnapshot.studySummary) {
+            setStudySummary(cachedSnapshot.studySummary);
+            setStudyStatus("Restored cached study plan");
+          }
+
+          if (cachedSnapshot.blieResponse) {
+            setBlieResponse(cachedSnapshot.blieResponse);
+            setBlieStatus("Restored cached BLIE response");
+          }
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setOfflineStorageLabel("Offline cache unavailable");
+        }
+      });
 
     fetchHealthStatus()
       .then((status) => {
@@ -309,9 +352,12 @@ export default function App(): React.JSX.Element {
 
       setBlieResponse(response);
       setBlieStatus("Learning response ready");
+      cacheLearningSnapshot({ blieResponse: response });
     } catch {
-      setBlieResponse(fallbackBlieResponse);
-      setBlieStatus("BLIE request failed");
+      const cachedBlieResponse = getLearningSnapshot().blieResponse;
+
+      setBlieResponse(cachedBlieResponse ?? fallbackBlieResponse);
+      setBlieStatus(cachedBlieResponse ? "Using cached BLIE response" : "BLIE request failed");
     }
   };
 
@@ -993,6 +1039,7 @@ export default function App(): React.JSX.Element {
         <Text style={styles.panelTitle}>Cloud memory</Text>
         <Text style={styles.metricText}>{syncStatus.connectionStatus}</Text>
         <Text style={styles.mutedText}>{syncStatusLabel}</Text>
+        <Text style={styles.mutedText}>{offlineStorageLabel}</Text>
         <Text style={styles.mutedText}>
           Persistence: {healthStatus.runtime?.persistenceLabel ?? "Runtime pending"}
         </Text>
