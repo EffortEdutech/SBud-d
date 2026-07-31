@@ -9,7 +9,7 @@ The product is built around:
 - A cloud-first, offline-capable learning experience.
 - A TypeScript monorepo architecture.
 
-This repository has completed the local MVP baseline through Sprint 10, the Cross-Cutting Checklist, MVP Stabilization Pass 1 persistence wiring, Sprint 12 real PDF upload, Sprint 13 document text extraction baseline, and Sprint 14 concept extraction/PLKG enrichment baseline work.
+This repository has completed the local MVP baseline through Sprint 10, the Cross-Cutting Checklist, MVP Stabilization Pass 1 persistence wiring, Sprint 12 real PDF upload, Sprint 13 document text extraction baseline, Sprint 14 concept extraction/PLKG enrichment baseline work, and Sprint 15 real BLIE provider integration.
 
 ---
 
@@ -165,15 +165,18 @@ with student-owned object paths:
 Sprint 12 adds PDF-only upload through the API boundary. Sprint 13 adds a dependency-free baseline
 text extraction endpoint that reads embedded text from uploaded PDFs and stores `extractedText`.
 Sprint 14 adds baseline concept extraction and maps document-derived concepts into the PLKG.
-Full PDF parsing, OCR, real AI educational concept analysis, and BLIE retrieval from extracted
-knowledge remain later True Learning MVP work.
+Sprint 15 adds an opt-in OpenAI-compatible BLIE provider behind the existing provider abstraction.
+Full PDF parsing, OCR, real AI educational concept analysis, and BLIE preparation/quiz generation
+from extracted knowledge remain later True Learning MVP work.
 
 Sprint 6 BLIE endpoint:
 
 - `POST /api/v1/blie/chat`
 
-Sprint 6 uses a local provider abstraction for deterministic learning responses. Do not commit
-AI provider secrets; real provider wiring remains behind the provider interface.
+Sprint 6 uses a local provider abstraction for deterministic learning responses. Sprint 15 adds
+`SBUD_BLIE_PROVIDER=local|openai-compatible` with server-only
+`SBUD_BLIE_OPENAI_API_KEY`, `SBUD_BLIE_OPENAI_BASE_URL`, and `SBUD_BLIE_MODEL` configuration. Do
+not commit AI provider secrets; real provider wiring remains behind the provider interface.
 
 Sprint 7 PLKG endpoints:
 
@@ -221,8 +224,8 @@ Current stabilization/product-completion track:
 
 - Plan: `docs/planning/MVP_STABILIZATION_PASS_1.md`
 - Active product plan: `docs/planning/PRODUCT_COMPLETION_MASTER_PLAN.md`
-- Current True Learning MVP sequence: Sprint 14 completed baseline concept mapping and PLKG
-  enrichment; Sprint 15 should wire a real BLIE provider behind the existing abstraction.
+- Current True Learning MVP sequence: Sprint 15 added real BLIE provider integration; Sprint 16
+  should generate retrieval-backed preparation priorities and a quick quiz.
 - API data mode: `SBUD_API_DATA_MODE=fixture|supabase`
 - Guardrail: mobile clients continue using API endpoints; no service-role key or secret is committed.
 

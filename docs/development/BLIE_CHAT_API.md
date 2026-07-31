@@ -1,16 +1,17 @@
 # BLIE Chat API
 
-Status: MVP Stabilization Pass 1 PLKG-aware baseline
-Last updated: 2026-07-14
+Status: Sprint 15 real provider integration
+Last updated: 2026-07-31
 
 ---
 
 # 1. Scope
 
-Sprint 6 introduces the minimum useful BLIE chat contract.
+Sprint 6 introduced the minimum useful BLIE chat contract.
 
-The API uses a local deterministic provider behind a provider interface. This proves the BLIE
-orchestration path without committing AI provider secrets or depending on a live AI account.
+Sprint 15 keeps the local deterministic provider as the default and adds an opt-in
+OpenAI-compatible provider behind the same provider interface. This lets controlled validation use a
+real model without committing AI provider secrets or moving educational logic into the model layer.
 
 ---
 
@@ -74,6 +75,34 @@ grounding path to the basic student-owned PLKG.
 MVP Stabilization Pass 1 keeps BLIE provider-independent while allowing PLKG retrieval to use
 Supabase-backed PLKG nodes in `SBUD_API_DATA_MODE=supabase`.
 
+Sprint 15 provider modes:
+
+- `SBUD_BLIE_PROVIDER=local`: default deterministic provider for fixture-safe development.
+- `SBUD_BLIE_PROVIDER=openai-compatible`: sends the retrieved BLIE context package to a Chat
+  Completions-compatible endpoint.
+
+OpenAI-compatible mode uses these server-only variables:
+
+```text
+SBUD_BLIE_OPENAI_API_KEY=<local-only secret>
+SBUD_BLIE_OPENAI_BASE_URL=https://api.openai.com/v1
+SBUD_BLIE_MODEL=gpt-4o-mini
+```
+
+Do not paste the key into chat and do not commit `.env` files.
+
+The provider request asks for JSON object output with the same response keys used by local mode:
+
+```json
+{
+  "explanation": "...",
+  "connection": "...",
+  "example": "...",
+  "checkUnderstanding": "...",
+  "nextStep": "..."
+}
+```
+
 ---
 
 # 5. Safety
@@ -86,3 +115,6 @@ Do not commit:
 - `.env` files
 
 API request logs must avoid student question text and generated response content.
+
+The health endpoint may report whether a provider mode appears configured, but it must not expose
+provider API keys, bearer tokens, prompt text, generated answer content, or model credentials.

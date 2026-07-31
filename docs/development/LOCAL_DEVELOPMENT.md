@@ -1,6 +1,6 @@
 # AI Study Buddy Local Development
 
-Status: Sprint 14 concept extraction and PLKG enrichment
+Status: Sprint 15 real BLIE provider integration
 Last updated: 2026-07-31
 
 ---
@@ -160,8 +160,30 @@ Sprint 14 adds `POST /api/v1/documents/:id/concepts` for baseline concept extrac
 enrichment. The API stores document concepts in `learning_documents.extracted_concepts`, adds
 document-derived PLKG nodes/edges, and returns the updated document as `connected`.
 
-BLIE real-provider integration and stronger retrieval-backed responses from extracted knowledge
-remain later True Learning MVP work.
+Sprint 15 adds real BLIE provider configuration behind the existing provider abstraction. Local mode
+remains the default:
+
+```text
+SBUD_BLIE_PROVIDER=local
+```
+
+For controlled local-only validation with an OpenAI-compatible Chat Completions endpoint, set these
+variables in your shell or local `.env` file:
+
+```powershell
+$env:SBUD_BLIE_PROVIDER="openai-compatible"
+$env:SBUD_BLIE_OPENAI_API_KEY="<local-only secret>"
+$env:SBUD_BLIE_OPENAI_BASE_URL="https://api.openai.com/v1"
+$env:SBUD_BLIE_MODEL="gpt-4o-mini"
+corepack pnpm --filter @sbud-d/api dev
+```
+
+Do not commit `.env` files, provider keys, bearer tokens, prompt text, or generated answer content.
+The health endpoint can show whether the provider appears configured without exposing the key or
+model credential.
+
+Stronger retrieval-backed preparation priorities and quiz generation remain Sprint 16 True Learning
+MVP work.
 
 MVP Stabilization Pass 1 begins Supabase repository wiring with the academic profile,
 subjects, dashboard, document metadata, PLKG node/edge, study preparation/revision, and sync queue
@@ -170,8 +192,8 @@ event slices.
 The dashboard endpoint keeps the existing response shape and derives its learning status and BLIE
 recommendation from academic profile, document library, PLKG, and study summaries.
 
-Sprint 6 uses a local deterministic BLIE provider abstraction. Do not commit AI provider
-keys or real provider credentials.
+Sprint 6 introduced the local deterministic BLIE provider abstraction. Sprint 15 adds an opt-in real
+provider mode. Do not commit AI provider keys or real provider credentials.
 
 Sprint 7 uses in-memory PLKG fixtures for local API/mobile flow. Supabase persistence is
 wired for PLKG nodes, edges, summary, and learning activity writes when

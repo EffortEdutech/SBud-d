@@ -20,12 +20,13 @@ When work progresses, update this checklist in the same commit or handoff as the
 
 # Current Sprint
 
-Current sprint: Sprint 14 - Concept Extraction And PLKG Enrichment
+Current sprint: Sprint 15 - Real BLIE Provider Integration
 
 Current goal:
 
-Implement the third step of the True Learning MVP wow moment: extract learning concepts from
-document text, enrich PLKG, and show the mapped concepts in the mobile Library flow.
+Wire a real OpenAI-compatible BLIE provider behind the existing provider abstraction while keeping
+fixture-safe local mode, retrieval-before-generation context assembly, and server-only secret
+handling.
 
 Accepted carry-over:
 
@@ -532,12 +533,34 @@ Current blocker:
 - [x] Refresh Graphify.
 - [x] Run `git diff --check`.
 
+## Sprint 15 - Real BLIE Provider Integration
+
+- [x] Prepare Sprint 15 implementation plan.
+- [x] Read BLIE architecture and AI pipeline references before implementation.
+- [x] Query Graphify before source inspection.
+- [x] Inspect BLIE provider, BLIE service, environment, health, mobile health, and BLIE docs directly.
+- [x] Add provider mode configuration with `SBUD_BLIE_PROVIDER=local|openai-compatible`.
+- [x] Keep local deterministic provider as the default.
+- [x] Add OpenAI-compatible Chat Completions provider behind the BLIE provider interface.
+- [x] Use dependency-free server-side `fetch` instead of adding a new production SDK.
+- [x] Require server-only `SBUD_BLIE_OPENAI_API_KEY` for real provider mode.
+- [x] Add provider base URL and model configuration.
+- [x] Preserve structured BLIE response validation.
+- [x] Keep request logging free of student question text and generated answer content.
+- [x] Add health/runtime visibility for provider mode without exposing key or model.
+- [x] Add tests for local provider, real-provider request shape, provider selection, env parsing, and health status.
+- [x] Update development, BLIE API, release, planning, README, and agent docs.
+- [x] Run `corepack pnpm check`.
+- [x] Run `corepack pnpm mvp:readiness`.
+- [x] Refresh Graphify.
+- [x] Run `git diff --check`.
+
 ## Phase 3 - True MVP Completion
 
 - [x] Sprint 12 - Real Document Upload And Storage.
 - [x] Sprint 13 - Document Text Extraction Baseline.
 - [x] Sprint 14 - Concept Extraction And PLKG Enrichment.
-- [ ] Sprint 15 - Real BLIE Provider Integration.
+- [x] Sprint 15 - Real BLIE Provider Integration.
 - [ ] Sprint 16 - Retrieval-Backed BLIE Preparation And Quiz.
 - [ ] Sprint 17 - Durable Offline Storage And Sync Hardening.
 - [ ] Sprint 18 - MVP UX Polish And Empty/Error State Completion.
@@ -552,7 +575,7 @@ Current blocker:
 - [x] Text extraction produces usable learning text.
 - [x] Concept extraction identifies priority learning concepts.
 - [x] PLKG is enriched from extracted concepts.
-- [ ] BLIE retrieves student-owned context before generating guidance.
+- [x] BLIE retrieves student-owned context before generating guidance.
 - [ ] BLIE shows three things to understand before the next class.
 - [ ] BLIE generates a quick quiz or flashcards from processed knowledge.
 - [ ] Student can revise from the generated guidance.

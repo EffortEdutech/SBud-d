@@ -1,5 +1,7 @@
 interface RuntimeHealthStatus {
   authRequiredForSupabase: boolean;
+  blieProviderConfigured: boolean;
+  blieProviderLabel: string;
   dataMode: "fixture" | "supabase";
   liveValidationStatus:
     "fixture_mode" | "supabase_configuration_missing" | "ready_for_authenticated_validation";

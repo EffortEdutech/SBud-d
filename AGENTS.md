@@ -42,7 +42,7 @@ Before making changes:
 
 ## Current Project State
 
-This project has completed Sprint 10: MVP Quality, Security, and Release Readiness, plus the Cross-Cutting Checklist audit. MVP Stabilization Pass 1, Sprint 12 real document upload, Sprint 13 document text extraction baseline, and Sprint 14 concept extraction/PLKG enrichment baseline are now part of the active True Learning MVP track.
+This project has completed Sprint 10: MVP Quality, Security, and Release Readiness, plus the Cross-Cutting Checklist audit. MVP Stabilization Pass 1, Sprint 12 real document upload, Sprint 13 document text extraction baseline, Sprint 14 concept extraction/PLKG enrichment baseline, and Sprint 15 real BLIE provider integration are now part of the active True Learning MVP track.
 
 The approved monorepo skeleton from Volume G2 now exists:
 
@@ -175,7 +175,7 @@ Sprint 5 storage notes:
 
 - Private Supabase Storage bucket: `student-documents`.
 - Student-owned object path pattern: `{studentId}/{subjectId}/{documentId}/{fileName}`.
-- Current implementation supports metadata creation, Sprint 12 PDF upload through the API boundary, Sprint 13 baseline embedded-text extraction, and Sprint 14 baseline concept mapping into PLKG. BLIE real-provider integration and stronger retrieval from extracted knowledge remain later True Learning MVP work.
+- Current implementation supports metadata creation, Sprint 12 PDF upload through the API boundary, Sprint 13 baseline embedded-text extraction, Sprint 14 baseline concept mapping into PLKG, and Sprint 15 real BLIE provider integration. Stronger preparation/quiz generation from extracted knowledge remains later True Learning MVP work.
 
 Sprint 6 BLIE endpoint:
 
@@ -183,7 +183,7 @@ Sprint 6 BLIE endpoint:
 
 Sprint 6 BLIE notes:
 
-- BLIE uses a local deterministic provider through an AI provider abstraction.
+- BLIE uses a local deterministic provider by default and supports an opt-in OpenAI-compatible provider through an AI provider abstraction.
 - No AI provider API keys, model secrets, or real provider credentials are committed.
 - Context assembly must retrieve academic, subject, document, and PLKG placeholder context before response generation.
 - Request logging must avoid student question text and response content.
@@ -244,6 +244,7 @@ MVP Stabilization Pass 1 planning notes:
 - Document metadata is wired for Supabase mode and Sprint 12 adds PDF file-byte upload to private Supabase Storage through the API boundary. Background document processing remains out of scope.
 - Sprint 13 adds `POST /api/v1/documents/:id/extract`, stores `learning_documents.extracted_text`, and exposes extracted text in the mobile Library tab. The extractor is a dependency-free readable embedded-text baseline, not full OCR or high-fidelity PDF parsing.
 - Sprint 14 adds `POST /api/v1/documents/:id/concepts`, stores `learning_documents.extracted_concepts`, exposes extracted concepts in the mobile Library tab, and enriches PLKG nodes/edges from document-derived concepts. The extractor is a dependency-free baseline, not real AI educational concept analysis.
+- Sprint 15 adds `SBUD_BLIE_PROVIDER=local|openai-compatible`, keeps local deterministic mode as the default, and supports server-only `SBUD_BLIE_OPENAI_API_KEY`, `SBUD_BLIE_OPENAI_BASE_URL`, and `SBUD_BLIE_MODEL` configuration for controlled real-provider validation.
 - PLKG nodes, edges, summary, and learning activity writes are now wired for Supabase mode; BLIE and study services await PLKG context.
 - Study preparation/revision rows and revision reflection updates are now wired for Supabase mode.
 - Sync queue events are now wired for Supabase mode while mobile queue durability remains deferred.

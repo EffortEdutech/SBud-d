@@ -1,15 +1,20 @@
 import { BadRequestException, Logger } from "@nestjs/common";
 import type { BlieChatRequest, BlieChatResponse, BlieLearningResponse } from "@sbud-d/types";
 
-import { LocalLearningProvider, type BlieProvider } from "./ai-provider.js";
+import {
+  LocalLearningProvider,
+  OpenAiCompatibleLearningProvider,
+  type BlieProvider,
+} from "./ai-provider.js";
 import { assembleBlieContext } from "./blie-context.js";
+import { getApiEnvironment, type ApiEnvironment } from "../config/environment.js";
 
 const MIN_MESSAGE_LENGTH = 3;
 
 export class BlieService {
   private readonly logger = new Logger(BlieService.name);
 
-  constructor(private readonly provider: BlieProvider = new LocalLearningProvider()) {}
+  constructor(private readonly provider: BlieProvider = createBlieProvider()) {}
 
   async chat(input: BlieChatRequest): Promise<BlieChatResponse> {
     if (!input.message?.trim() || input.message.trim().length < MIN_MESSAGE_LENGTH) {
@@ -22,7 +27,7 @@ export class BlieService {
       `BLIE chat request accepted intent=${context.intent} subjectId=${context.subjectId ?? "none"} contextItems=${context.retrievedContext.length}`,
     );
 
-    const response = this.provider.generateLearningResponse({ input, context });
+    const response = await this.provider.generateLearningResponse({ input, context });
     const validationStatus = this.validateResponse(response);
     const now = new Date().toISOString();
 
@@ -58,4 +63,14 @@ export class BlieService {
       ? "passed"
       : "needs_more_context";
   }
+}
+
+export function createBlieProvider(
+  environment: ApiEnvironment = getApiEnvironment(),
+): BlieProvider {
+  if (environment.blieProvider === "openai-compatible") {
+    return new OpenAiCompatibleLearningProvider(environment);
+  }
+
+  return new LocalLearningProvider();
 }

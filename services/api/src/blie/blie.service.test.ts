@@ -1,7 +1,8 @@
 import { BadRequestException } from "@nestjs/common";
 import { describe, expect, it } from "vitest";
 
-import { BlieService } from "./blie.service.js";
+import { OpenAiCompatibleLearningProvider } from "./ai-provider.js";
+import { BlieService, createBlieProvider } from "./blie.service.js";
 
 describe("BlieService", () => {
   it("answers with retrieved context before generation", async () => {
@@ -30,5 +31,20 @@ describe("BlieService", () => {
 
   it("rejects empty learning questions", async () => {
     await expect(new BlieService().chat({ message: "" })).rejects.toThrow(BadRequestException);
+  });
+
+  it("selects the OpenAI-compatible provider from environment configuration", () => {
+    const provider = createBlieProvider({
+      blieOpenAiApiKey: "test-key",
+      blieOpenAiBaseUrl: "https://provider.example/v1",
+      blieOpenAiModel: "test-model",
+      blieProvider: "openai-compatible",
+      dataMode: "fixture",
+      nodeEnv: "test",
+      supabasePublishableKey: "",
+      supabaseUrl: "",
+    });
+
+    expect(provider).toBeInstanceOf(OpenAiCompatibleLearningProvider);
   });
 });

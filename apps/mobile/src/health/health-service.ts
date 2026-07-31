@@ -10,6 +10,8 @@ export const fallbackHealthStatus: HealthStatus = {
   version: "0.0.0",
   runtime: {
     authRequiredForSupabase: false,
+    blieProviderConfigured: true,
+    blieProviderLabel: "Local deterministic provider",
     dataMode: "fixture",
     liveValidationStatus: "fixture_mode",
     persistenceLabel: "Offline fallback",

@@ -5,6 +5,8 @@ export type LiveValidationStatus =
 
 export interface ApiRuntimeStatus {
   authRequiredForSupabase: boolean;
+  blieProviderConfigured: boolean;
+  blieProviderLabel: string;
   dataMode: ApiRuntimeDataMode;
   liveValidationStatus: LiveValidationStatus;
   persistenceLabel: string;

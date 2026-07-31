@@ -1,6 +1,6 @@
 # MVP Known Issues
 
-Status: Sprint 14 concept extraction and PLKG enrichment baseline
+Status: Sprint 15 real provider integration
 Last updated: 2026-07-31
 
 ---
@@ -46,17 +46,21 @@ Impact: document intake is now real for PDFs and simple readable text/concepts c
 document intelligence remains incomplete.
 
 The baseline extractors are not OCR, not full PDF parsing, and not real AI educational concept
-analysis. BLIE real-provider integration and stronger retrieval-backed responses remain later True
-Learning MVP work.
+analysis. Stronger retrieval-backed BLIE preparation and quiz responses remain later True Learning
+MVP work.
 
 Live Supabase storage upload, extraction, and concept enrichment validation is still pending local
 Supabase-mode execution with an authenticated test user.
 
-## AI Provider Is Local Deterministic
+## Real AI Provider Requires Local Configuration
 
-BLIE uses a local deterministic provider through the provider abstraction.
+BLIE now supports `local` and `openai-compatible` provider modes behind the provider abstraction.
+Local deterministic mode remains the default. Real-provider mode requires a server-only local API
+key and model/base-url configuration.
 
-Impact: no external AI provider cost or secret exposure, but real model quality is not represented.
+Impact: no external AI provider cost or secret exposure in default mode. Real model quality,
+latency, cost, and response behavior are not validated until controlled local-only provider
+credentials are configured and tested.
 
 ## Production Observability Not Wired
 

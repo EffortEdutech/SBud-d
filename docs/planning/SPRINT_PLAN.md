@@ -38,14 +38,15 @@ Existing repository state:
 Current implementation status:
 
 - Current phase: True Learning MVP planning, with Controlled Demo MVP live-validation carry-over.
-- Current sprint: Sprint 14 - Concept Extraction And PLKG Enrichment.
-- Active implementation target: turn extracted document text into structured concepts, enrich the
-  student-owned PLKG, and prepare retrieval-backed BLIE work.
+- Current sprint: Sprint 15 - Real BLIE Provider Integration.
+- Active implementation target: wire a real OpenAI-compatible BLIE provider behind the existing
+  provider abstraction while preserving fixture-safe local mode and server-only secret handling.
 - Master plan: `docs/planning/PRODUCT_COMPLETION_MASTER_PLAN.md`.
 - Release target scope: `docs/planning/RELEASE_TARGET_SCOPE.md`.
 - Sprint 12 plan: `docs/planning/SPRINT_12_REAL_DOCUMENT_UPLOAD_AND_STORAGE.md`.
 - Sprint 13 plan: `docs/planning/SPRINT_13_DOCUMENT_TEXT_EXTRACTION_BASELINE.md`.
 - Sprint 14 plan: `docs/planning/SPRINT_14_CONCEPT_EXTRACTION_AND_PLKG_ENRICHMENT.md`.
+- Sprint 15 plan: `docs/planning/SPRINT_15_REAL_BLIE_PROVIDER_INTEGRATION.md`.
 - Product-defining wow moment: lecture PDF upload -> concept extraction -> PLKG enrichment -> BLIE
   preparation priorities -> quick quiz.
 - Sprint 11 status: Accepted with known live-validation blocker.
@@ -517,7 +518,7 @@ Recommended sprint sequence:
 - Sprint 12 - Real Document Upload And Storage.
 - Sprint 13 - Document Text Extraction Baseline.
 - Sprint 14 - Concept Extraction And PLKG Enrichment.
-- Sprint 15 - Real BLIE Provider Integration.
+- Sprint 15 - Real BLIE Provider Integration. Implemented and verified.
 - Sprint 16 - Retrieval-Backed BLIE Preparation And Quiz.
 - Sprint 17 - Durable Offline Storage And Sync Hardening.
 - Sprint 18 - MVP UX Polish And Empty/Error State Completion.

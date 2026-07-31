@@ -24,10 +24,18 @@ export class HealthService {
     const supabaseConfigured = Boolean(
       this.environment.supabaseUrl && this.environment.supabasePublishableKey,
     );
+    const blieProviderConfigured =
+      this.environment.blieProvider === "local" || Boolean(this.environment.blieOpenAiApiKey);
+    const blieProviderLabel =
+      this.environment.blieProvider === "openai-compatible"
+        ? "OpenAI-compatible provider"
+        : "Local deterministic provider";
 
     if (this.environment.dataMode === "fixture") {
       return {
         authRequiredForSupabase: false,
+        blieProviderConfigured,
+        blieProviderLabel,
         dataMode: "fixture",
         liveValidationStatus: "fixture_mode",
         persistenceLabel: "Fixture mode",
@@ -42,6 +50,8 @@ export class HealthService {
     if (!supabaseConfigured) {
       return {
         authRequiredForSupabase: true,
+        blieProviderConfigured,
+        blieProviderLabel,
         dataMode: "supabase",
         liveValidationStatus: "supabase_configuration_missing",
         persistenceLabel: "Supabase mode needs configuration",
@@ -55,6 +65,8 @@ export class HealthService {
 
     return {
       authRequiredForSupabase: true,
+      blieProviderConfigured,
+      blieProviderLabel,
       dataMode: "supabase",
       liveValidationStatus: "ready_for_authenticated_validation",
       persistenceLabel: "Supabase mode",

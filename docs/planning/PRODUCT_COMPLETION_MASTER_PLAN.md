@@ -117,7 +117,8 @@ Current state:
 - Sprint 11 is accepted with a known live-validation blocker.
 - Sprint 12 completed Real Document Upload And Storage.
 - Sprint 13 completed the Document Text Extraction Baseline.
-- Sprint 14 implements Concept Extraction And PLKG Enrichment.
+- Sprint 14 completed Concept Extraction And PLKG Enrichment.
+- Sprint 15 implements Real BLIE Provider Integration behind the BLIE provider abstraction.
 - The near-term product scope has been revised around three release targets: Controlled Demo MVP,
   True Learning MVP, and Public Version 1.
 - The product-defining wow moment is now: upload a lecture PDF, extract concepts, enrich PLKG, and
@@ -129,8 +130,7 @@ Current blockers:
 - Live RLS validation still requires two authenticated test users and local-only bearer tokens.
 - Baseline document text extraction is implemented for readable embedded PDF text.
 - Baseline concept extraction and PLKG enrichment are implemented.
-- Real BLIE provider integration is the next implementation target.
-- Real AI provider integration remains deferred.
+- Real BLIE provider mode is implemented but live provider validation requires a local-only API key.
 - Durable encrypted mobile offline storage remains deferred pending dependency approval.
 - Production deployment, observability, app-store release, and subscription flows remain future work.
 
@@ -378,17 +378,13 @@ Exit criteria:
 
 Recommended next targets:
 
-1. Complete Sprint 12 real document upload and private storage.
-2. Keep Sprint 11 live-validation blocker visible and resolve it when Supabase access allows.
-3. Complete Sprint 13 text extraction baseline.
-4. Complete Sprint 14 concept extraction from uploaded material.
-5. Complete PLKG enrichment from processed document text.
-6. Implement Sprint 15 real BLIE provider integration behind the existing abstraction.
-7. Replace placeholder BLIE context with retrieval-backed responses.
-8. Generate three preparation priorities and a quick quiz from processed knowledge.
-9. Harden offline storage and sync durability.
-10. Polish the MVP user experience for controlled student testing.
-11. Prepare a controlled MVP release candidate.
+1. Keep Sprint 11 live-validation blocker visible and resolve it when Supabase access allows.
+2. Complete Sprint 15 final readiness/Graphify verification.
+3. Complete Sprint 16 retrieval-backed BLIE preparation and quiz.
+4. Generate three preparation priorities and a quick quiz from processed knowledge.
+5. Harden offline storage and sync durability.
+6. Polish the MVP user experience for controlled student testing.
+7. Prepare a controlled MVP release candidate.
 
 ---
 
@@ -412,8 +408,8 @@ Recommended next targets:
 - [/] Document text extraction works for MVP file types.
 - [x] Extracted concepts are visible to the student.
 - [x] Processed document knowledge enriches PLKG.
-- [ ] BLIE uses a real provider through the provider abstraction.
-- [ ] Retrieval-before-generation is implemented with trusted student context.
+- [x] BLIE uses a real provider through the provider abstraction.
+- [x] Retrieval-before-generation is implemented with trusted student context.
 - [ ] BLIE produces three preparation priorities from processed knowledge.
 - [ ] BLIE produces a quick quiz or flashcards from processed knowledge.
 - [ ] Study preparation and revision use processed knowledge.
@@ -481,12 +477,12 @@ At the end of each sprint:
 
 Recommended next sprint:
 
-Sprint 15 - Real BLIE Provider Integration.
+Sprint 16 - Retrieval-Backed BLIE Preparation And Quiz.
 
 Goal:
 
-Wire a real AI provider behind the existing BLIE provider abstraction while keeping educational
-logic provider-independent and secrets out of tracked files.
+Use processed document concepts and PLKG context to generate the True Learning MVP student output:
+three preparation priorities and a quick quiz or flashcards.
 
 Why this is next:
 
