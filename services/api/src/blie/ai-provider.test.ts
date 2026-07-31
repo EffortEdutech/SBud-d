@@ -58,6 +58,41 @@ describe("BLIE providers", () => {
                   example: "A countdown function calls itself with a smaller number.",
                   explanation: "Recursion solves a problem by calling the same function.",
                   nextStep: "Trace one small recursive call by hand.",
+                  preparationPriorities: [
+                    {
+                      id: "priority-1",
+                      reason: "Recursion has low mastery.",
+                      recommendedAction: "Review the stopping condition.",
+                      sourceContextIds: ["plkg-concept-recursion"],
+                      title: "Recursion",
+                    },
+                    {
+                      id: "priority-2",
+                      reason: "Functions are prerequisite context.",
+                      recommendedAction: "Connect recursion to functions.",
+                      sourceContextIds: ["plkg-concept-recursion"],
+                      title: "Functions",
+                    },
+                    {
+                      id: "priority-3",
+                      reason: "Trace practice is required.",
+                      recommendedAction: "Trace one call stack.",
+                      sourceContextIds: ["plkg-concept-recursion"],
+                      title: "Call stack",
+                    },
+                  ],
+                  quickQuiz: {
+                    questions: [
+                      {
+                        answer: "It stops when the base case is reached.",
+                        explanation: "This checks the stopping condition.",
+                        id: "quiz-1",
+                        prompt: "What stops recursion?",
+                        sourceContextIds: ["plkg-concept-recursion"],
+                      },
+                    ],
+                    title: "Recursion quick check",
+                  },
                 }),
               },
             },
@@ -78,6 +113,8 @@ describe("BLIE providers", () => {
     const response = await provider.generateLearningResponse(providerRequest);
 
     expect(response.explanation).toContain("Recursion");
+    expect(response.preparationPriorities).toHaveLength(3);
+    expect(response.quickQuiz.questions[0]?.prompt).toBe("What stops recursion?");
     expect(calls[0]?.url).toBe("https://provider.example/v1/chat/completions");
     expect(calls[0]?.body).toMatchObject({
       model: "test-model",

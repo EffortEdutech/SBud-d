@@ -111,8 +111,8 @@ MVP Stabilization Pass 1 keeps retrieval-before-generation intact by awaiting PL
 assembly before BLIE response generation.
 
 After Sprint 14, document-derived concept nodes are available to BLIE retrieval in the same PLKG
-context path. Real provider integration and stronger retrieval-backed responses remain Sprint 15 and
-Sprint 16 work.
+context path. Sprint 15 added real provider integration and Sprint 16 added retrieval-backed
+preparation priorities plus quick quiz output.
 
 ---
 

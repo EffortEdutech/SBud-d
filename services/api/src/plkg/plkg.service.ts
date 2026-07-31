@@ -61,7 +61,7 @@ export class PlkgService {
       sourceId: node.id,
       sourceType: "plkg",
       title: node.label,
-      snippet: `${node.type}; status: ${node.learningStatus}; mastery: ${node.masteryScore}%.`,
+      snippet: `${node.type}; status: ${node.learningStatus}; mastery: ${node.masteryScore}%. ${node.description ?? ""}`,
       relevanceLabel: "Student PLKG context",
     }));
   }

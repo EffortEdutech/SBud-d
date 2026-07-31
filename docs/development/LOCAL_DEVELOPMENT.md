@@ -1,6 +1,6 @@
 # AI Study Buddy Local Development
 
-Status: Sprint 15 real BLIE provider integration
+Status: Sprint 16 retrieval-backed BLIE preparation and quiz
 Last updated: 2026-07-31
 
 ---
@@ -182,8 +182,8 @@ Do not commit `.env` files, provider keys, bearer tokens, prompt text, or genera
 The health endpoint can show whether the provider appears configured without exposing the key or
 model credential.
 
-Stronger retrieval-backed preparation priorities and quiz generation remain Sprint 16 True Learning
-MVP work.
+Retrieval-backed preparation priorities and quiz generation are now implemented in the BLIE chat
+response.
 
 MVP Stabilization Pass 1 begins Supabase repository wiring with the academic profile,
 subjects, dashboard, document metadata, PLKG node/edge, study preparation/revision, and sync queue
@@ -256,6 +256,16 @@ Sprint 14 mobile concept mapping flow:
 5. Open the PLKG tab and confirm the graph summary refreshes.
 6. In Supabase mode, apply migration `20260731003000_add_document_extracted_concepts.sql` before
    live validation.
+
+Sprint 16 mobile BLIE preparation and quiz flow:
+
+1. Complete the Sprint 12 upload flow, Sprint 13 extraction flow, and Sprint 14 concept mapping
+   flow.
+2. Open the BLIE tab.
+3. Ask: `Prepare me for the next class and give me a quiz`.
+4. Confirm the response includes `Before next class` priorities.
+5. Confirm the response includes a quick quiz.
+6. Confirm the reasoning trace remains `grounded`.
 
 ---
 

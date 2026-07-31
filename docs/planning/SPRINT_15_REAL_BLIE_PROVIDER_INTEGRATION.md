@@ -70,9 +70,9 @@ file. Do not paste the key into chat or commit it.
 
 ---
 
-# 5. Carry-Over To Sprint 16
+# 5. Sprint 16 Follow-Up
 
-Sprint 16 should use the now-real provider path to produce the True Learning MVP output:
+Sprint 16 used the now-real provider path to produce the True Learning MVP output:
 
 - three things the student must understand before the next class,
 - a quick quiz or flashcards from processed document/PLKG knowledge,

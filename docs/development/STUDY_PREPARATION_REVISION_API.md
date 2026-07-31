@@ -6,6 +6,10 @@ Fixture mode uses deterministic in-memory guidance generated from academic subje
 context. Supabase mode persists preparation plans, revision items, and revision reflection status
 updates behind the API repository boundary while preserving the existing endpoint contracts.
 
+Sprint 16 shares fixture-mode PLKG memory across document enrichment, BLIE retrieval, and study
+guidance. This means concepts mapped from uploaded documents can influence preparation/revision
+guidance in the controlled local flow.
+
 ## Endpoints
 
 Base path: `/api/v1`

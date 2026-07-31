@@ -20,13 +20,12 @@ When work progresses, update this checklist in the same commit or handoff as the
 
 # Current Sprint
 
-Current sprint: Sprint 15 - Real BLIE Provider Integration
+Current sprint: Sprint 16 - Retrieval-Backed BLIE Preparation And Quiz
 
 Current goal:
 
-Wire a real OpenAI-compatible BLIE provider behind the existing provider abstraction while keeping
-fixture-safe local mode, retrieval-before-generation context assembly, and server-only secret
-handling.
+Use processed document concepts and PLKG context to generate three preparation priorities and a
+quick quiz through the BLIE response flow.
 
 Accepted carry-over:
 
@@ -555,13 +554,35 @@ Current blocker:
 - [x] Refresh Graphify.
 - [x] Run `git diff --check`.
 
+## Sprint 16 - Retrieval-Backed BLIE Preparation And Quiz
+
+- [x] Prepare Sprint 16 implementation plan.
+- [x] Read BLIE, retrieval, study preparation, PRD, and roadmap references before implementation.
+- [x] Query Graphify before source inspection.
+- [x] Inspect BLIE, PLKG, document, study, shared type, and mobile source files directly.
+- [x] Pass authenticated request context into BLIE retrieval for Supabase mode.
+- [x] Retrieve academic, subject, document, and PLKG context before BLIE generation.
+- [x] Include extracted document concepts in retrieved document context when available.
+- [x] Share fixture-mode PLKG memory across document enrichment, study guidance, and BLIE retrieval.
+- [x] Extend BLIE learning response with exactly three preparation priorities.
+- [x] Extend BLIE learning response with a quick quiz.
+- [x] Keep local deterministic provider fixture-safe.
+- [x] Update OpenAI-compatible provider prompt/parsing for preparation priorities and quiz output.
+- [x] Show preparation priorities and quick quiz in the mobile BLIE response.
+- [x] Add tests proving document concept mapping enriches PLKG and BLIE retrieves it for priorities/quiz.
+- [x] Update development, BLIE API, release, planning, README, and agent docs.
+- [x] Run `corepack pnpm check`.
+- [x] Run `corepack pnpm mvp:readiness`.
+- [x] Refresh Graphify.
+- [x] Run `git diff --check`.
+
 ## Phase 3 - True MVP Completion
 
 - [x] Sprint 12 - Real Document Upload And Storage.
 - [x] Sprint 13 - Document Text Extraction Baseline.
 - [x] Sprint 14 - Concept Extraction And PLKG Enrichment.
 - [x] Sprint 15 - Real BLIE Provider Integration.
-- [ ] Sprint 16 - Retrieval-Backed BLIE Preparation And Quiz.
+- [x] Sprint 16 - Retrieval-Backed BLIE Preparation And Quiz.
 - [ ] Sprint 17 - Durable Offline Storage And Sync Hardening.
 - [ ] Sprint 18 - MVP UX Polish And Empty/Error State Completion.
 - [ ] Sprint 19 - MVP Performance, Security, And Observability Baseline.
@@ -576,9 +597,9 @@ Current blocker:
 - [x] Concept extraction identifies priority learning concepts.
 - [x] PLKG is enriched from extracted concepts.
 - [x] BLIE retrieves student-owned context before generating guidance.
-- [ ] BLIE shows three things to understand before the next class.
-- [ ] BLIE generates a quick quiz or flashcards from processed knowledge.
-- [ ] Student can revise from the generated guidance.
+- [x] BLIE shows three things to understand before the next class.
+- [x] BLIE generates a quick quiz or flashcards from processed knowledge.
+- [x] Student can revise from the generated guidance.
 
 ## Phase 4 - Closed Beta Readiness
 

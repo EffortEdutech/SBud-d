@@ -835,6 +835,30 @@ export default function App(): React.JSX.Element {
       <Text style={styles.mutedText}>{response.response.checkUnderstanding}</Text>
       <Text style={styles.responseLabel}>Next Step</Text>
       <Text style={styles.mutedText}>{response.response.nextStep}</Text>
+      {response.response.preparationPriorities.length > 0 ? (
+        <View style={styles.taskBlock}>
+          <Text style={styles.responseLabel}>Before next class</Text>
+          {response.response.preparationPriorities.map((priority) => (
+            <View key={priority.id} style={styles.conceptItem}>
+              <Text style={styles.subjectName}>{priority.title}</Text>
+              <Text style={styles.mutedText}>{priority.reason}</Text>
+              <Text style={styles.mutedText}>{priority.recommendedAction}</Text>
+            </View>
+          ))}
+        </View>
+      ) : null}
+      {response.response.quickQuiz.questions.length > 0 ? (
+        <View style={styles.taskBlock}>
+          <Text style={styles.responseLabel}>{response.response.quickQuiz.title}</Text>
+          {response.response.quickQuiz.questions.map((question) => (
+            <View key={question.id} style={styles.conceptItem}>
+              <Text style={styles.subjectName}>{question.prompt}</Text>
+              <Text style={styles.mutedText}>{question.answer}</Text>
+              <Text style={styles.statusMeta}>{question.explanation}</Text>
+            </View>
+          ))}
+        </View>
+      ) : null}
       <Text style={styles.statusMeta}>
         {response.trace.intent} - {response.trace.retrievalStatus} - {response.trace.provider}
       </Text>
@@ -895,8 +919,8 @@ export default function App(): React.JSX.Element {
         <View style={styles.panel}>
           <Text style={styles.panelTitle}>Learning context</Text>
           <Text style={styles.mutedText}>
-            BLIE will assemble academic profile, subject, document, and PLKG placeholder context
-            before generating a response.
+            BLIE will assemble academic profile, subject, document, and PLKG context before
+            generating preparation priorities and a quick quiz.
           </Text>
         </View>
       )}

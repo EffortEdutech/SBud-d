@@ -99,8 +99,8 @@ function buildSummary(studentId: string, nodes: PlkgNode[], edges: PlkgEdge[]): 
 }
 
 export class PlkgRepository {
-  private nodes: PlkgNode[] = structuredClone(demoPlkgNodes);
-  private edges: PlkgEdge[] = structuredClone(demoPlkgEdges);
+  private static fixtureNodes: PlkgNode[] = structuredClone(demoPlkgNodes);
+  private static fixtureEdges: PlkgEdge[] = structuredClone(demoPlkgEdges);
 
   constructor(
     private readonly environment: ApiEnvironment = getApiEnvironment(),
@@ -120,7 +120,7 @@ export class PlkgRepository {
       return buildSummary(studentId, nodes, edges);
     }
 
-    return buildSummary(DEMO_STUDENT_ID, this.nodes, this.edges);
+    return buildSummary(DEMO_STUDENT_ID, PlkgRepository.fixtureNodes, PlkgRepository.fixtureEdges);
   }
 
   async listNodes(context: PlkgRequestContext = {}): Promise<PlkgNode[]> {
@@ -128,7 +128,7 @@ export class PlkgRepository {
       return this.listSupabaseNodes(context);
     }
 
-    return structuredClone(this.nodes);
+    return structuredClone(PlkgRepository.fixtureNodes);
   }
 
   async listEdges(context: PlkgRequestContext = {}): Promise<PlkgEdge[]> {
@@ -136,7 +136,7 @@ export class PlkgRepository {
       return this.listSupabaseEdges(context);
     }
 
-    return structuredClone(this.edges);
+    return structuredClone(PlkgRepository.fixtureEdges);
   }
 
   async addLearningActivity(
@@ -148,7 +148,7 @@ export class PlkgRepository {
     }
 
     const now = new Date().toISOString();
-    const nodeId = `plkg-activity-${this.nodes.length + 1}`;
+    const nodeId = `plkg-activity-${PlkgRepository.fixtureNodes.length + 1}`;
     const node: PlkgNode = {
       id: nodeId,
       studentId: DEMO_STUDENT_ID,
@@ -165,17 +165,17 @@ export class PlkgRepository {
       updatedAt: now,
     };
 
-    this.nodes = [node, ...this.nodes];
+    PlkgRepository.fixtureNodes = [node, ...PlkgRepository.fixtureNodes];
 
     if (input.subjectId) {
-      const subjectNode = this.nodes.find(
+      const subjectNode = PlkgRepository.fixtureNodes.find(
         (candidate) => candidate.type === "subject" && candidate.subjectId === input.subjectId,
       );
 
       if (subjectNode) {
-        this.edges = [
+        PlkgRepository.fixtureEdges = [
           {
-            id: `plkg-edge-${this.edges.length + 1}`,
+            id: `plkg-edge-${PlkgRepository.fixtureEdges.length + 1}`,
             studentId: DEMO_STUDENT_ID,
             sourceNodeId: subjectNode.id,
             targetNodeId: node.id,
@@ -184,7 +184,7 @@ export class PlkgRepository {
             strength: 0.5,
             createdAt: now,
           },
-          ...this.edges,
+          ...PlkgRepository.fixtureEdges,
         ];
       }
     }
@@ -220,7 +220,7 @@ export class PlkgRepository {
         }),
       );
 
-      const subjectNode = this.nodes.find(
+      const subjectNode = PlkgRepository.fixtureNodes.find(
         (node) => node.type === "subject" && node.subjectId === document.subjectId,
       );
 
@@ -238,14 +238,20 @@ export class PlkgRepository {
       }
     }
 
-    this.nodes = [
-      ...conceptNodes.filter((node) => !this.nodes.some((candidate) => candidate.id === node.id)),
-      ...(this.nodes.some((node) => node.id === resourceNode.id) ? [] : [resourceNode]),
-      ...this.nodes,
+    PlkgRepository.fixtureNodes = [
+      ...conceptNodes.filter(
+        (node) => !PlkgRepository.fixtureNodes.some((candidate) => candidate.id === node.id),
+      ),
+      ...(PlkgRepository.fixtureNodes.some((node) => node.id === resourceNode.id)
+        ? []
+        : [resourceNode]),
+      ...PlkgRepository.fixtureNodes,
     ];
-    this.edges = [
-      ...createdEdges.filter((edge) => !this.edges.some((candidate) => candidate.id === edge.id)),
-      ...this.edges,
+    PlkgRepository.fixtureEdges = [
+      ...createdEdges.filter(
+        (edge) => !PlkgRepository.fixtureEdges.some((candidate) => candidate.id === edge.id),
+      ),
+      ...PlkgRepository.fixtureEdges,
     ];
 
     return {
@@ -297,7 +303,7 @@ export class PlkgRepository {
 
   private ensureFixtureDocumentResourceNode(document: LearningDocument, now: string): PlkgNode {
     return (
-      this.nodes.find(
+      PlkgRepository.fixtureNodes.find(
         (node) =>
           node.type === "resource" &&
           node.sourceType === "document" &&
@@ -311,7 +317,7 @@ export class PlkgRepository {
     concept: LearningDocumentConcept,
     now: string,
   ): PlkgNode {
-    const existingNode = this.nodes.find(
+    const existingNode = PlkgRepository.fixtureNodes.find(
       (node) =>
         node.type === "concept" &&
         node.sourceType === "document" &&
@@ -334,7 +340,7 @@ export class PlkgRepository {
     targetNodeId: string;
     type: PlkgEdge["type"];
   }): PlkgEdge {
-    const existingEdge = this.edges.find(
+    const existingEdge = PlkgRepository.fixtureEdges.find(
       (edge) =>
         edge.sourceNodeId === input.sourceNodeId &&
         edge.targetNodeId === input.targetNodeId &&

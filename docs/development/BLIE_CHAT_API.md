@@ -1,6 +1,6 @@
 # BLIE Chat API
 
-Status: Sprint 15 real provider integration
+Status: Sprint 16 retrieval-backed preparation and quiz
 Last updated: 2026-07-31
 
 ---
@@ -12,6 +12,9 @@ Sprint 6 introduced the minimum useful BLIE chat contract.
 Sprint 15 keeps the local deterministic provider as the default and adds an opt-in
 OpenAI-compatible provider behind the same provider interface. This lets controlled validation use a
 real model without committing AI provider secrets or moving educational logic into the model layer.
+
+Sprint 16 extends the BLIE response so retrieved document/PLKG context produces the True Learning
+MVP output: three preparation priorities and a quick quiz.
 
 ---
 
@@ -65,6 +68,8 @@ BLIE responses include:
 - example
 - check understanding
 - next step
+- three preparation priorities
+- quick quiz
 - retrieved context
 - reasoning trace
 
@@ -99,9 +104,34 @@ The provider request asks for JSON object output with the same response keys use
   "connection": "...",
   "example": "...",
   "checkUnderstanding": "...",
-  "nextStep": "..."
+  "nextStep": "...",
+  "preparationPriorities": [
+    {
+      "id": "priority-1",
+      "title": "Recursion",
+      "reason": "This appears in retrieved PLKG context.",
+      "recommendedAction": "Review Recursion first and explain it in your own words.",
+      "sourceContextIds": ["plkg-concept-recursion"]
+    }
+  ],
+  "quickQuiz": {
+    "title": "Quick check for Functions and control flow",
+    "questions": [
+      {
+        "id": "quick-quiz-1",
+        "prompt": "Why does Recursion matter for Programming Fundamentals?",
+        "answer": "A strong answer connects Recursion to a subject goal and one example.",
+        "explanation": "This checks understanding from retrieved student-owned context.",
+        "sourceContextIds": ["plkg-concept-recursion"]
+      }
+    ]
+  }
 }
 ```
+
+In Supabase mode, BLIE chat accepts the same authenticated bearer token pattern as the other
+student-owned endpoints. Mobile still calls the API boundary; it does not access the database or
+provider directly.
 
 ---
 

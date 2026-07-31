@@ -23,6 +23,29 @@ export interface BlieLearningResponse {
   example: string;
   checkUnderstanding: string;
   nextStep: string;
+  preparationPriorities: BliePreparationPriority[];
+  quickQuiz: BlieQuickQuiz;
+}
+
+export interface BliePreparationPriority {
+  id: string;
+  title: string;
+  reason: string;
+  recommendedAction: string;
+  sourceContextIds: string[];
+}
+
+export interface BlieQuickQuizQuestion {
+  id: string;
+  prompt: string;
+  answer: string;
+  explanation: string;
+  sourceContextIds: string[];
+}
+
+export interface BlieQuickQuiz {
+  title: string;
+  questions: BlieQuickQuizQuestion[];
 }
 
 export interface BlieReasoningTrace {

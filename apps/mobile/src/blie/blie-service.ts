@@ -14,6 +14,11 @@ export const fallbackBlieResponse: BlieChatResponse = {
     example: "Try again when the API status shows connected.",
     checkUnderstanding: "Which topic were you trying to study?",
     nextStep: "Start the API and send the question again.",
+    preparationPriorities: [],
+    quickQuiz: {
+      questions: [],
+      title: "Offline quick quiz unavailable",
+    },
   },
   retrievedContext: [],
   trace: {

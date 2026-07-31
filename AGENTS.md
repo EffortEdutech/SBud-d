@@ -42,7 +42,7 @@ Before making changes:
 
 ## Current Project State
 
-This project has completed Sprint 10: MVP Quality, Security, and Release Readiness, plus the Cross-Cutting Checklist audit. MVP Stabilization Pass 1, Sprint 12 real document upload, Sprint 13 document text extraction baseline, Sprint 14 concept extraction/PLKG enrichment baseline, and Sprint 15 real BLIE provider integration are now part of the active True Learning MVP track.
+This project has completed Sprint 10: MVP Quality, Security, and Release Readiness, plus the Cross-Cutting Checklist audit. MVP Stabilization Pass 1, Sprint 12 real document upload, Sprint 13 document text extraction baseline, Sprint 14 concept extraction/PLKG enrichment baseline, Sprint 15 real BLIE provider integration, and Sprint 16 retrieval-backed BLIE preparation/quiz output are now part of the active True Learning MVP track.
 
 The approved monorepo skeleton from Volume G2 now exists:
 
@@ -175,7 +175,7 @@ Sprint 5 storage notes:
 
 - Private Supabase Storage bucket: `student-documents`.
 - Student-owned object path pattern: `{studentId}/{subjectId}/{documentId}/{fileName}`.
-- Current implementation supports metadata creation, Sprint 12 PDF upload through the API boundary, Sprint 13 baseline embedded-text extraction, Sprint 14 baseline concept mapping into PLKG, and Sprint 15 real BLIE provider integration. Stronger preparation/quiz generation from extracted knowledge remains later True Learning MVP work.
+- Current implementation supports metadata creation, Sprint 12 PDF upload through the API boundary, Sprint 13 baseline embedded-text extraction, Sprint 14 baseline concept mapping into PLKG, Sprint 15 real BLIE provider integration, and Sprint 16 retrieval-backed preparation priorities plus quick quiz output. Production-grade retrieval ranking remains later True Learning MVP work.
 
 Sprint 6 BLIE endpoint:
 
@@ -245,6 +245,7 @@ MVP Stabilization Pass 1 planning notes:
 - Sprint 13 adds `POST /api/v1/documents/:id/extract`, stores `learning_documents.extracted_text`, and exposes extracted text in the mobile Library tab. The extractor is a dependency-free readable embedded-text baseline, not full OCR or high-fidelity PDF parsing.
 - Sprint 14 adds `POST /api/v1/documents/:id/concepts`, stores `learning_documents.extracted_concepts`, exposes extracted concepts in the mobile Library tab, and enriches PLKG nodes/edges from document-derived concepts. The extractor is a dependency-free baseline, not real AI educational concept analysis.
 - Sprint 15 adds `SBUD_BLIE_PROVIDER=local|openai-compatible`, keeps local deterministic mode as the default, and supports server-only `SBUD_BLIE_OPENAI_API_KEY`, `SBUD_BLIE_OPENAI_BASE_URL`, and `SBUD_BLIE_MODEL` configuration for controlled real-provider validation.
+- Sprint 16 extends BLIE chat responses with `preparationPriorities` and `quickQuiz`, passes authenticated request context into retrieval for Supabase mode, and shares fixture PLKG memory across document enrichment, study guidance, and BLIE retrieval.
 - PLKG nodes, edges, summary, and learning activity writes are now wired for Supabase mode; BLIE and study services await PLKG context.
 - Study preparation/revision rows and revision reflection updates are now wired for Supabase mode.
 - Sync queue events are now wired for Supabase mode while mobile queue durability remains deferred.

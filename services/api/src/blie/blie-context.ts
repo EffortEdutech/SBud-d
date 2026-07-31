@@ -1,8 +1,12 @@
 import type { BlieChatRequest, BlieIntent, BlieRetrievedContext } from "@sbud-d/types";
 
-import { demoAcademicProfile, demoSubjects } from "../academic/academic.fixtures.js";
-import { demoDocuments } from "../documents/document.fixtures.js";
+import { AcademicService } from "../academic/academic.service.js";
+import { DocumentService } from "../documents/document.service.js";
 import { PlkgService } from "../plkg/plkg.service.js";
+
+export interface BlieRequestContext {
+  authorizationHeader?: string | undefined;
+}
 
 export interface BlieContextPackage {
   intent: BlieIntent;
@@ -47,21 +51,31 @@ export function detectBlieIntent(message: string): BlieIntent {
   return "general_learning";
 }
 
-export async function assembleBlieContext(input: BlieChatRequest): Promise<BlieContextPackage> {
+export async function assembleBlieContext(
+  input: BlieChatRequest,
+  requestContext: BlieRequestContext = {},
+): Promise<BlieContextPackage> {
+  const academicService = new AcademicService();
+  const documentService = new DocumentService();
   const plkgService = new PlkgService();
   const intent = detectBlieIntent(input.message);
-  const requestedSubject = demoSubjects.find((subject) => subject.id === input.subjectId);
-  const subject = requestedSubject ?? demoSubjects[0] ?? null;
+  const [academicProfile, subjects, documents] = await Promise.all([
+    academicService.getProfile(requestContext),
+    academicService.listSubjects(requestContext),
+    documentService.listDocuments(requestContext),
+  ]);
+  const requestedSubject = subjects.find((subject) => subject.id === input.subjectId);
+  const subject = requestedSubject ?? subjects[0] ?? null;
   const subjectDocuments = subject
-    ? demoDocuments.filter((document) => document.subjectId === subject.id)
+    ? documents.filter((document) => document.subjectId === subject.id)
     : [];
 
   const retrievedContext: BlieRetrievedContext[] = [
     {
-      sourceId: demoAcademicProfile.studentId,
+      sourceId: academicProfile.studentId,
       sourceType: "academic_profile",
-      title: demoAcademicProfile.programmeName,
-      snippet: `${demoAcademicProfile.currentSemester.label}; goals: ${demoAcademicProfile.academicGoals.join(", ")}`,
+      title: academicProfile.programmeName,
+      snippet: `${academicProfile.currentSemester.label}; goals: ${academicProfile.academicGoals.join(", ")}`,
       relevanceLabel: "Student academic context",
     },
   ];
@@ -81,14 +95,22 @@ export async function assembleBlieContext(input: BlieChatRequest): Promise<BlieC
       sourceId: document.id,
       sourceType: "document" as const,
       title: document.title,
-      snippet:
+      snippet: [
         document.summary ??
-        `${document.processing.label} Topic: ${document.topicLabel ?? "topic pending"}.`,
+          `${document.processing.label} Topic: ${document.topicLabel ?? "topic pending"}.`,
+        document.extractedConcepts.length > 0
+          ? `Concepts: ${document.extractedConcepts.map((concept) => concept.label).join(", ")}.`
+          : null,
+      ]
+        .filter(Boolean)
+        .join(" "),
       relevanceLabel: "Retrieved learning material",
     })),
   );
 
-  retrievedContext.push(...(await plkgService.retrieveContextForBlie(subject?.id ?? null)));
+  retrievedContext.push(
+    ...(await plkgService.retrieveContextForBlie(subject?.id ?? null, requestContext)),
+  );
 
   return {
     intent,

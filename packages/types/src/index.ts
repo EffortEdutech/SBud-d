@@ -13,6 +13,9 @@ export type {
   BlieChatStatus,
   BlieIntent,
   BlieLearningResponse,
+  BliePreparationPriority,
+  BlieQuickQuiz,
+  BlieQuickQuizQuestion,
   BlieReasoningTrace,
   BlieRetrievedContext,
 } from "./blie.js";

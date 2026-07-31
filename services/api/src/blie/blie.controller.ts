@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Headers, Post } from "@nestjs/common";
 import type { BlieChatRequest, BlieChatResponse } from "@sbud-d/types";
 
 import { BlieService } from "./blie.service.js";
@@ -8,7 +8,10 @@ export class BlieController {
   private readonly blieService = new BlieService();
 
   @Post("chat")
-  chat(@Body() input: BlieChatRequest): Promise<BlieChatResponse> {
-    return this.blieService.chat(input);
+  chat(
+    @Body() input: BlieChatRequest,
+    @Headers("authorization") authorizationHeader?: string,
+  ): Promise<BlieChatResponse> {
+    return this.blieService.chat(input, { authorizationHeader });
   }
 }

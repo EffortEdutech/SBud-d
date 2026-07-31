@@ -6,7 +6,7 @@ import {
   OpenAiCompatibleLearningProvider,
   type BlieProvider,
 } from "./ai-provider.js";
-import { assembleBlieContext } from "./blie-context.js";
+import { assembleBlieContext, type BlieRequestContext } from "./blie-context.js";
 import { getApiEnvironment, type ApiEnvironment } from "../config/environment.js";
 
 const MIN_MESSAGE_LENGTH = 3;
@@ -16,12 +16,15 @@ export class BlieService {
 
   constructor(private readonly provider: BlieProvider = createBlieProvider()) {}
 
-  async chat(input: BlieChatRequest): Promise<BlieChatResponse> {
+  async chat(
+    input: BlieChatRequest,
+    requestContext: BlieRequestContext = {},
+  ): Promise<BlieChatResponse> {
     if (!input.message?.trim() || input.message.trim().length < MIN_MESSAGE_LENGTH) {
       throw new BadRequestException("message must contain a learning question.");
     }
 
-    const context = await assembleBlieContext(input);
+    const context = await assembleBlieContext(input, requestContext);
 
     this.logger.log(
       `BLIE chat request accepted intent=${context.intent} subjectId=${context.subjectId ?? "none"} contextItems=${context.retrievedContext.length}`,
@@ -51,15 +54,19 @@ export class BlieService {
   }
 
   private validateResponse(response: BlieLearningResponse): "passed" | "needs_more_context" {
-    const requiredFields: Array<keyof BlieLearningResponse> = [
+    const requiredFields = [
       "explanation",
       "connection",
       "example",
       "checkUnderstanding",
       "nextStep",
-    ];
+    ] satisfies Array<keyof BlieLearningResponse>;
 
-    return requiredFields.every((field) => response[field].trim().length > 0)
+    return requiredFields.every((field) => {
+      const value = response[field];
+
+      return typeof value === "string" && value.trim().length > 0;
+    })
       ? "passed"
       : "needs_more_context";
   }

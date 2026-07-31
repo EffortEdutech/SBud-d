@@ -1,6 +1,6 @@
 # MVP Known Issues
 
-Status: Sprint 15 real provider integration
+Status: Sprint 16 retrieval-backed preparation and quiz
 Last updated: 2026-07-31
 
 ---
@@ -46,8 +46,8 @@ Impact: document intake is now real for PDFs and simple readable text/concepts c
 document intelligence remains incomplete.
 
 The baseline extractors are not OCR, not full PDF parsing, and not real AI educational concept
-analysis. Stronger retrieval-backed BLIE preparation and quiz responses remain later True Learning
-MVP work.
+analysis. Sprint 16 adds retrieval-backed BLIE preparation priorities and a quick quiz, but the
+underlying extraction and ranking remain MVP baselines.
 
 Live Supabase storage upload, extraction, and concept enrichment validation is still pending local
 Supabase-mode execution with an authenticated test user.
@@ -61,6 +61,15 @@ key and model/base-url configuration.
 Impact: no external AI provider cost or secret exposure in default mode. Real model quality,
 latency, cost, and response behavior are not validated until controlled local-only provider
 credentials are configured and tested.
+
+## Retrieval Ranking Is Baseline
+
+BLIE now retrieves academic, subject, document, and PLKG context before producing preparation
+priorities and a quick quiz. Ranking is deterministic and uses simple source priority rather than
+vector search or advanced graph traversal.
+
+Impact: the controlled MVP can demonstrate the learning loop, but production-quality retrieval still
+requires stronger ranking, source confidence, and evaluation.
 
 ## Production Observability Not Wired
 

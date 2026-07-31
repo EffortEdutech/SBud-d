@@ -9,7 +9,7 @@ The product is built around:
 - A cloud-first, offline-capable learning experience.
 - A TypeScript monorepo architecture.
 
-This repository has completed the local MVP baseline through Sprint 10, the Cross-Cutting Checklist, MVP Stabilization Pass 1 persistence wiring, Sprint 12 real PDF upload, Sprint 13 document text extraction baseline, Sprint 14 concept extraction/PLKG enrichment baseline work, and Sprint 15 real BLIE provider integration.
+This repository has completed the local MVP baseline through Sprint 10, the Cross-Cutting Checklist, MVP Stabilization Pass 1 persistence wiring, Sprint 12 real PDF upload, Sprint 13 document text extraction baseline, Sprint 14 concept extraction/PLKG enrichment baseline work, Sprint 15 real BLIE provider integration, and Sprint 16 retrieval-backed BLIE preparation/quiz output.
 
 ---
 
@@ -166,8 +166,9 @@ Sprint 12 adds PDF-only upload through the API boundary. Sprint 13 adds a depend
 text extraction endpoint that reads embedded text from uploaded PDFs and stores `extractedText`.
 Sprint 14 adds baseline concept extraction and maps document-derived concepts into the PLKG.
 Sprint 15 adds an opt-in OpenAI-compatible BLIE provider behind the existing provider abstraction.
-Full PDF parsing, OCR, real AI educational concept analysis, and BLIE preparation/quiz generation
-from extracted knowledge remain later True Learning MVP work.
+Sprint 16 makes BLIE return retrieved-context-backed preparation priorities and a quick quiz.
+Full PDF parsing, OCR, real AI educational concept analysis, and production-grade retrieval ranking
+remain later True Learning MVP work.
 
 Sprint 6 BLIE endpoint:
 
@@ -224,8 +225,8 @@ Current stabilization/product-completion track:
 
 - Plan: `docs/planning/MVP_STABILIZATION_PASS_1.md`
 - Active product plan: `docs/planning/PRODUCT_COMPLETION_MASTER_PLAN.md`
-- Current True Learning MVP sequence: Sprint 15 added real BLIE provider integration; Sprint 16
-  should generate retrieval-backed preparation priorities and a quick quiz.
+- Current True Learning MVP sequence: Sprint 16 added retrieval-backed preparation priorities and a
+  quick quiz; Sprint 17 should harden durable offline storage and sync.
 - API data mode: `SBUD_API_DATA_MODE=fixture|supabase`
 - Guardrail: mobile clients continue using API endpoints; no service-role key or secret is committed.
 
