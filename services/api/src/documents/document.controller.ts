@@ -55,6 +55,14 @@ export class DocumentController {
     return this.documentService.extractDocumentText(id, { authorizationHeader });
   }
 
+  @Post("documents/:id/concepts")
+  extractDocumentConcepts(
+    @Param("id") id: string,
+    @Headers("authorization") authorizationHeader?: string,
+  ): Promise<LearningDocument> {
+    return this.documentService.extractDocumentConcepts(id, { authorizationHeader });
+  }
+
   @Post("documents")
   createDocument(
     @Body() input: CreateLearningDocumentInput,

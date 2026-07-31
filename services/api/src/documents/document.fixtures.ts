@@ -28,6 +28,15 @@ export const demoDocuments: LearningDocument[] = [
     topicLabel: "Functions and control flow",
     summary: "Processing placeholder for extracted lecture concepts.",
     extractedText: "Functions help organize code into reusable blocks with inputs and outputs.",
+    extractedConcepts: [
+      {
+        confidence: 82,
+        description:
+          "Functions was identified from the uploaded learning material and is ready for PLKG review.",
+        label: "Functions",
+        sourceSnippet: "Functions help organize code into reusable blocks with inputs and outputs.",
+      },
+    ],
     conceptCount: 4,
     createdAt: "2026-07-12T00:00:00.000Z",
     processing: {
@@ -53,6 +62,7 @@ export const demoDocuments: LearningDocument[] = [
     topicLabel: "Limits and continuity",
     summary: null,
     extractedText: null,
+    extractedConcepts: [],
     conceptCount: 0,
     createdAt: "2026-07-12T00:05:00.000Z",
     processing: {

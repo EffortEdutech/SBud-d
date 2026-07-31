@@ -19,6 +19,7 @@ create table public.learning_documents (
   ),
   processing_error_message text,
   extracted_text text,
+  extracted_concepts jsonb not null default '[]'::jsonb,
   summary text,
   concept_count integer not null default 0 check (concept_count >= 0),
   created_at timestamptz not null default now(),

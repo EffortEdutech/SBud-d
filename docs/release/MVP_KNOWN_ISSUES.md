@@ -1,6 +1,6 @@
 # MVP Known Issues
 
-Status: Sprint 13 document text extraction baseline
+Status: Sprint 14 concept extraction and PLKG enrichment baseline
 Last updated: 2026-07-31
 
 ---
@@ -34,21 +34,23 @@ Sprint 9 uses an in-memory mobile queue and cache because no durable encrypted m
 
 Impact: offline actions do not survive app restart.
 
-## Document Processing Is Baseline Extraction Only
+## Document Processing Uses Baseline Extraction And Concept Mapping
 
 The document library now supports metadata creation, Sprint 12 PDF upload through the API boundary,
-and Sprint 13 baseline embedded-text extraction. In Supabase mode, uploaded PDF bytes are written to
-the private `student-documents` bucket before metadata is created, and extraction downloads the
-student-owned object through the API server.
+Sprint 13 baseline embedded-text extraction, and Sprint 14 baseline concept mapping into the PLKG.
+In Supabase mode, uploaded PDF bytes are written to the private `student-documents` bucket before
+metadata is created, extraction downloads the student-owned object through the API server, and
+concept mapping writes student-owned PLKG nodes/edges.
 
-Impact: document intake is now real for PDFs and simple readable text can be surfaced, but document
-intelligence remains incomplete.
+Impact: document intake is now real for PDFs and simple readable text/concepts can be surfaced, but
+document intelligence remains incomplete.
 
-The baseline extractor is not OCR and is not a full PDF parser. Concept extraction, PLKG enrichment,
-and BLIE retrieval remain later True Learning MVP work.
+The baseline extractors are not OCR, not full PDF parsing, and not real AI educational concept
+analysis. BLIE real-provider integration and stronger retrieval-backed responses remain later True
+Learning MVP work.
 
-Live Supabase storage upload and extraction validation is still pending local Supabase-mode
-execution with an authenticated test user.
+Live Supabase storage upload, extraction, and concept enrichment validation is still pending local
+Supabase-mode execution with an authenticated test user.
 
 ## AI Provider Is Local Deterministic
 

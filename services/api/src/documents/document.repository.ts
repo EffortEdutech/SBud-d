@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 import type {
   CreateLearningDocumentInput,
   Database,
+  LearningDocumentConcept,
   LearningDocument,
   LearningDocumentKind,
 } from "@sbud-d/types";
@@ -27,6 +28,21 @@ export interface UploadLearningDocumentInput extends CreateLearningDocumentInput
 
 type LearningDocumentRow = Database["public"]["Tables"]["learning_documents"]["Row"];
 type AcademicSubjectRow = Database["public"]["Tables"]["academic_subjects"]["Row"];
+
+function mapDocumentConcepts(value: unknown): LearningDocumentConcept[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value
+    .filter((item): item is Record<string, unknown> => typeof item === "object" && item !== null)
+    .map((item) => ({
+      confidence: typeof item.confidence === "number" ? item.confidence : 50,
+      description: typeof item.description === "string" ? item.description : "",
+      label: typeof item.label === "string" ? item.label : "Untitled concept",
+      sourceSnippet: typeof item.sourceSnippet === "string" ? item.sourceSnippet : "",
+    }));
+}
 
 function inferDocumentKind(mimeType: string, fileName: string): LearningDocumentKind {
   if (mimeType === "application/pdf") {
@@ -82,6 +98,7 @@ function mapDocument(
     summary: row.summary,
     title: row.title,
     topicLabel: row.topic_label,
+    extractedConcepts: mapDocumentConcepts(row.extracted_concepts),
     extractedText: row.extracted_text,
   };
 }
@@ -147,6 +164,7 @@ export class DocumentRepository {
       topicLabel: input.topicLabel?.trim() || null,
       summary: null,
       extractedText: null,
+      extractedConcepts: [],
       conceptCount: 0,
       createdAt: now,
       processing: {
@@ -213,6 +231,7 @@ export class DocumentRepository {
     const extractedDocument: LearningDocument = {
       ...document,
       conceptCount: 0,
+      extractedConcepts: [],
       extractedText: extraction.extractedText,
       processing: {
         errorMessage: null,
@@ -227,6 +246,40 @@ export class DocumentRepository {
     this.documents = this.documents.map((item) => (item.id === id ? extractedDocument : item));
 
     return structuredClone(extractedDocument);
+  }
+
+  async connectDocumentConcepts(
+    id: string,
+    concepts: LearningDocumentConcept[],
+    context: DocumentRequestContext = {},
+  ): Promise<LearningDocument | null> {
+    if (this.environment.dataMode === "supabase") {
+      return this.connectSupabaseDocumentConcepts(id, concepts, context);
+    }
+
+    const document = this.documents.find((item) => item.id === id);
+
+    if (!document) {
+      return null;
+    }
+
+    const now = new Date().toISOString();
+    const connectedDocument: LearningDocument = {
+      ...document,
+      conceptCount: concepts.length,
+      extractedConcepts: structuredClone(concepts),
+      processing: {
+        errorMessage: null,
+        label: "Concepts mapped to your PLKG.",
+        progressPercent: 100,
+        status: "connected",
+        updatedAt: now,
+      },
+    };
+
+    this.documents = this.documents.map((item) => (item.id === id ? connectedDocument : item));
+
+    return structuredClone(connectedDocument);
   }
 
   private getSupabaseContext(context: DocumentRequestContext): {
@@ -434,12 +487,50 @@ export class DocumentRepository {
     const { data, error } = await client
       .from("learning_documents")
       .update({
+        extracted_concepts: [],
         extracted_text: extraction.extractedText,
         processing_error_message: null,
         processing_label: "Readable text extracted. Ready for concept extraction.",
         processing_progress_percent: 45,
         processing_status: "understanding",
         summary: extraction.summary,
+      })
+      .eq("student_id", studentId)
+      .eq("id", id)
+      .select("*")
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    const row = data as LearningDocumentRow;
+    const subjectNamesById = await this.getSubjectNamesById(client, studentId, [row.subject_id]);
+
+    return mapDocument(row, subjectNamesById);
+  }
+
+  private async connectSupabaseDocumentConcepts(
+    id: string,
+    concepts: LearningDocumentConcept[],
+    context: DocumentRequestContext,
+  ): Promise<LearningDocument | null> {
+    const { client, studentId } = this.getSupabaseContext(context);
+    const document = await this.getSupabaseDocument(id, context);
+
+    if (!document) {
+      return null;
+    }
+
+    const { data, error } = await client
+      .from("learning_documents")
+      .update({
+        concept_count: concepts.length,
+        extracted_concepts: concepts,
+        processing_error_message: null,
+        processing_label: "Concepts mapped to your PLKG.",
+        processing_progress_percent: 100,
+        processing_status: "connected",
       })
       .eq("student_id", studentId)
       .eq("id", id)

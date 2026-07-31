@@ -1,6 +1,6 @@
 # AI Study Buddy Local Development
 
-Status: Sprint 13 document text extraction baseline
+Status: Sprint 14 concept extraction and PLKG enrichment
 Last updated: 2026-07-31
 
 ---
@@ -66,6 +66,7 @@ http://localhost:4801/api/v1/documents/library
 http://localhost:4801/api/v1/documents
 http://localhost:4801/api/v1/documents/upload
 http://localhost:4801/api/v1/documents/:id/extract
+http://localhost:4801/api/v1/documents/:id/concepts
 ```
 
 Sprint 6 BLIE chat endpoint:
@@ -154,8 +155,13 @@ student-owned path convention.
 
 Sprint 13 adds `POST /api/v1/documents/:id/extract` for baseline embedded-text extraction. The API
 stores extracted text in `learning_documents.extracted_text` and returns it as `extractedText`.
-Concept extraction, PLKG enrichment, and BLIE retrieval from extracted knowledge remain later True
-Learning MVP work.
+
+Sprint 14 adds `POST /api/v1/documents/:id/concepts` for baseline concept extraction and PLKG
+enrichment. The API stores document concepts in `learning_documents.extracted_concepts`, adds
+document-derived PLKG nodes/edges, and returns the updated document as `connected`.
+
+BLIE real-provider integration and stronger retrieval-backed responses from extracted knowledge
+remain later True Learning MVP work.
 
 MVP Stabilization Pass 1 begins Supabase repository wiring with the academic profile,
 subjects, dashboard, document metadata, PLKG node/edge, study preparation/revision, and sync queue
@@ -218,6 +224,16 @@ Sprint 13 mobile document extraction flow:
 4. Confirm extracted text appears under the document summary.
 5. In Supabase mode, apply migration `20260731000000_add_document_extracted_text.sql` before live
    validation.
+
+Sprint 14 mobile concept mapping flow:
+
+1. Complete the Sprint 12 upload flow and Sprint 13 extraction flow.
+2. Tap `Map concepts` on the uploaded PDF card.
+3. Confirm the card shows `Concepts mapped to your PLKG.`
+4. Confirm concept cards appear under the document text.
+5. Open the PLKG tab and confirm the graph summary refreshes.
+6. In Supabase mode, apply migration `20260731003000_add_document_extracted_concepts.sql` before
+   live validation.
 
 ---
 

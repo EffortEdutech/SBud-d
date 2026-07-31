@@ -51,6 +51,7 @@ describe("AcademicService", () => {
           subjectName: "Programming Fundamentals",
           summary: "Recursion lecture notes.",
           extractedText: "Recursion lecture notes.",
+          extractedConcepts: [],
           title: "Recursion",
           topicLabel: "Recursion",
         },

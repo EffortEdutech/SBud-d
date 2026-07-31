@@ -3,6 +3,8 @@ import { randomUUID } from "node:crypto";
 import type {
   CreatePlkgLearningActivityInput,
   Database,
+  LearningDocument,
+  LearningDocumentConcept,
   PlkgEdge,
   PlkgNode,
   PlkgSummary,
@@ -21,6 +23,22 @@ interface PlkgRequestContext {
 
 type PlkgNodeRow = Database["public"]["Tables"]["plkg_nodes"]["Row"];
 type PlkgEdgeRow = Database["public"]["Tables"]["plkg_edges"]["Row"];
+
+export interface PlkgDocumentEnrichmentResult {
+  conceptNodes: PlkgNode[];
+  edges: PlkgEdge[];
+  resourceNode: PlkgNode;
+}
+
+function slugify(value: string): string {
+  return (
+    value
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "item"
+  );
+}
 
 function mapNode(row: PlkgNodeRow): PlkgNode {
   return {
@@ -174,6 +192,173 @@ export class PlkgRepository {
     return structuredClone(node);
   }
 
+  async enrichFromDocumentConcepts(
+    document: LearningDocument,
+    concepts: LearningDocumentConcept[],
+    context: PlkgRequestContext = {},
+  ): Promise<PlkgDocumentEnrichmentResult> {
+    if (this.environment.dataMode === "supabase") {
+      return this.enrichSupabaseFromDocumentConcepts(document, concepts, context);
+    }
+
+    const now = new Date().toISOString();
+    const resourceNode = this.ensureFixtureDocumentResourceNode(document, now);
+    const conceptNodes: PlkgNode[] = [];
+    const createdEdges: PlkgEdge[] = [];
+
+    for (const concept of concepts) {
+      const conceptNode = this.ensureFixtureDocumentConceptNode(document, concept, now);
+      conceptNodes.push(conceptNode);
+      createdEdges.push(
+        this.ensureFixtureEdge({
+          createdAt: now,
+          label: `${document.title} explains ${concept.label}.`,
+          sourceNodeId: resourceNode.id,
+          strength: concept.confidence / 100,
+          targetNodeId: conceptNode.id,
+          type: "explains",
+        }),
+      );
+
+      const subjectNode = this.nodes.find(
+        (node) => node.type === "subject" && node.subjectId === document.subjectId,
+      );
+
+      if (subjectNode) {
+        createdEdges.push(
+          this.ensureFixtureEdge({
+            createdAt: now,
+            label: `${subjectNode.label} contains ${concept.label}.`,
+            sourceNodeId: subjectNode.id,
+            strength: 0.65,
+            targetNodeId: conceptNode.id,
+            type: "contains",
+          }),
+        );
+      }
+    }
+
+    this.nodes = [
+      ...conceptNodes.filter((node) => !this.nodes.some((candidate) => candidate.id === node.id)),
+      ...(this.nodes.some((node) => node.id === resourceNode.id) ? [] : [resourceNode]),
+      ...this.nodes,
+    ];
+    this.edges = [
+      ...createdEdges.filter((edge) => !this.edges.some((candidate) => candidate.id === edge.id)),
+      ...this.edges,
+    ];
+
+    return {
+      conceptNodes: structuredClone(conceptNodes),
+      edges: structuredClone(createdEdges),
+      resourceNode: structuredClone(resourceNode),
+    };
+  }
+
+  private buildDocumentResourceNode(document: LearningDocument, now: string): PlkgNode {
+    return {
+      confidenceLevel: 65,
+      createdAt: now,
+      description: document.summary ?? `Learning resource for ${document.title}.`,
+      id: `plkg-resource-${document.id}`,
+      label: document.title,
+      learningStatus: "understanding",
+      masteryScore: 45,
+      sourceId: document.id,
+      sourceType: "document",
+      studentId: document.studentId,
+      subjectId: document.subjectId,
+      type: "resource",
+      updatedAt: now,
+    };
+  }
+
+  private buildDocumentConceptNode(
+    document: LearningDocument,
+    concept: LearningDocumentConcept,
+    now: string,
+  ): PlkgNode {
+    return {
+      confidenceLevel: concept.confidence,
+      createdAt: now,
+      description: `${concept.description} Source: ${concept.sourceSnippet}`,
+      id: `plkg-concept-${document.id}-${slugify(concept.label)}`,
+      label: concept.label,
+      learningStatus: "introduced",
+      masteryScore: Math.max(15, Math.round(concept.confidence * 0.35)),
+      sourceId: document.id,
+      sourceType: "document",
+      studentId: document.studentId,
+      subjectId: document.subjectId,
+      type: "concept",
+      updatedAt: now,
+    };
+  }
+
+  private ensureFixtureDocumentResourceNode(document: LearningDocument, now: string): PlkgNode {
+    return (
+      this.nodes.find(
+        (node) =>
+          node.type === "resource" &&
+          node.sourceType === "document" &&
+          node.sourceId === document.id,
+      ) ?? this.buildDocumentResourceNode(document, now)
+    );
+  }
+
+  private ensureFixtureDocumentConceptNode(
+    document: LearningDocument,
+    concept: LearningDocumentConcept,
+    now: string,
+  ): PlkgNode {
+    const existingNode = this.nodes.find(
+      (node) =>
+        node.type === "concept" &&
+        node.sourceType === "document" &&
+        node.sourceId === document.id &&
+        node.label.toLowerCase() === concept.label.toLowerCase(),
+    );
+
+    if (existingNode) {
+      return existingNode;
+    }
+
+    return this.buildDocumentConceptNode(document, concept, now);
+  }
+
+  private ensureFixtureEdge(input: {
+    createdAt: string;
+    label: string;
+    sourceNodeId: string;
+    strength: number;
+    targetNodeId: string;
+    type: PlkgEdge["type"];
+  }): PlkgEdge {
+    const existingEdge = this.edges.find(
+      (edge) =>
+        edge.sourceNodeId === input.sourceNodeId &&
+        edge.targetNodeId === input.targetNodeId &&
+        edge.type === input.type,
+    );
+
+    if (existingEdge) {
+      return existingEdge;
+    }
+
+    return {
+      createdAt: input.createdAt,
+      id: `plkg-edge-${slugify(input.sourceNodeId)}-${slugify(input.type)}-${slugify(
+        input.targetNodeId,
+      )}`,
+      label: input.label,
+      sourceNodeId: input.sourceNodeId,
+      strength: Math.max(0.1, Math.min(1, input.strength)),
+      studentId: DEMO_STUDENT_ID,
+      targetNodeId: input.targetNodeId,
+      type: input.type,
+    };
+  }
+
   private getSupabaseContext(context: PlkgRequestContext): {
     client: SupabaseClient;
     studentId: string;
@@ -288,5 +473,216 @@ export class PlkgRepository {
     if (error) {
       throw error;
     }
+  }
+
+  private async enrichSupabaseFromDocumentConcepts(
+    document: LearningDocument,
+    concepts: LearningDocumentConcept[],
+    context: PlkgRequestContext,
+  ): Promise<PlkgDocumentEnrichmentResult> {
+    const { client, studentId } = this.getSupabaseContext(context);
+    const resourceNode = await this.ensureSupabaseDocumentResourceNode(client, studentId, document);
+    const conceptNodes: PlkgNode[] = [];
+    const edges: PlkgEdge[] = [];
+
+    for (const concept of concepts) {
+      const conceptNode = await this.createSupabaseDocumentConceptNode(
+        client,
+        studentId,
+        document,
+        concept,
+      );
+      conceptNodes.push(conceptNode);
+      edges.push(
+        await this.createSupabaseEdge(client, studentId, {
+          label: `${document.title} explains ${concept.label}.`,
+          sourceNodeId: resourceNode.id,
+          strength: concept.confidence / 100,
+          targetNodeId: conceptNode.id,
+          type: "explains",
+        }),
+      );
+
+      const subjectNode = await this.getSupabaseSubjectNode(client, studentId, document.subjectId);
+
+      if (subjectNode) {
+        edges.push(
+          await this.createSupabaseEdge(client, studentId, {
+            label: `${subjectNode.label} contains ${concept.label}.`,
+            sourceNodeId: subjectNode.id,
+            strength: 0.65,
+            targetNodeId: conceptNode.id,
+            type: "contains",
+          }),
+        );
+      }
+    }
+
+    return { conceptNodes, edges, resourceNode };
+  }
+
+  private async ensureSupabaseDocumentResourceNode(
+    client: SupabaseClient,
+    studentId: string,
+    document: LearningDocument,
+  ): Promise<PlkgNode> {
+    const { data: existingData, error: existingError } = await client
+      .from("plkg_nodes")
+      .select("*")
+      .eq("student_id", studentId)
+      .eq("source_type", "document")
+      .eq("source_id", document.id)
+      .eq("type", "resource")
+      .maybeSingle();
+
+    if (existingError) {
+      throw existingError;
+    }
+
+    if (existingData) {
+      return mapNode(existingData as PlkgNodeRow);
+    }
+
+    const { data, error } = await client
+      .from("plkg_nodes")
+      .insert({
+        confidence_level: 65,
+        description: document.summary ?? `Learning resource for ${document.title}.`,
+        id: randomUUID(),
+        label: document.title,
+        learning_status: "understanding",
+        mastery_score: 45,
+        source_id: document.id,
+        source_type: "document",
+        student_id: studentId,
+        subject_id: document.subjectId,
+        type: "resource",
+      })
+      .select("*")
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return mapNode(data as PlkgNodeRow);
+  }
+
+  private async createSupabaseDocumentConceptNode(
+    client: SupabaseClient,
+    studentId: string,
+    document: LearningDocument,
+    concept: LearningDocumentConcept,
+  ): Promise<PlkgNode> {
+    const { data: existingData, error: existingError } = await client
+      .from("plkg_nodes")
+      .select("*")
+      .eq("student_id", studentId)
+      .eq("source_type", "document")
+      .eq("source_id", document.id)
+      .eq("type", "concept")
+      .eq("label", concept.label)
+      .maybeSingle();
+
+    if (existingError) {
+      throw existingError;
+    }
+
+    if (existingData) {
+      return mapNode(existingData as PlkgNodeRow);
+    }
+
+    const { data, error } = await client
+      .from("plkg_nodes")
+      .insert({
+        confidence_level: concept.confidence,
+        description: `${concept.description} Source: ${concept.sourceSnippet}`,
+        id: randomUUID(),
+        label: concept.label,
+        learning_status: "introduced",
+        mastery_score: Math.max(15, Math.round(concept.confidence * 0.35)),
+        source_id: document.id,
+        source_type: "document",
+        student_id: studentId,
+        subject_id: document.subjectId,
+        type: "concept",
+      })
+      .select("*")
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return mapNode(data as PlkgNodeRow);
+  }
+
+  private async getSupabaseSubjectNode(
+    client: SupabaseClient,
+    studentId: string,
+    subjectId: string,
+  ): Promise<PlkgNode | null> {
+    const { data, error } = await client
+      .from("plkg_nodes")
+      .select("*")
+      .eq("student_id", studentId)
+      .eq("subject_id", subjectId)
+      .eq("type", "subject")
+      .maybeSingle();
+
+    if (error) {
+      throw error;
+    }
+
+    return data ? mapNode(data as PlkgNodeRow) : null;
+  }
+
+  private async createSupabaseEdge(
+    client: SupabaseClient,
+    studentId: string,
+    input: {
+      label: string;
+      sourceNodeId: string;
+      strength: number;
+      targetNodeId: string;
+      type: PlkgEdge["type"];
+    },
+  ): Promise<PlkgEdge> {
+    const { data: existingData, error: existingError } = await client
+      .from("plkg_edges")
+      .select("*")
+      .eq("student_id", studentId)
+      .eq("source_node_id", input.sourceNodeId)
+      .eq("target_node_id", input.targetNodeId)
+      .eq("type", input.type)
+      .maybeSingle();
+
+    if (existingError) {
+      throw existingError;
+    }
+
+    if (existingData) {
+      return mapEdge(existingData as PlkgEdgeRow);
+    }
+
+    const { data, error } = await client
+      .from("plkg_edges")
+      .insert({
+        id: randomUUID(),
+        label: input.label,
+        source_node_id: input.sourceNodeId,
+        strength: Math.max(0.1, Math.min(1, input.strength)),
+        student_id: studentId,
+        target_node_id: input.targetNodeId,
+        type: input.type,
+      })
+      .select("*")
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    return mapEdge(data as PlkgEdgeRow);
   }
 }

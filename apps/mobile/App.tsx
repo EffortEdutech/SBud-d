@@ -31,6 +31,7 @@ import {
   extractLearningDocumentText,
   fallbackDocumentLibrarySummary,
   fetchDocumentLibrarySummary,
+  mapLearningDocumentConcepts,
   uploadSamplePdfDocument,
 } from "./src/documents/document-service";
 import { fallbackHealthStatus, fetchHealthStatus } from "./src/health/health-service";
@@ -327,6 +328,25 @@ export default function App(): React.JSX.Element {
       setUploadState("Readable text extracted. Concept extraction is next.");
     } catch {
       setUploadState("Text extraction failed; try again when the API is reachable");
+    }
+  };
+
+  const handleMapDocumentConcepts = async (documentId: string): Promise<void> => {
+    setUploadState("Mapping concepts into your PLKG...");
+
+    try {
+      const document = await mapLearningDocumentConcepts(documentId);
+      const summary = await fetchPlkgSummary();
+
+      setDocumentLibrary((current) => ({
+        ...current,
+        documents: current.documents.map((item) => (item.id === document.id ? document : item)),
+      }));
+      setPlkgSummary(summary);
+      setPlkgStatus("Document concepts added to PLKG");
+      setUploadState("Concepts mapped to your PLKG.");
+    } catch {
+      setUploadState("Concept mapping failed; try again when the API is reachable");
     }
   };
 
@@ -734,6 +754,16 @@ export default function App(): React.JSX.Element {
       {document.extractedText ? (
         <Text style={styles.mutedText}>{document.extractedText}</Text>
       ) : null}
+      {document.extractedConcepts.length > 0 ? (
+        <View style={styles.conceptList}>
+          {document.extractedConcepts.map((concept) => (
+            <View key={`${document.id}-${concept.label}`} style={styles.conceptItem}>
+              <Text style={styles.responseLabel}>{concept.label}</Text>
+              <Text style={styles.mutedText}>{concept.description}</Text>
+            </View>
+          ))}
+        </View>
+      ) : null}
       <View style={styles.progressTrack}>
         <View style={[styles.progressFill, { width: `${document.processing.progressPercent}%` }]} />
       </View>
@@ -746,6 +776,17 @@ export default function App(): React.JSX.Element {
           style={styles.secondaryButton}
         >
           <Text style={styles.secondaryButtonText}>Extract text</Text>
+        </Pressable>
+      ) : null}
+      {document.processing.status === "understanding" && document.extractedText ? (
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => {
+            void handleMapDocumentConcepts(document.id);
+          }}
+          style={styles.secondaryButton}
+        >
+          <Text style={styles.secondaryButtonText}>Map concepts</Text>
         </Pressable>
       ) : null}
     </View>
@@ -1435,6 +1476,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     textTransform: "uppercase",
+  },
+  conceptList: {
+    gap: 6,
+  },
+  conceptItem: {
+    backgroundColor: "#f4f8f5",
+    borderColor: "#d8e3dc",
+    borderRadius: 8,
+    borderWidth: 1,
+    padding: 10,
   },
   progressTrack: {
     backgroundColor: "#e5ece7",

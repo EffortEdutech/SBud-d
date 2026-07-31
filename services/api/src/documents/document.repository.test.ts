@@ -11,6 +11,7 @@ const documentRow = {
   id: "document-1",
   kind: "pdf",
   mime_type: "application/pdf",
+  extracted_concepts: [],
   extracted_text: null,
   processing_error_message: null,
   processing_label: "Document received.",
@@ -106,6 +107,7 @@ describe("DocumentRepository", () => {
         subjectId: "subject-1",
         subjectName: "Programming Fundamentals",
         summary: null,
+        extractedConcepts: [],
         extractedText: null,
         title: "Lecture 1",
         topicLabel: "Intro",
@@ -242,6 +244,7 @@ describe("DocumentRepository", () => {
             learning_documents: {
               ...documentRow,
               extracted_text: "Baseline extraction text",
+              extracted_concepts: [],
               processing_label: "Readable text extracted. Ready for concept extraction.",
               processing_progress_percent: 45,
               processing_status: "understanding",
@@ -263,6 +266,60 @@ describe("DocumentRepository", () => {
       label: "Readable text extracted. Ready for concept extraction.",
       progressPercent: 45,
       status: "understanding",
+    });
+  });
+
+  it("stores extracted concepts after PLKG enrichment", async () => {
+    const repository = new DocumentRepository(
+      {
+        dataMode: "supabase",
+        nodeEnv: "test",
+        supabasePublishableKey: "test-key",
+        supabaseUrl: "https://example.supabase.co",
+      },
+      () =>
+        createDocumentClient({
+          academic_subjects: [{ id: "subject-1", name: "Programming Fundamentals" }],
+          learning_documents: {
+            ...documentRow,
+            concept_count: 1,
+            extracted_concepts: [
+              {
+                confidence: 82,
+                description: "Recursion was identified from the uploaded learning material.",
+                label: "Recursion",
+                sourceSnippet: "Recursion breaks problems into smaller steps.",
+              },
+            ],
+            processing_label: "Concepts mapped to your PLKG.",
+            processing_progress_percent: 100,
+            processing_status: "connected",
+          },
+        }),
+    );
+
+    const document = await repository.connectDocumentConcepts(
+      "document-1",
+      [
+        {
+          confidence: 82,
+          description: "Recursion was identified from the uploaded learning material.",
+          label: "Recursion",
+          sourceSnippet: "Recursion breaks problems into smaller steps.",
+        },
+      ],
+      {
+        accessToken: "token",
+        studentId: "student-1",
+      },
+    );
+
+    expect(document?.conceptCount).toBe(1);
+    expect(document?.extractedConcepts[0]?.label).toBe("Recursion");
+    expect(document?.processing).toMatchObject({
+      label: "Concepts mapped to your PLKG.",
+      progressPercent: 100,
+      status: "connected",
     });
   });
 });

@@ -22,6 +22,7 @@ export type {
   CreateLearningDocumentInput,
   DocumentLibrarySummary,
   LearningDocument,
+  LearningDocumentConcept,
   LearningDocumentKind,
   LearningDocumentProcessing,
   LearningDocumentStatus,

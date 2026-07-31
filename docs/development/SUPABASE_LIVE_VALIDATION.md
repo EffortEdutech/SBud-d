@@ -1,6 +1,6 @@
 # Supabase Live Validation Checklist
 
-Status: Ready for project-owner execution with Sprint 13 extraction visibility
+Status: Ready for project-owner execution with Sprint 14 concept enrichment visibility
 Last updated: 2026-07-31
 
 ---
@@ -18,6 +18,7 @@ It confirms:
 - no service-role key is needed by the mobile app or tracked files.
 - uploaded PDF text can be extracted through the API boundary and stored on the student-owned
   document row.
+- extracted document concepts can be mapped into student-owned PLKG nodes and edges.
 
 Do not paste secrets, bearer tokens, API keys, passwords, or `.env` contents into chat or tracked
 files.
@@ -38,10 +39,11 @@ Keep these values only in your local terminal or local `.env` files:
   - `STUDENT_A_ID`
   - `STUDENT_B_ID`
 
-Apply this Sprint 13 migration before extraction validation:
+Apply these Sprint 13 and Sprint 14 migrations before extraction/enrichment validation:
 
 ```text
 database/supabase/migrations/20260731000000_add_document_extracted_text.sql
+database/supabase/migrations/20260731003000_add_document_extracted_concepts.sql
 ```
 
 Use test accounts only. Do not use a real student account for validation.
@@ -227,6 +229,27 @@ Expected:
 - `learning_documents.extracted_text` is updated for `STUDENT_A_ID`,
 - processing status is `understanding`,
 - processing label says readable text is ready for concept extraction.
+
+## 5.3C Document Concept Mapping And PLKG Enrichment
+
+Replace `DOCUMENT_ID` with the id returned from the PDF upload step:
+
+```powershell
+Invoke-RestMethod `
+  -Method Post `
+  -Uri "http://localhost:4801/api/v1/documents/DOCUMENT_ID/concepts" `
+  -Headers @{ Authorization = "Bearer $env:STUDENT_A_TOKEN" }
+```
+
+Expected:
+
+- `extractedConcepts` contains baseline concept objects,
+- `learning_documents.extracted_concepts` is updated for `STUDENT_A_ID`,
+- `conceptCount` matches the extracted concept count,
+- processing status is `connected`,
+- a document `resource` node and document-sourced `concept` nodes exist in `plkg_nodes`,
+- `plkg_edges` contains student-owned `explains` and subject `contains` relationships where
+  applicable.
 
 ## 5.4 PLKG Learning Activity
 

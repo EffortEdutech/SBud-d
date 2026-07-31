@@ -11,6 +11,13 @@ export interface LearningDocumentProcessing {
   errorMessage: string | null;
 }
 
+export interface LearningDocumentConcept {
+  label: string;
+  description: string;
+  confidence: number;
+  sourceSnippet: string;
+}
+
 export interface LearningDocument {
   id: string;
   studentId: string;
@@ -26,6 +33,7 @@ export interface LearningDocument {
   topicLabel: string | null;
   summary: string | null;
   extractedText: string | null;
+  extractedConcepts: LearningDocumentConcept[];
   conceptCount: number;
   createdAt: string;
   processing: LearningDocumentProcessing;

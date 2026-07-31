@@ -1,6 +1,6 @@
 # AI Study Buddy Implementation Checklist
 
-Version: 0.3
+Version: 0.4
 Status: Living checklist
 Last updated: 2026-07-31
 
@@ -20,12 +20,12 @@ When work progresses, update this checklist in the same commit or handoff as the
 
 # Current Sprint
 
-Current sprint: Sprint 13 - Document Text Extraction Baseline
+Current sprint: Sprint 14 - Concept Extraction And PLKG Enrichment
 
 Current goal:
 
-Implement the second step of the True Learning MVP wow moment: extract readable baseline text from
-uploaded PDFs, persist it with the document, and show it in the mobile Library flow.
+Implement the third step of the True Learning MVP wow moment: extract learning concepts from
+document text, enrich PLKG, and show the mapped concepts in the mobile Library flow.
 
 Accepted carry-over:
 
@@ -511,11 +511,32 @@ Current blocker:
 - [x] Refresh Graphify.
 - [x] Run `git diff --check`.
 
+## Sprint 14 - Concept Extraction And PLKG Enrichment
+
+- [x] Prepare Sprint 14 implementation plan.
+- [x] Query Graphify before source inspection.
+- [x] Inspect document, PLKG, shared type, database, and mobile source files directly.
+- [x] Add `learning_documents.extracted_concepts` schema and migration.
+- [x] Add shared `LearningDocumentConcept` and `LearningDocument.extractedConcepts` contract.
+- [x] Implement dependency-free baseline concept extractor.
+- [x] Implement API `POST /api/v1/documents/:id/concepts`.
+- [x] Persist extracted concepts on the document.
+- [x] Enrich PLKG with document resource and concept nodes.
+- [x] Add source-traceable PLKG edges from document/subject to concepts.
+- [x] Show concept mapping action and concepts in mobile Library UI.
+- [x] Add document service/repository tests for concept mapping.
+- [x] Run `corepack pnpm check`.
+- [x] Run `corepack pnpm mvp:readiness`.
+- [x] Run local fixture-mode upload -> extract -> map concepts smoke test.
+- [x] Update development, API, release, planning, README, and agent docs.
+- [x] Refresh Graphify.
+- [x] Run `git diff --check`.
+
 ## Phase 3 - True MVP Completion
 
 - [x] Sprint 12 - Real Document Upload And Storage.
 - [x] Sprint 13 - Document Text Extraction Baseline.
-- [ ] Sprint 14 - Concept Extraction And PLKG Enrichment.
+- [x] Sprint 14 - Concept Extraction And PLKG Enrichment.
 - [ ] Sprint 15 - Real BLIE Provider Integration.
 - [ ] Sprint 16 - Retrieval-Backed BLIE Preparation And Quiz.
 - [ ] Sprint 17 - Durable Offline Storage And Sync Hardening.
@@ -529,8 +550,8 @@ Current blocker:
 - [x] File bytes are stored in private student-owned storage.
 - [x] Document processing status is visible.
 - [x] Text extraction produces usable learning text.
-- [ ] Concept extraction identifies priority learning concepts.
-- [ ] PLKG is enriched from extracted concepts.
+- [x] Concept extraction identifies priority learning concepts.
+- [x] PLKG is enriched from extracted concepts.
 - [ ] BLIE retrieves student-owned context before generating guidance.
 - [ ] BLIE shows three things to understand before the next class.
 - [ ] BLIE generates a quick quiz or flashcards from processed knowledge.

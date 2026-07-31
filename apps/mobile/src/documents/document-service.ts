@@ -94,3 +94,15 @@ export async function extractLearningDocumentText(documentId: string): Promise<L
 
   return (await response.json()) as LearningDocument;
 }
+
+export async function mapLearningDocumentConcepts(documentId: string): Promise<LearningDocument> {
+  const response = await apiFetch(`/documents/${documentId}/concepts`, {
+    method: "POST",
+  });
+
+  if (!response.ok) {
+    throw new Error(`Document concept mapping failed with status ${response.status}.`);
+  }
+
+  return (await response.json()) as LearningDocument;
+}

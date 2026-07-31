@@ -5,6 +5,7 @@ import type {
   LearningDocument,
 } from "@sbud-d/types";
 
+import { extractDocumentConceptsBaseline } from "./concept-extraction.js";
 import {
   ACCEPTED_DOCUMENT_MIME_TYPES,
   DOCUMENT_STORAGE_BUCKET,
@@ -14,6 +15,7 @@ import {
 import { DocumentRepository, type UploadLearningDocumentInput } from "./document.repository.js";
 import { getAuthenticatedUserAndTokenFromHeader } from "../auth/supabase-auth-client.js";
 import { getApiEnvironment, type ApiEnvironment } from "../config/environment.js";
+import { PlkgRepository } from "../plkg/plkg.repository.js";
 
 interface DocumentRequestContext {
   authorizationHeader?: string | undefined;
@@ -36,6 +38,7 @@ export class DocumentService {
   constructor(
     private readonly repository: DocumentRepository = new DocumentRepository(),
     private readonly environment: ApiEnvironment = getApiEnvironment(),
+    private readonly plkgRepository: PlkgRepository = new PlkgRepository(environment),
   ) {}
 
   async getLibrarySummary(context: DocumentRequestContext = {}): Promise<DocumentLibrarySummary> {
@@ -89,6 +92,41 @@ export class DocumentService {
     return document;
   }
 
+  async extractDocumentConcepts(
+    id: string,
+    context: DocumentRequestContext = {},
+  ): Promise<LearningDocument> {
+    const repositoryContext = await this.getRepositoryContext(context);
+    const document = await this.repository.getDocument(id, repositoryContext);
+
+    if (!document) {
+      throw new NotFoundException("Document not found.");
+    }
+
+    if (!document.extractedText?.trim()) {
+      throw new BadRequestException("Document text must be extracted before concept mapping.");
+    }
+
+    const concepts = extractDocumentConceptsBaseline({
+      extractedText: document.extractedText,
+      topicLabel: document.topicLabel,
+    });
+
+    await this.plkgRepository.enrichFromDocumentConcepts(document, concepts, repositoryContext);
+
+    const connectedDocument = await this.repository.connectDocumentConcepts(
+      id,
+      concepts,
+      repositoryContext,
+    );
+
+    if (!connectedDocument) {
+      throw new NotFoundException("Document not found.");
+    }
+
+    return connectedDocument;
+  }
+
   async createDocument(
     input: CreateLearningDocumentInput,
     context: DocumentRequestContext = {},
@@ -126,7 +164,7 @@ export class DocumentService {
     this.validateDocumentInput(input);
 
     if (input.mimeType !== PDF_DOCUMENT_MIME_TYPE) {
-      throw new BadRequestException("Only PDF upload is supported for Sprint 12.");
+      throw new BadRequestException("Only PDF upload is supported for this MVP processing flow.");
     }
 
     return this.repository.uploadDocument(input, await this.getRepositoryContext(context));

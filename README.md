@@ -9,7 +9,7 @@ The product is built around:
 - A cloud-first, offline-capable learning experience.
 - A TypeScript monorepo architecture.
 
-This repository has completed the local MVP baseline through Sprint 10, the Cross-Cutting Checklist, MVP Stabilization Pass 1 persistence wiring, Sprint 12 real PDF upload, and Sprint 13 document text extraction baseline work.
+This repository has completed the local MVP baseline through Sprint 10, the Cross-Cutting Checklist, MVP Stabilization Pass 1 persistence wiring, Sprint 12 real PDF upload, Sprint 13 document text extraction baseline, and Sprint 14 concept extraction/PLKG enrichment baseline work.
 
 ---
 
@@ -153,6 +153,7 @@ Sprint 5 document library endpoints:
 - `POST /api/v1/documents`
 - `POST /api/v1/documents/upload`
 - `POST /api/v1/documents/:id/extract`
+- `POST /api/v1/documents/:id/concepts`
 
 Document storage is prepared for a private Supabase Storage bucket named `student-documents`
 with student-owned object paths:
@@ -163,7 +164,8 @@ with student-owned object paths:
 
 Sprint 12 adds PDF-only upload through the API boundary. Sprint 13 adds a dependency-free baseline
 text extraction endpoint that reads embedded text from uploaded PDFs and stores `extractedText`.
-Full PDF parsing, OCR, concept extraction, PLKG enrichment, and BLIE retrieval from extracted
+Sprint 14 adds baseline concept extraction and maps document-derived concepts into the PLKG.
+Full PDF parsing, OCR, real AI educational concept analysis, and BLIE retrieval from extracted
 knowledge remain later True Learning MVP work.
 
 Sprint 6 BLIE endpoint:
@@ -219,8 +221,8 @@ Current stabilization/product-completion track:
 
 - Plan: `docs/planning/MVP_STABILIZATION_PASS_1.md`
 - Active product plan: `docs/planning/PRODUCT_COMPLETION_MASTER_PLAN.md`
-- Current True Learning MVP sequence: Sprint 13 completed baseline extraction; Sprint 14 should
-  enrich the PLKG from extracted document concepts.
+- Current True Learning MVP sequence: Sprint 14 completed baseline concept mapping and PLKG
+  enrichment; Sprint 15 should wire a real BLIE provider behind the existing abstraction.
 - API data mode: `SBUD_API_DATA_MODE=fixture|supabase`
 - Guardrail: mobile clients continue using API endpoints; no service-role key or secret is committed.
 

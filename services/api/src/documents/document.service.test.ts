@@ -75,6 +75,45 @@ describe("DocumentService", () => {
     );
   });
 
+  it("maps extracted concepts into the PLKG", async () => {
+    const service = new DocumentService();
+    const document = await service.uploadDocument(
+      {
+        subjectId: "subject-programming",
+        topicLabel: "Recursion",
+      },
+      {
+        buffer: Buffer.from(
+          "%PDF-1.4\nRecursion breaks a problem into smaller repeated steps. Functions provide reusable inputs and outputs.\n%%EOF",
+        ),
+        mimetype: "application/pdf",
+        originalname: "lecture recursion.pdf",
+        size: 2048,
+      },
+    );
+    const extractedDocument = await service.extractDocumentText(document.id);
+
+    const connectedDocument = await service.extractDocumentConcepts(extractedDocument.id);
+
+    expect(connectedDocument.processing.status).toBe("connected");
+    expect(connectedDocument.processing.label).toBe("Concepts mapped to your PLKG.");
+    expect(connectedDocument.conceptCount).toBeGreaterThan(0);
+    expect(connectedDocument.extractedConcepts[0]?.label).toBe("Recursion");
+  });
+
+  it("requires extracted text before concept mapping", async () => {
+    const service = new DocumentService();
+    const document = await service.createDocument({
+      subjectId: "subject-programming",
+      fileName: "lecture 4 recursion.pdf",
+      mimeType: "application/pdf",
+      fileSizeBytes: 2048,
+      topicLabel: "Recursion",
+    });
+
+    await expect(service.extractDocumentConcepts(document.id)).rejects.toThrow(BadRequestException);
+  });
+
   it("rejects upload without a PDF file", async () => {
     const service = new DocumentService();
 

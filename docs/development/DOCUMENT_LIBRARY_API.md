@@ -1,6 +1,6 @@
 # Document Library API
 
-Status: Sprint 13 document text extraction baseline
+Status: Sprint 14 concept extraction and PLKG enrichment
 Last updated: 2026-07-31
 
 ---
@@ -9,7 +9,7 @@ Last updated: 2026-07-31
 
 Sprint 5 introduced the document library metadata contract. Sprint 12 added the first real file
 upload path for PDF learning materials. Sprint 13 adds baseline embedded-text extraction for
-uploaded PDFs.
+uploaded PDFs. Sprint 14 adds baseline concept extraction and PLKG enrichment.
 
 The API defaults to an in-memory fixture repository so the mobile Library tab can exercise
 the student flow locally. MVP Stabilization Pass 1 adds a Supabase-backed metadata path
@@ -18,6 +18,7 @@ when `SBUD_API_DATA_MODE=supabase`.
 `POST /documents` remains available for metadata-only records. `POST /documents/upload` accepts a
 PDF file and stores bytes through the API boundary before creating metadata. `POST
 /documents/:id/extract` triggers the baseline text extraction step for an existing document.
+`POST /documents/:id/concepts` maps extracted concepts into the student's PLKG.
 
 In Supabase mode, requests must include an authenticated bearer token. Mobile clients still
 call the API; they must not write directly to Supabase tables or Supabase Storage.
@@ -40,6 +41,7 @@ Endpoints:
 - `POST /documents`
 - `POST /documents/upload`
 - `POST /documents/:id/extract`
+- `POST /documents/:id/concepts`
 
 Example metadata create request:
 
@@ -63,7 +65,7 @@ field: topicLabel
 file: file = application/pdf
 ```
 
-`POST /documents/upload` is PDF-only for Sprint 12 and Sprint 13.
+`POST /documents/upload` is PDF-only for the current MVP processing flow.
 
 Example extraction request:
 
@@ -73,6 +75,15 @@ POST /documents/DOCUMENT_ID/extract
 
 The extraction response returns the updated document, including `extractedText`, an updated summary,
 and processing status `understanding`.
+
+Example concept mapping request:
+
+```text
+POST /documents/DOCUMENT_ID/concepts
+```
+
+The concept mapping response returns the updated document, including `extractedConcepts`,
+`conceptCount`, and processing status `connected`.
 
 ---
 
@@ -92,8 +103,11 @@ successful upload.
 Sprint 13 moves a document to `understanding` with the label `Readable text extracted. Ready for
 concept extraction.` after baseline text extraction succeeds.
 
-OCR, concept extraction, BLIE retrieval, and PLKG enrichment remain deferred to later True Learning
-MVP sprints.
+Sprint 14 moves a document to `connected` with the label `Concepts mapped to your PLKG.` after
+baseline concepts are stored and PLKG nodes/edges are created.
+
+OCR, real-provider concept extraction, BLIE retrieval, and student concept edit/reject UI remain
+deferred to later True Learning MVP sprints.
 
 ---
 
@@ -132,6 +146,20 @@ Migration:
 
 ```text
 database/supabase/migrations/20260731000000_add_document_extracted_text.sql
+database/supabase/migrations/20260731003000_add_document_extracted_concepts.sql
+```
+
+Sprint 14 persists concept transparency data in:
+
+```text
+public.learning_documents.extracted_concepts
+```
+
+The PLKG enrichment step writes to:
+
+```text
+public.plkg_nodes
+public.plkg_edges
 ```
 
 ---
@@ -149,10 +177,11 @@ Do not commit `.env` files, service-role keys, storage tokens, or Supabase secre
 
 ---
 
-# 6. Extraction Baseline Limitation
+# 6. Baseline Limitations
 
 The Sprint 13 extractor is dependency-free and only targets readable embedded text. It does not
 perform OCR and should not be treated as a full PDF parser.
 
-This keeps the API/data/UI pipeline small and reviewable before Sprint 14 concept extraction and
-PLKG enrichment.
+The Sprint 14 concept extractor is also dependency-free. It identifies topic labels, repeated terms,
+and significant phrases from extracted text. It proves the document -> concept -> PLKG pipeline, but
+it is not a substitute for real AI-assisted educational concept extraction.

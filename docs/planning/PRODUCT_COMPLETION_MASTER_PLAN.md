@@ -1,6 +1,6 @@
 # AI Study Buddy Product Completion Master Plan
 
-Version: 0.2
+Version: 0.3
 Status: Living product-completion plan
 Last updated: 2026-07-31
 
@@ -116,7 +116,8 @@ Current state:
 - Sprint 11 has started to make live validation and API data mode visible through the mobile UI.
 - Sprint 11 is accepted with a known live-validation blocker.
 - Sprint 12 completed Real Document Upload And Storage.
-- Sprint 13 implements the Document Text Extraction Baseline.
+- Sprint 13 completed the Document Text Extraction Baseline.
+- Sprint 14 implements Concept Extraction And PLKG Enrichment.
 - The near-term product scope has been revised around three release targets: Controlled Demo MVP,
   True Learning MVP, and Public Version 1.
 - The product-defining wow moment is now: upload a lecture PDF, extract concepts, enrich PLKG, and
@@ -127,7 +128,8 @@ Current blockers:
 - Live Supabase CLI migration-history validation is blocked by a Supabase access-control response.
 - Live RLS validation still requires two authenticated test users and local-only bearer tokens.
 - Baseline document text extraction is implemented for readable embedded PDF text.
-- Concept extraction and PLKG enrichment are the next implementation targets.
+- Baseline concept extraction and PLKG enrichment are implemented.
+- Real BLIE provider integration is the next implementation target.
 - Real AI provider integration remains deferred.
 - Durable encrypted mobile offline storage remains deferred pending dependency approval.
 - Production deployment, observability, app-store release, and subscription flows remain future work.
@@ -379,9 +381,9 @@ Recommended next targets:
 1. Complete Sprint 12 real document upload and private storage.
 2. Keep Sprint 11 live-validation blocker visible and resolve it when Supabase access allows.
 3. Complete Sprint 13 text extraction baseline.
-4. Implement Sprint 14 concept extraction from uploaded material.
-5. Enrich PLKG from processed document text.
-6. Wire real BLIE provider integration behind the existing abstraction.
+4. Complete Sprint 14 concept extraction from uploaded material.
+5. Complete PLKG enrichment from processed document text.
+6. Implement Sprint 15 real BLIE provider integration behind the existing abstraction.
 7. Replace placeholder BLIE context with retrieval-backed responses.
 8. Generate three preparation priorities and a quick quiz from processed knowledge.
 9. Harden offline storage and sync durability.
@@ -408,8 +410,8 @@ Recommended next targets:
 
 - [x] Real document upload writes file bytes to private storage.
 - [/] Document text extraction works for MVP file types.
-- [ ] Extracted concepts are visible to the student.
-- [ ] Processed document knowledge enriches PLKG.
+- [x] Extracted concepts are visible to the student.
+- [x] Processed document knowledge enriches PLKG.
 - [ ] BLIE uses a real provider through the provider abstraction.
 - [ ] Retrieval-before-generation is implemented with trusted student context.
 - [ ] BLIE produces three preparation priorities from processed knowledge.
@@ -479,15 +481,16 @@ At the end of each sprint:
 
 Recommended next sprint:
 
-Sprint 14 - Concept Extraction And PLKG Enrichment.
+Sprint 15 - Real BLIE Provider Integration.
 
 Goal:
 
-Turn extracted document text into student-owned learning concepts, enrich the PLKG, and make the
-next BLIE retrieval step possible.
+Wire a real AI provider behind the existing BLIE provider abstraction while keeping educational
+logic provider-independent and secrets out of tracked files.
 
 Why this is next:
 
 - Sprint 12 made document upload real.
-- Sprint 13 makes readable document text available.
-- Sprint 14 is the first point where SBud-d can transform an uploaded lecture into learning memory.
+- Sprint 13 made readable document text available.
+- Sprint 14 transformed uploaded lecture text into PLKG learning memory.
+- Sprint 15 lets BLIE use a real model while preserving retrieval-before-generation.
