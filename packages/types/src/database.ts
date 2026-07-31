@@ -157,6 +157,7 @@ export interface Database {
           processing_label: string;
           processing_progress_percent: number;
           processing_error_message: string | null;
+          extracted_text: string | null;
           summary: string | null;
           concept_count: number;
           created_at: string;
@@ -178,6 +179,7 @@ export interface Database {
           processing_label?: string;
           processing_progress_percent?: number;
           processing_error_message?: string | null;
+          extracted_text?: string | null;
           summary?: string | null;
           concept_count?: number;
           created_at?: string;
@@ -197,6 +199,7 @@ export interface Database {
           processing_label?: string;
           processing_progress_percent?: number;
           processing_error_message?: string | null;
+          extracted_text?: string | null;
           summary?: string | null;
           concept_count?: number;
           updated_at?: string;

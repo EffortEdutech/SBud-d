@@ -1,7 +1,7 @@
 # Supabase Live Validation Checklist
 
-Status: Ready for project-owner execution with Sprint 12 upload visibility
-Last updated: 2026-07-30
+Status: Ready for project-owner execution with Sprint 13 extraction visibility
+Last updated: 2026-07-31
 
 ---
 
@@ -16,6 +16,8 @@ It confirms:
 - authenticated student-owned rows can be read and written,
 - cross-student access is blocked by RLS,
 - no service-role key is needed by the mobile app or tracked files.
+- uploaded PDF text can be extracted through the API boundary and stored on the student-owned
+  document row.
 
 Do not paste secrets, bearer tokens, API keys, passwords, or `.env` contents into chat or tracked
 files.
@@ -35,6 +37,12 @@ Keep these values only in your local terminal or local `.env` files:
 - two matching test-user ids:
   - `STUDENT_A_ID`
   - `STUDENT_B_ID`
+
+Apply this Sprint 13 migration before extraction validation:
+
+```text
+database/supabase/migrations/20260731000000_add_document_extracted_text.sql
+```
 
 Use test accounts only. Do not use a real student account for validation.
 
@@ -198,6 +206,27 @@ Expected:
 - storage path starts with `STUDENT_A_ID/SUBJECT_ID/`,
 - processing status is `processing`,
 - processing label says the PDF is waiting for text extraction.
+
+Save the returned document id as `DOCUMENT_ID` for the next section.
+
+## 5.3B Document Text Extraction
+
+Replace `DOCUMENT_ID` with the id returned from the PDF upload step:
+
+```powershell
+Invoke-RestMethod `
+  -Method Post `
+  -Uri "http://localhost:4801/api/v1/documents/DOCUMENT_ID/extract" `
+  -Headers @{ Authorization = "Bearer $env:STUDENT_A_TOKEN" }
+```
+
+Expected:
+
+- the API downloads the student's private storage object,
+- `extractedText` is populated when the PDF contains readable embedded text,
+- `learning_documents.extracted_text` is updated for `STUDENT_A_ID`,
+- processing status is `understanding`,
+- processing label says readable text is ready for concept extraction.
 
 ## 5.4 PLKG Learning Activity
 

@@ -27,6 +27,7 @@ export const demoDocuments: LearningDocument[] = [
       "demo-student/subject-programming/document-database-lecture/lecture-3-functions.pdf",
     topicLabel: "Functions and control flow",
     summary: "Processing placeholder for extracted lecture concepts.",
+    extractedText: "Functions help organize code into reusable blocks with inputs and outputs.",
     conceptCount: 4,
     createdAt: "2026-07-12T00:00:00.000Z",
     processing: {
@@ -51,6 +52,7 @@ export const demoDocuments: LearningDocument[] = [
     storagePath: "demo-student/subject-calculus/document-calculus-notes/limits-whiteboard.png",
     topicLabel: "Limits and continuity",
     summary: null,
+    extractedText: null,
     conceptCount: 0,
     createdAt: "2026-07-12T00:05:00.000Z",
     processing: {

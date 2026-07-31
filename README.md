@@ -9,7 +9,7 @@ The product is built around:
 - A cloud-first, offline-capable learning experience.
 - A TypeScript monorepo architecture.
 
-This repository has completed the local MVP baseline through Sprint 10 and the Cross-Cutting Checklist. The next planned target is MVP Stabilization Pass 1: Supabase Persistence Wiring.
+This repository has completed the local MVP baseline through Sprint 10, the Cross-Cutting Checklist, MVP Stabilization Pass 1 persistence wiring, Sprint 12 real PDF upload, and Sprint 13 document text extraction baseline work.
 
 ---
 
@@ -152,6 +152,7 @@ Sprint 5 document library endpoints:
 - `GET /api/v1/documents/:id`
 - `POST /api/v1/documents`
 - `POST /api/v1/documents/upload`
+- `POST /api/v1/documents/:id/extract`
 
 Document storage is prepared for a private Supabase Storage bucket named `student-documents`
 with student-owned object paths:
@@ -160,8 +161,10 @@ with student-owned object paths:
 {studentId}/{subjectId}/{documentId}/{fileName}
 ```
 
-Sprint 12 adds PDF-only upload through the API boundary. Text extraction and PLKG enrichment remain
-later True Learning MVP work.
+Sprint 12 adds PDF-only upload through the API boundary. Sprint 13 adds a dependency-free baseline
+text extraction endpoint that reads embedded text from uploaded PDFs and stores `extractedText`.
+Full PDF parsing, OCR, concept extraction, PLKG enrichment, and BLIE retrieval from extracted
+knowledge remain later True Learning MVP work.
 
 Sprint 6 BLIE endpoint:
 
@@ -212,10 +215,12 @@ Run the local release gate:
 corepack pnpm mvp:readiness
 ```
 
-Next planned stabilization target:
+Current stabilization/product-completion track:
 
 - Plan: `docs/planning/MVP_STABILIZATION_PASS_1.md`
-- Focus: wire Supabase-backed persistence behind API repositories while preserving fixture mode for local/demo validation.
+- Active product plan: `docs/planning/PRODUCT_COMPLETION_MASTER_PLAN.md`
+- Current True Learning MVP sequence: Sprint 13 completed baseline extraction; Sprint 14 should
+  enrich the PLKG from extracted document concepts.
 - API data mode: `SBUD_API_DATA_MODE=fixture|supabase`
 - Guardrail: mobile clients continue using API endpoints; no service-role key or secret is committed.
 

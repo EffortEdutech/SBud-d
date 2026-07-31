@@ -12,6 +12,7 @@ import { demoSubjects } from "../academic/academic.fixtures.js";
 import { getApiEnvironment, type ApiEnvironment } from "../config/environment.js";
 import { createSupabaseApiClient } from "../supabase/supabase-api-client.js";
 import { DOCUMENT_STORAGE_BUCKET, demoDocuments } from "./document.fixtures.js";
+import { extractPdfTextBaseline } from "./pdf-text-extraction.js";
 
 const DEMO_STUDENT_ID = "demo-student";
 
@@ -81,11 +82,13 @@ function mapDocument(
     summary: row.summary,
     title: row.title,
     topicLabel: row.topic_label,
+    extractedText: row.extracted_text,
   };
 }
 
 export class DocumentRepository {
   private documents: LearningDocument[] = structuredClone(demoDocuments);
+  private documentBytesById = new Map<string, Uint8Array>();
 
   constructor(
     private readonly environment: ApiEnvironment = getApiEnvironment(),
@@ -143,6 +146,7 @@ export class DocumentRepository {
       storagePath: `${DEMO_STUDENT_ID}/${input.subjectId}/${documentId}/${safeFileName}`,
       topicLabel: input.topicLabel?.trim() || null,
       summary: null,
+      extractedText: null,
       conceptCount: 0,
       createdAt: now,
       processing: {
@@ -182,8 +186,47 @@ export class DocumentRepository {
     this.documents = this.documents.map((item) =>
       item.id === uploadedDocument.id ? uploadedDocument : item,
     );
+    this.documentBytesById.set(uploadedDocument.id, input.fileBytes);
 
     return structuredClone(uploadedDocument);
+  }
+
+  async extractDocumentText(
+    id: string,
+    context: DocumentRequestContext = {},
+  ): Promise<LearningDocument | null> {
+    if (this.environment.dataMode === "supabase") {
+      return this.extractSupabaseDocumentText(id, context);
+    }
+
+    const document = this.documents.find((item) => item.id === id);
+
+    if (!document) {
+      return null;
+    }
+
+    const fileBytes =
+      this.documentBytesById.get(id) ??
+      new TextEncoder().encode(document.extractedText ?? document.summary ?? document.title);
+    const extraction = extractPdfTextBaseline(fileBytes);
+    const now = new Date().toISOString();
+    const extractedDocument: LearningDocument = {
+      ...document,
+      conceptCount: 0,
+      extractedText: extraction.extractedText,
+      processing: {
+        errorMessage: null,
+        label: "Readable text extracted. Ready for concept extraction.",
+        progressPercent: 45,
+        status: "understanding",
+        updatedAt: now,
+      },
+      summary: extraction.summary,
+    };
+
+    this.documents = this.documents.map((item) => (item.id === id ? extractedDocument : item));
+
+    return structuredClone(extractedDocument);
   }
 
   private getSupabaseContext(context: DocumentRequestContext): {
@@ -358,6 +401,52 @@ export class DocumentRepository {
 
     if (error) {
       await storage.remove([storagePath]);
+      throw error;
+    }
+
+    const row = data as LearningDocumentRow;
+    const subjectNamesById = await this.getSubjectNamesById(client, studentId, [row.subject_id]);
+
+    return mapDocument(row, subjectNamesById);
+  }
+
+  private async extractSupabaseDocumentText(
+    id: string,
+    context: DocumentRequestContext,
+  ): Promise<LearningDocument | null> {
+    const { client, studentId } = this.getSupabaseContext(context);
+    const document = await this.getSupabaseDocument(id, context);
+
+    if (!document) {
+      return null;
+    }
+
+    const storage = client.storage.from(DOCUMENT_STORAGE_BUCKET);
+    const { data: storedFile, error: downloadError } = await storage.download(document.storagePath);
+
+    if (downloadError) {
+      throw downloadError;
+    }
+
+    const fileBytes = new Uint8Array(await storedFile.arrayBuffer());
+    const extraction = extractPdfTextBaseline(fileBytes);
+
+    const { data, error } = await client
+      .from("learning_documents")
+      .update({
+        extracted_text: extraction.extractedText,
+        processing_error_message: null,
+        processing_label: "Readable text extracted. Ready for concept extraction.",
+        processing_progress_percent: 45,
+        processing_status: "understanding",
+        summary: extraction.summary,
+      })
+      .eq("student_id", studentId)
+      .eq("id", id)
+      .select("*")
+      .single();
+
+    if (error) {
       throw error;
     }
 

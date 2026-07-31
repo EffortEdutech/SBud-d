@@ -11,6 +11,7 @@ const documentRow = {
   id: "document-1",
   kind: "pdf",
   mime_type: "application/pdf",
+  extracted_text: null,
   processing_error_message: null,
   processing_label: "Document received.",
   processing_progress_percent: 10,
@@ -28,6 +29,7 @@ const documentRow = {
 function createDocumentClient(
   results: Record<string, unknown>,
   storageFailure: Error | null = null,
+  downloadedBytes = Buffer.from("%PDF-1.4\nBaseline extraction text\n%%EOF"),
 ): SupabaseClient {
   return {
     from(tableName: string) {
@@ -40,12 +42,17 @@ function createDocumentClient(
         order: async () => ({ data: result, error: null }),
         select: () => chain,
         single: async () => ({ data: result, error: null }),
+        update: () => chain,
       };
 
       return chain;
     },
     storage: {
       from: () => ({
+        download: async () => ({
+          data: new Blob([downloadedBytes], { type: "application/pdf" }),
+          error: storageFailure,
+        }),
         remove: async () => ({ data: [], error: null }),
         upload: async () => ({
           data: { path: "student-1/subject-1/document-1/lecture-1.pdf" },
@@ -99,6 +106,7 @@ describe("DocumentRepository", () => {
         subjectId: "subject-1",
         subjectName: "Programming Fundamentals",
         summary: null,
+        extractedText: null,
         title: "Lecture 1",
         topicLabel: "Intro",
       },
@@ -217,5 +225,44 @@ describe("DocumentRepository", () => {
         },
       ),
     ).rejects.toThrow("Storage upload failed");
+  });
+
+  it("extracts Supabase PDF text from stored file bytes", async () => {
+    const repository = new DocumentRepository(
+      {
+        dataMode: "supabase",
+        nodeEnv: "test",
+        supabasePublishableKey: "test-key",
+        supabaseUrl: "https://example.supabase.co",
+      },
+      () =>
+        createDocumentClient(
+          {
+            academic_subjects: [{ id: "subject-1", name: "Programming Fundamentals" }],
+            learning_documents: {
+              ...documentRow,
+              extracted_text: "Baseline extraction text",
+              processing_label: "Readable text extracted. Ready for concept extraction.",
+              processing_progress_percent: 45,
+              processing_status: "understanding",
+              summary: "Baseline extraction text",
+            },
+          },
+          null,
+          Buffer.from("%PDF-1.4\nBaseline extraction text\n%%EOF"),
+        ),
+    );
+
+    const document = await repository.extractDocumentText("document-1", {
+      accessToken: "token",
+      studentId: "student-1",
+    });
+
+    expect(document?.extractedText).toBe("Baseline extraction text");
+    expect(document?.processing).toMatchObject({
+      label: "Readable text extracted. Ready for concept extraction.",
+      progressPercent: 45,
+      status: "understanding",
+    });
   });
 });

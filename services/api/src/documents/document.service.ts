@@ -73,6 +73,22 @@ export class DocumentService {
     return document;
   }
 
+  async extractDocumentText(
+    id: string,
+    context: DocumentRequestContext = {},
+  ): Promise<LearningDocument> {
+    const document = await this.repository.extractDocumentText(
+      id,
+      await this.getRepositoryContext(context),
+    );
+
+    if (!document) {
+      throw new NotFoundException("Document not found.");
+    }
+
+    return document;
+  }
+
   async createDocument(
     input: CreateLearningDocumentInput,
     context: DocumentRequestContext = {},

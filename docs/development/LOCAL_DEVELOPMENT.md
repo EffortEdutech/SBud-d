@@ -1,7 +1,7 @@
 # AI Study Buddy Local Development
 
-Status: Sprint 12 real PDF upload baseline
-Last updated: 2026-07-30
+Status: Sprint 13 document text extraction baseline
+Last updated: 2026-07-31
 
 ---
 
@@ -65,6 +65,7 @@ Sprint 5 document library endpoints:
 http://localhost:4801/api/v1/documents/library
 http://localhost:4801/api/v1/documents
 http://localhost:4801/api/v1/documents/upload
+http://localhost:4801/api/v1/documents/:id/extract
 ```
 
 Sprint 6 BLIE chat endpoint:
@@ -149,8 +150,12 @@ docs/development/SUPABASE_SETUP.md
 
 Sprint 12 adds `POST /api/v1/documents/upload` for PDF-only upload through the API boundary. In
 Supabase mode, the API writes file bytes to the private `student-documents` bucket using the
-student-owned path convention. Text extraction, concept extraction, PLKG enrichment, and BLIE
-retrieval remain later True Learning MVP work.
+student-owned path convention.
+
+Sprint 13 adds `POST /api/v1/documents/:id/extract` for baseline embedded-text extraction. The API
+stores extracted text in `learning_documents.extracted_text` and returns it as `extractedText`.
+Concept extraction, PLKG enrichment, and BLIE retrieval from extracted knowledge remain later True
+Learning MVP work.
 
 MVP Stabilization Pass 1 begins Supabase repository wiring with the academic profile,
 subjects, dashboard, document metadata, PLKG node/edge, study preparation/revision, and sync queue
@@ -204,6 +209,15 @@ Sprint 12 mobile document upload flow:
 5. Confirm the new document appears with `processing` status and the label `PDF uploaded. Waiting
    for text extraction.`
 6. In Supabase mode, sign in first from the Sync tab so the API can write to student-owned storage.
+
+Sprint 13 mobile document extraction flow:
+
+1. Complete the Sprint 12 upload flow.
+2. Tap `Extract text` on the uploaded PDF card.
+3. Confirm the card shows `Readable text extracted. Ready for concept extraction.`
+4. Confirm extracted text appears under the document summary.
+5. In Supabase mode, apply migration `20260731000000_add_document_extracted_text.sql` before live
+   validation.
 
 ---
 

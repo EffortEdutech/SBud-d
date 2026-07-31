@@ -50,6 +50,7 @@ describe("AcademicService", () => {
           subjectId: "subject-programming",
           subjectName: "Programming Fundamentals",
           summary: "Recursion lecture notes.",
+          extractedText: "Recursion lecture notes.",
           title: "Recursion",
           topicLabel: "Recursion",
         },

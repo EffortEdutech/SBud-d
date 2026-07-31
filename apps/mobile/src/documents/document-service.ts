@@ -53,9 +53,14 @@ export async function uploadSamplePdfDocument(input: {
   topicLabel?: string | null;
 }): Promise<LearningDocument> {
   const formData = new FormData();
-  const samplePdf = new Blob(["%PDF-1.4\n% SBud-d sample lecture PDF\n%%EOF"], {
-    type: "application/pdf",
-  });
+  const samplePdf = new Blob(
+    [
+      "%PDF-1.4\nSBud-d sample lecture PDF\nRecursion breaks a problem into smaller repeated steps.\n%%EOF",
+    ],
+    {
+      type: "application/pdf",
+    },
+  );
 
   formData.append("subjectId", input.subjectId);
   formData.append("title", "Sample lecture PDF");
@@ -73,6 +78,18 @@ export async function uploadSamplePdfDocument(input: {
 
   if (!response.ok) {
     throw new Error(`Document upload failed with status ${response.status}.`);
+  }
+
+  return (await response.json()) as LearningDocument;
+}
+
+export async function extractLearningDocumentText(documentId: string): Promise<LearningDocument> {
+  const response = await apiFetch(`/documents/${documentId}/extract`, {
+    method: "POST",
+  });
+
+  if (!response.ok) {
+    throw new Error(`Document extraction failed with status ${response.status}.`);
   }
 
   return (await response.json()) as LearningDocument;

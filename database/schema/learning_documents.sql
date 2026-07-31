@@ -18,6 +18,7 @@ create table public.learning_documents (
     processing_progress_percent >= 0 and processing_progress_percent <= 100
   ),
   processing_error_message text,
+  extracted_text text,
   summary text,
   concept_count integer not null default 0 check (concept_count >= 0),
   created_at timestamptz not null default now(),

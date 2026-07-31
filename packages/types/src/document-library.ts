@@ -25,6 +25,7 @@ export interface LearningDocument {
   storagePath: string;
   topicLabel: string | null;
   summary: string | null;
+  extractedText: string | null;
   conceptCount: number;
   createdAt: string;
   processing: LearningDocumentProcessing;

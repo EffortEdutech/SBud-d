@@ -1,8 +1,8 @@
 # AI Study Buddy Sprint Plan
 
-Version: 0.2
+Version: 0.3
 Status: Living implementation plan
-Last updated: 2026-07-30
+Last updated: 2026-07-31
 
 ---
 
@@ -38,12 +38,14 @@ Existing repository state:
 Current implementation status:
 
 - Current phase: True Learning MVP planning, with Controlled Demo MVP live-validation carry-over.
-- Current sprint: Sprint 12 - Real Document Upload And Storage.
-- Active implementation target: Prepare and implement Sprint 12 as the first step toward the
-  upload -> extraction -> PLKG enrichment -> BLIE retrieval -> revision loop.
+- Current sprint: Sprint 13 - Document Text Extraction Baseline.
+- Active implementation target: extract readable embedded text from uploaded PDFs and persist it as
+  the next step toward the upload -> extraction -> PLKG enrichment -> BLIE retrieval -> revision
+  loop.
 - Master plan: `docs/planning/PRODUCT_COMPLETION_MASTER_PLAN.md`.
 - Release target scope: `docs/planning/RELEASE_TARGET_SCOPE.md`.
 - Sprint 12 plan: `docs/planning/SPRINT_12_REAL_DOCUMENT_UPLOAD_AND_STORAGE.md`.
+- Sprint 13 plan: `docs/planning/SPRINT_13_DOCUMENT_TEXT_EXTRACTION_BASELINE.md`.
 - Product-defining wow moment: lecture PDF upload -> concept extraction -> PLKG enrichment -> BLIE
   preparation priorities -> quick quiz.
 - Sprint 11 status: Accepted with known live-validation blocker.

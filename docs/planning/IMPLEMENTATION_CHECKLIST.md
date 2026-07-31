@@ -1,8 +1,8 @@
 # AI Study Buddy Implementation Checklist
 
-Version: 0.2
+Version: 0.3
 Status: Living checklist
-Last updated: 2026-07-30
+Last updated: 2026-07-31
 
 ---
 
@@ -20,12 +20,12 @@ When work progresses, update this checklist in the same commit or handoff as the
 
 # Current Sprint
 
-Current sprint: Sprint 12 - Real Document Upload And Storage
+Current sprint: Sprint 13 - Document Text Extraction Baseline
 
 Current goal:
 
-Implement the first step of the True Learning MVP wow moment: API-first PDF upload into private
-student-owned storage with persisted metadata and visible processing status.
+Implement the second step of the True Learning MVP wow moment: extract readable baseline text from
+uploaded PDFs, persist it with the document, and show it in the mobile Library flow.
 
 Accepted carry-over:
 
@@ -491,10 +491,30 @@ Current blocker:
 - [x] Run local fixture-mode multipart upload smoke test.
 - [x] Refresh Graphify.
 
+## Sprint 13 - Document Text Extraction Baseline
+
+- [x] Prepare Sprint 13 implementation plan.
+- [x] Query Graphify before source inspection.
+- [x] Inspect document repository, service, controller, type, database, and mobile files directly.
+- [x] Add `learning_documents.extracted_text` schema and migration.
+- [x] Add shared `LearningDocument.extractedText` contract.
+- [x] Implement dependency-free baseline PDF embedded-text extractor.
+- [x] Implement API `POST /api/v1/documents/:id/extract`.
+- [x] Implement fixture-mode extraction for local demos.
+- [x] Implement Supabase-mode storage download and document update path.
+- [x] Show extraction action and extracted text in the mobile Library UI.
+- [x] Add service/repository tests for text extraction.
+- [x] Update development, API, release, planning, README, and agent docs.
+- [x] Run `corepack pnpm check`.
+- [x] Run `corepack pnpm mvp:readiness`.
+- [x] Run local fixture-mode upload -> extract smoke test.
+- [x] Refresh Graphify.
+- [x] Run `git diff --check`.
+
 ## Phase 3 - True MVP Completion
 
-- [ ] Sprint 12 - Real Document Upload And Storage.
-- [ ] Sprint 13 - Document Text Extraction Baseline.
+- [x] Sprint 12 - Real Document Upload And Storage.
+- [x] Sprint 13 - Document Text Extraction Baseline.
 - [ ] Sprint 14 - Concept Extraction And PLKG Enrichment.
 - [ ] Sprint 15 - Real BLIE Provider Integration.
 - [ ] Sprint 16 - Retrieval-Backed BLIE Preparation And Quiz.
@@ -505,10 +525,10 @@ Current blocker:
 
 ## True Learning MVP Wow Moment Checklist
 
-- [ ] Student uploads a lecture PDF into a subject workspace.
-- [ ] File bytes are stored in private student-owned storage.
-- [ ] Document processing status is visible.
-- [ ] Text extraction produces usable learning text.
+- [x] Student uploads a lecture PDF into a subject workspace.
+- [x] File bytes are stored in private student-owned storage.
+- [x] Document processing status is visible.
+- [x] Text extraction produces usable learning text.
 - [ ] Concept extraction identifies priority learning concepts.
 - [ ] PLKG is enriched from extracted concepts.
 - [ ] BLIE retrieves student-owned context before generating guidance.

@@ -28,6 +28,7 @@ import { getApiBaseUrl } from "./src/config/environment";
 import { fallbackDashboardSummary, fetchDashboardSummary } from "./src/dashboard/dashboard-service";
 import {
   createLearningDocument,
+  extractLearningDocumentText,
   fallbackDocumentLibrarySummary,
   fetchDocumentLibrarySummary,
   uploadSamplePdfDocument,
@@ -310,6 +311,22 @@ export default function App(): React.JSX.Element {
     } catch {
       setBlieResponse(fallbackBlieResponse);
       setBlieStatus("BLIE request failed");
+    }
+  };
+
+  const handleExtractDocumentText = async (documentId: string): Promise<void> => {
+    setUploadState("Extracting readable PDF text...");
+
+    try {
+      const document = await extractLearningDocumentText(documentId);
+
+      setDocumentLibrary((current) => ({
+        ...current,
+        documents: current.documents.map((item) => (item.id === document.id ? document : item)),
+      }));
+      setUploadState("Readable text extracted. Concept extraction is next.");
+    } catch {
+      setUploadState("Text extraction failed; try again when the API is reachable");
     }
   };
 
@@ -714,9 +731,23 @@ export default function App(): React.JSX.Element {
         {document.subjectName} - {document.topicLabel ?? "Topic pending"}
       </Text>
       <Text style={styles.mutedText}>{document.processing.label}</Text>
+      {document.extractedText ? (
+        <Text style={styles.mutedText}>{document.extractedText}</Text>
+      ) : null}
       <View style={styles.progressTrack}>
         <View style={[styles.progressFill, { width: `${document.processing.progressPercent}%` }]} />
       </View>
+      {document.kind === "pdf" && document.processing.status === "processing" ? (
+        <Pressable
+          accessibilityRole="button"
+          onPress={() => {
+            void handleExtractDocumentText(document.id);
+          }}
+          style={styles.secondaryButton}
+        >
+          <Text style={styles.secondaryButtonText}>Extract text</Text>
+        </Pressable>
+      ) : null}
     </View>
   );
 

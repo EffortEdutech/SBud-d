@@ -51,6 +51,30 @@ describe("DocumentService", () => {
     );
   });
 
+  it("extracts readable baseline text from an uploaded PDF", async () => {
+    const service = new DocumentService();
+    const document = await service.uploadDocument(
+      {
+        subjectId: "subject-programming",
+        topicLabel: "Recursion",
+      },
+      {
+        buffer: Buffer.from("%PDF-1.4\nRecursion calls a function from itself.\n%%EOF"),
+        mimetype: "application/pdf",
+        originalname: "lecture recursion.pdf",
+        size: 2048,
+      },
+    );
+
+    const extractedDocument = await service.extractDocumentText(document.id);
+
+    expect(extractedDocument.extractedText).toBe("Recursion calls a function from itself.");
+    expect(extractedDocument.processing.status).toBe("understanding");
+    expect(extractedDocument.processing.label).toBe(
+      "Readable text extracted. Ready for concept extraction.",
+    );
+  });
+
   it("rejects upload without a PDF file", async () => {
     const service = new DocumentService();
 
