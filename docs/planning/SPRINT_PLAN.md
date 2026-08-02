@@ -2,7 +2,7 @@
 
 Version: 0.4
 Status: Living implementation plan
-Last updated: 2026-07-31
+Last updated: 2026-08-02
 
 ---
 
@@ -38,10 +38,8 @@ Existing repository state:
 Current implementation status:
 
 - Current phase: True Learning MVP planning, with Controlled Demo MVP live-validation carry-over.
-- Current sprint: Sprint 18 - MVP UX Polish And Empty/Error State Completion.
-- Active implementation target: make the controlled True MVP mobile shell feel like a coherent
-  student product with visible learning-loop progress, action-oriented empty states, and clear
-  offline/error/status feedback.
+- Current sprint: Sprint 19 - MVP Performance, Security, And Observability Baseline.
+- Active implementation target: expose a controlled MVP operational baseline with health-contract performance budgets, metadata-only API request logging, security posture checks, and mobile Sync-tab readiness visibility.
 - Master plan: `docs/planning/PRODUCT_COMPLETION_MASTER_PLAN.md`.
 - Release target scope: `docs/planning/RELEASE_TARGET_SCOPE.md`.
 - Sprint 12 plan: `docs/planning/SPRINT_12_REAL_DOCUMENT_UPLOAD_AND_STORAGE.md`.
@@ -51,6 +49,7 @@ Current implementation status:
 - Sprint 16 plan: `docs/planning/SPRINT_16_RETRIEVAL_BACKED_BLIE_PREPARATION_AND_QUIZ.md`.
 - Sprint 17 plan: `docs/planning/SPRINT_17_DURABLE_OFFLINE_STORAGE_AND_SYNC_HARDENING.md`.
 - Sprint 18 plan: `docs/planning/SPRINT_18_MVP_UX_POLISH_AND_EMPTY_ERROR_STATE_COMPLETION.md`.
+- Sprint 19 plan: `docs/planning/SPRINT_19_MVP_PERFORMANCE_SECURITY_OBSERVABILITY_BASELINE.md`.
 - Product-defining wow moment: lecture PDF upload -> concept extraction -> PLKG enrichment -> BLIE
   preparation priorities -> quick quiz.
 - Sprint 11 status: Accepted with known live-validation blocker.

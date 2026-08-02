@@ -36,6 +36,11 @@ export type {
   HealthStatus,
   HealthStatusValue,
   LiveValidationStatus,
+  ObservabilityBaselineStatus,
+  OperationalReadinessStatus,
+  OperationalStatus,
+  PerformanceBudgetStatus,
+  SecurityBaselineStatus,
 } from "./health.js";
 export type {
   CreatePlkgLearningActivityInput,

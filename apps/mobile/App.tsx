@@ -103,6 +103,7 @@ export default function App(): React.JSX.Element {
   const priorityRevision = studySummary.revisionItems[0] ?? null;
   const priorityGap = plkgSummary.knowledgeGaps[0] ?? null;
   const runtime = healthStatus.runtime ?? fallbackHealthStatus.runtime;
+  const operational = healthStatus.operational ?? fallbackHealthStatus.operational;
   const studentContextLabel = `${dashboard.academicOverview.currentSemester.label} - ${dashboard.academicOverview.programmeName}`;
   const hasSubjects = dashboard.subjects.length > 0;
   const hasDocuments = documentLibrary.documents.length > 0;
@@ -596,6 +597,32 @@ export default function App(): React.JSX.Element {
     </View>
   );
 
+  const renderOperationalBaseline = (): React.JSX.Element => (
+    <View style={styles.statusPanel}>
+      <Text style={styles.statusLabel}>Operational baseline</Text>
+      <Text style={styles.statusValue}>
+        {operational?.readiness === "baseline_ready" ? "Baseline ready" : "Needs attention"}
+      </Text>
+      <Text style={styles.statusMeta}>
+        Logs: {operational?.observability.logPolicy ?? "metadata_only"} - Alerting:{" "}
+        {operational?.observability.alertingConfigured ? "configured" : "not configured"}
+      </Text>
+      <View style={styles.graphMetricRow}>
+        <Text style={styles.graphMetric}>
+          API p95 target {operational?.performanceBudgets.apiP95TargetMs ?? 750}ms
+        </Text>
+        <Text style={styles.graphMetric}>
+          Memory warn {operational?.performanceBudgets.memoryRssWarningMb ?? 512}MB
+        </Text>
+        <Text style={styles.graphMetric}>
+          RLS {operational?.security.rlsLiveValidation ?? "pending"}
+        </Text>
+      </View>
+      <Text style={styles.mutedText}>
+        Signals: {(operational?.observability.monitoredSignals ?? []).slice(0, 5).join(", ")}
+      </Text>
+    </View>
+  );
   const renderRuntimeStatus = (): React.JSX.Element => {
     return (
       <View style={styles.statusPanel}>
@@ -1241,6 +1268,7 @@ export default function App(): React.JSX.Element {
       </View>
 
       {renderRuntimeStatus()}
+      {renderOperationalBaseline()}
       {renderLiveSession()}
 
       <View style={styles.statusPanel}>

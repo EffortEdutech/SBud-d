@@ -1,7 +1,7 @@
 # MVP Known Issues
 
-Status: Sprint 18 MVP UX polish and empty/error state completion
-Last updated: 2026-07-31
+Status: Sprint 19 MVP operational baseline
+Last updated: 2026-08-02
 
 ---
 
@@ -85,11 +85,13 @@ states, and clearer feedback for offline/error/success states.
 Impact: the MVP is easier to experience during controlled testing, but final mobile polish still
 needs device-level review across Expo Go/native layouts, accessibility, and real student feedback.
 
-## Production Observability Not Wired
+## Production Observability Provider Not Wired
 
-Release readiness docs define monitoring needs, but no production monitoring provider is configured.
+Sprint 19 adds local operational health visibility and metadata-only API request completion logs. The mobile Sync tab now shows readiness, log policy, performance budgets, RLS status, and monitored signals.
 
-Impact: controlled testing only until observability is implemented.
+No production monitoring provider, metrics dashboard, alert routing, or incident automation is configured yet.
+
+Impact: controlled testing can use the local baseline, but closed beta still needs production observability and alerting.
 
 ## App Store Release Not Prepared
 

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { createHealthStatus } from "@sbud-d/shared";
-import type { ApiRuntimeStatus, HealthStatus } from "@sbud-d/types";
+import type { ApiRuntimeStatus, HealthStatus, OperationalStatus } from "@sbud-d/types";
 
 import { getApiEnvironment, type ApiEnvironment } from "../config/environment.js";
 
@@ -16,8 +16,57 @@ export class HealthService {
       service: API_SERVICE_NAME,
       version: API_VERSION,
       environment: this.environment.nodeEnv,
+      operational: this.getOperationalStatus(),
       runtime: this.getRuntimeStatus(),
     });
+  }
+
+  private getOperationalStatus(): OperationalStatus {
+    const rlsLiveValidation =
+      this.environment.dataMode === "fixture"
+        ? "pending"
+        : this.environment.supabaseUrl && this.environment.supabasePublishableKey
+          ? "ready"
+          : "blocked";
+
+    return {
+      observability: {
+        alertingConfigured: false,
+        externalProviderConfigured: false,
+        logPolicy: "metadata_only",
+        mode: "local_baseline",
+        monitoredSignals: [
+          "api_health",
+          "request_duration_ms",
+          "document_processing_errors",
+          "blie_provider_mode",
+          "sync_pending_failed_counts",
+        ],
+      },
+      performanceBudgets: {
+        apiP95TargetMs: 750,
+        documentUploadMaxMb: 50,
+        memoryRssWarningMb: 512,
+        mobileStartupTargetMs: 3000,
+        syncQueueWarningCount: 25,
+      },
+      readiness:
+        rlsLiveValidation === "blocked" || !this.isMemoryWithinBaseline()
+          ? "needs_attention"
+          : "baseline_ready",
+      security: {
+        healthResponseExposesSecrets: false,
+        rlsLiveValidation,
+        serviceRoleKeyAllowedInClient: false,
+        studentContentAllowedInLogs: false,
+        trackedSecretFileScan: "enforced_by_mvp_readiness",
+      },
+      uptimeSeconds: Math.round(process.uptime()),
+    };
+  }
+
+  private isMemoryWithinBaseline(): boolean {
+    return process.memoryUsage().rss / 1024 / 1024 < 512;
   }
 
   private getRuntimeStatus(): ApiRuntimeStatus {

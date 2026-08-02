@@ -9,7 +9,7 @@ The product is built around:
 - A cloud-first, offline-capable learning experience.
 - A TypeScript monorepo architecture.
 
-This repository has completed the local MVP baseline through Sprint 10, the Cross-Cutting Checklist, MVP Stabilization Pass 1 persistence wiring, Sprint 12 real PDF upload, Sprint 13 document text extraction baseline, Sprint 14 concept extraction/PLKG enrichment baseline work, Sprint 15 real BLIE provider integration, Sprint 16 retrieval-backed BLIE preparation/quiz output, the Sprint 17 durable offline storage/sync hardening baseline, and Sprint 18 MVP UX polish.
+This repository has completed the local MVP baseline through Sprint 10, the Cross-Cutting Checklist, MVP Stabilization Pass 1 persistence wiring, Sprint 12 real PDF upload, Sprint 13 document text extraction baseline, Sprint 14 concept extraction/PLKG enrichment baseline work, Sprint 15 real BLIE provider integration, Sprint 16 retrieval-backed BLIE preparation/quiz output, the Sprint 17 durable offline storage/sync hardening baseline, Sprint 18 MVP UX polish, and Sprint 19 MVP performance/security/observability baseline.
 
 ---
 
@@ -231,8 +231,7 @@ Current stabilization/product-completion track:
 
 - Plan: `docs/planning/MVP_STABILIZATION_PASS_1.md`
 - Active product plan: `docs/planning/PRODUCT_COMPLETION_MASTER_PLAN.md`
-- Current True Learning MVP sequence: Sprint 18 polished the MVP mobile UX and empty/error states;
-  Sprint 19 should add performance, security, and observability baselines.
+- Current True Learning MVP sequence: Sprint 19 added a local operational baseline for performance budgets, metadata-only request logging, security posture visibility, and mobile Sync-tab readiness. Sprint 20 should prepare the controlled MVP release candidate.
 - API data mode: `SBUD_API_DATA_MODE=fixture|supabase`
 - Guardrail: mobile clients continue using API endpoints; no service-role key or secret is committed.
 

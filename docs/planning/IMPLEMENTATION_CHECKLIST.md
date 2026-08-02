@@ -2,7 +2,7 @@
 
 Version: 0.4
 Status: Living checklist
-Last updated: 2026-07-31
+Last updated: 2026-08-02
 
 ---
 
@@ -20,7 +20,7 @@ When work progresses, update this checklist in the same commit or handoff as the
 
 # Current Sprint
 
-Current sprint: Sprint 18 - MVP UX Polish And Empty/Error State Completion
+Current sprint: Sprint 19 - MVP Performance, Security, And Observability Baseline
 
 Current goal:
 
@@ -624,6 +624,28 @@ Current blocker:
 - [x] Run `git diff --check`.
 - [!] Device-level Expo Go/native visual review remains a carry-over.
 
+## Sprint 19 - MVP Performance, Security, And Observability Baseline
+
+- [x] Prepare Sprint 19 implementation plan.
+- [x] Read security, monitoring, testing, roadmap, and release-readiness references before implementation.
+- [x] Query Graphify before source inspection.
+- [x] Inspect health, API bootstrap, mobile health, shared type, release gate, and readiness test files directly.
+- [x] Add shared operational health contract for performance, security, and observability status.
+- [x] Add API health operational block with readiness status, uptime, performance budgets, and safe security posture fields.
+- [x] Keep health response free of Supabase keys, bearer tokens, AI provider keys, provider model values, student prompt text, and generated content.
+- [x] Add metadata-only API request logging for method, safe path, status code, and duration.
+- [x] Keep request bodies, query values, authorization headers, student questions, document text, and AI responses out of logs.
+- [x] Show operational baseline status in the mobile Sync tab.
+- [x] Add tests for operational readiness, RLS validation status, log policy, and no-secret health behavior.
+- [x] Add MVP release-readiness assertions for operational log policy, API p95 budget, and student-content logging policy.
+- [x] Update development, release, planning, README, and agent docs.
+- [x] Run `corepack pnpm format`.
+- [x] Run `corepack pnpm typecheck`.
+- [x] Run `corepack pnpm check`.
+- [x] Run `corepack pnpm mvp:readiness`.
+- [x] Refresh Graphify.
+- [x] Run `git diff --check`.
+- [!] Production observability provider, dashboards, alert routing, and incident-response automation remain Sprint 20/beta-readiness carry-over.
 ## Phase 3 - True MVP Completion
 
 - [x] Sprint 12 - Real Document Upload And Storage.
@@ -633,7 +655,7 @@ Current blocker:
 - [x] Sprint 16 - Retrieval-Backed BLIE Preparation And Quiz.
 - [x] Sprint 17 - Durable Offline Storage And Sync Hardening.
 - [x] Sprint 18 - MVP UX Polish And Empty/Error State Completion.
-- [ ] Sprint 19 - MVP Performance, Security, And Observability Baseline.
+- [x] Sprint 19 - MVP Performance, Security, And Observability Baseline.
 - [ ] Sprint 20 - Controlled MVP Release Candidate.
 
 ## True Learning MVP Wow Moment Checklist

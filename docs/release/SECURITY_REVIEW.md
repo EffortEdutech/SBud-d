@@ -1,13 +1,13 @@
 # MVP Security Review
 
-Status: MVP Stabilization Pass 1 live-validation baseline
-Last updated: 2026-07-15
+Status: Sprint 19 operational security baseline
+Last updated: 2026-08-02
 
 ---
 
 # 1. Scope
 
-This review covers the MVP implementation through Sprint 10:
+This review covers the MVP implementation through Sprint 19:
 
 - student profile and authentication pattern,
 - academic profile and dashboard,
@@ -15,7 +15,9 @@ This review covers the MVP implementation through Sprint 10:
 - BLIE local provider abstraction,
 - PLKG foundation,
 - study preparation and revision,
-- offline and synchronization baseline.
+- offline and synchronization baseline,
+- real document upload, baseline extraction/concept mapping, retrieval-backed BLIE priorities/quiz,
+- local operational health, metadata-only request logging, and release-readiness assertions.
 
 ---
 
@@ -29,6 +31,7 @@ Current controls:
 - Supabase migrations use student-owned tables,
 - RLS policies use `TO authenticated` and `auth.uid()` ownership checks,
 - BLIE request logging avoids student question text and response content,
+- API request completion logging is metadata-only and strips query values from logged paths,
 - mobile API calls use backend endpoints rather than direct database access for app business flows.
 
 ---
@@ -60,9 +63,9 @@ docs/development/SUPABASE_LIVE_VALIDATION.md
 # 4. Known Security Gaps
 
 - Durable encrypted mobile storage is not implemented yet.
-- Production monitoring/alerting is not wired yet.
+- Production monitoring provider, dashboards, and alerting are not wired yet.
 - Real file upload signed URL flow is not implemented yet.
-- AI provider integration is not connected yet.
+- Real AI provider integration is implemented behind the provider abstraction but still requires controlled local-only credential validation.
 - Production authentication enforcement is represented by patterns and local guards, not a full deployed auth gateway.
 
 These are not blockers for local MVP validation, but they are blockers for broad production release.
@@ -77,5 +80,5 @@ Before public release:
 - complete same-student and cross-student RLS validation with two authenticated test users,
 - confirm private Storage bucket policies,
 - confirm no service-role keys exist in client/mobile configuration,
-- confirm production logs do not contain student question text, AI responses, uploaded document content, or private tokens,
+- confirm production logs do not contain request bodies, query values, authorization headers, student question text, AI responses, uploaded document content, or private tokens,
 - confirm account deletion/export requirements are planned before real student onboarding.

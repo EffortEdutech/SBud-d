@@ -12,6 +12,9 @@ describe("HealthService", () => {
     expect(health.runtime?.dataMode).toBe("fixture");
     expect(health.runtime?.liveValidationStatus).toBe("fixture_mode");
     expect(health.runtime?.blieProviderLabel).toBe("Local deterministic provider");
+    expect(health.operational?.readiness).toBe("baseline_ready");
+    expect(health.operational?.observability.logPolicy).toBe("metadata_only");
+    expect(health.operational?.security.studentContentAllowedInLogs).toBe(false);
   });
 
   it("reports Supabase mode as ready when server variables are configured", () => {
@@ -56,6 +59,8 @@ describe("HealthService", () => {
     });
     expect(JSON.stringify(health)).not.toContain("test-key");
     expect(JSON.stringify(health)).not.toContain("supabase.co");
+    expect(health.operational?.readiness).toBe("needs_attention");
+    expect(health.operational?.security.rlsLiveValidation).toBe("blocked");
   });
 
   it("reports real BLIE provider readiness without exposing provider secrets", () => {

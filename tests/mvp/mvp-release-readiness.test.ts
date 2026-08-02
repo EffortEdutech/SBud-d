@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { AcademicService } from "../../services/api/src/academic/academic.service.js";
 import { BlieService } from "../../services/api/src/blie/blie.service.js";
 import { DocumentService } from "../../services/api/src/documents/document.service.js";
+import { HealthService } from "../../services/api/src/health/health.service.js";
 import { PlkgService } from "../../services/api/src/plkg/plkg.service.js";
 import { StudyService } from "../../services/api/src/study/study.service.js";
 import { SyncService } from "../../services/api/src/sync/sync.service.js";
@@ -12,6 +13,7 @@ describe("MVP release readiness", () => {
     const academic = new AcademicService();
     const documents = new DocumentService();
     const blie = new BlieService();
+    const health = new HealthService();
     const plkg = new PlkgService();
     const study = new StudyService();
     const sync = new SyncService();
@@ -22,6 +24,7 @@ describe("MVP release readiness", () => {
       message: "Explain recursion for revision",
       subjectId: "subject-programming",
     });
+    const operational = health.getHealth().operational;
     const graph = await plkg.getSummary();
     const studySummary = await study.getSummary();
     const syncStatus = await sync.getStatus();
@@ -30,6 +33,9 @@ describe("MVP release readiness", () => {
     expect(library.documents.length).toBeGreaterThan(0);
     expect(chat.trace.retrievalStatus).toBe("grounded");
     expect(chat.retrievedContext.map((item) => item.sourceType)).toContain("plkg");
+    expect(operational?.observability.logPolicy).toBe("metadata_only");
+    expect(operational?.performanceBudgets.apiP95TargetMs).toBeLessThanOrEqual(750);
+    expect(operational?.security.studentContentAllowedInLogs).toBe(false);
     expect(graph.nodeCount).toBeGreaterThan(0);
     expect(studySummary.revisionItems.length).toBeGreaterThan(0);
     expect(syncStatus.cloudIsSystemOfRecord).toBe(true);

@@ -1,7 +1,7 @@
 # AI Study Buddy Local Development
 
-Status: Sprint 18 MVP UX polish and empty/error state completion
-Last updated: 2026-07-31
+Status: Sprint 19 MVP performance, security, and observability baseline
+Last updated: 2026-08-02
 
 ---
 

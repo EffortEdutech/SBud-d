@@ -2,7 +2,7 @@
 
 Version: 0.3
 Status: Living product-completion plan
-Last updated: 2026-07-31
+Last updated: 2026-08-02
 
 ---
 
@@ -124,6 +124,9 @@ Current state:
   and documented native encrypted storage as a carry-over.
 - Sprint 18 completed MVP UX polish for the controlled mobile shell, including visible learning-loop
   progress, action-oriented empty states, and clearer status feedback.
+- Sprint 19 completed the local MVP performance, security, and observability baseline, including
+  health-contract operational status, metadata-only API request logging, release-gate assertions, and
+  mobile Sync-tab visibility.
 - The near-term product scope has been revised around three release targets: Controlled Demo MVP,
   True Learning MVP, and Public Version 1.
 - The product-defining wow moment is now: upload a lecture PDF, extract concepts, enrich PLKG, and
@@ -140,7 +143,7 @@ Current blockers:
   controlled local flow.
 - Durable encrypted native mobile offline storage remains deferred pending dependency approval.
 - Device-level Expo Go/native visual review remains pending after Sprint 18.
-- Production deployment, observability, app-store release, and subscription flows remain future work.
+- Production deployment, external observability provider/alerting, app-store release, and subscription flows remain future work.
 
 ---
 
@@ -423,7 +426,8 @@ Recommended next targets:
 - [/] Sync queue survives app restarts where browser `localStorage` is available; native restart
   durability remains pending dependency approval.
 - [x] MVP mobile UX shows learning-loop progress and action-oriented empty/error states.
-- [ ] MVP observability baseline is active.
+- [x] MVP observability baseline is active for local controlled validation.
+- [ ] Production observability provider and alerting are configured.
 - [ ] Controlled MVP release candidate passes.
 
 ## Closed Beta
@@ -485,12 +489,12 @@ At the end of each sprint:
 
 Recommended next sprint:
 
-Sprint 19 - MVP Performance, Security, And Observability Baseline.
+Sprint 20 - Controlled MVP Release Candidate.
 
 Goal:
 
-Add the controlled MVP baseline for performance awareness, security validation, and operational
-observability before release-candidate preparation.
+Package the controlled True Learning MVP into a release-candidate checklist with demo-script validation,
+known blocker acceptance, and final local readiness gates.
 
 Why this is next:
 

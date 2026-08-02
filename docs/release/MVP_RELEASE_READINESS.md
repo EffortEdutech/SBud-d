@@ -1,7 +1,7 @@
 # MVP Release Readiness
 
-Status: Sprint 10 baseline
-Last updated: 2026-07-13
+Status: Sprint 19 operational baseline
+Last updated: 2026-08-02
 
 ---
 
@@ -16,6 +16,8 @@ The MVP can move toward controlled testing when all required checks pass:
 - no `.env` or secret-like files are tracked
 - release notes and known issues are current
 - cross-cutting audit is current
+- health operational baseline is present and safe
+- API request logging remains metadata-only
 
 ---
 
@@ -88,7 +90,21 @@ The release gate verifies required architecture and release documents exist, inc
 
 ---
 
-# 6. Rollback Plan
+
+# 6. Sprint 19 Operational Baseline Gate
+
+The controlled MVP now exposes a local operational baseline through `GET /api/v1/health` and the mobile Sync tab.
+
+Required baseline assertions:
+
+- `operational.observability.logPolicy` is `metadata_only`.
+- API p95 target remains at or below 750 ms for the MVP budget.
+- student content is disallowed in the operational logging policy.
+- health output does not expose Supabase keys, bearer tokens, AI provider keys, model secrets, student prompts, generated answers, or document contents.
+- Supabase-mode RLS status is visible as `ready` or `blocked`; fixture mode remains `pending`.
+
+Production monitoring provider and alerting are still carry-over items.
+# 7. Rollback Plan
 
 For the current MVP baseline:
 
@@ -100,7 +116,7 @@ For the current MVP baseline:
 
 ---
 
-# 7. Post-Release Monitoring
+# 8. Post-Release Monitoring
 
 For controlled testing, monitor:
 
@@ -111,4 +127,4 @@ For controlled testing, monitor:
 - study reflection updates,
 - sync queue pending and failed counts.
 
-No production observability provider is wired in Sprint 10. This is a release-readiness baseline, not a production operations rollout.
+Sprint 19 adds local metadata-only request logs plus operational health visibility. No production observability provider or alerting is wired yet. This remains a release-readiness baseline, not a production operations rollout.
